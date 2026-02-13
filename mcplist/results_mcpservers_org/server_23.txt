@@ -1,0 +1,30 @@
+NAME: EdgeOne Pages
+URL: https://remote.mcpservers.org/edgeone-pages/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Deploy HTML content to EdgeOne Pages, return the public URL",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "description": "HTML or text content to deploy. Provide complete HTML or text content you want to publish, and the system will return a public URL where your content can be accessed.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      },
+      "name": "deploy-html"
+    }
+  ]
+}
+---
