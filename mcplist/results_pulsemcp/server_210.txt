@@ -1,0 +1,9 @@
+NAME: io.github.wywy-llc/gas-library-hub
+URL: https://appscripthub.com/api/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: sending "notifications/initialized": Bad Request
+---

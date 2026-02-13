@@ -1,0 +1,66 @@
+NAME: Oh My Posh Validator
+URL: https://ohmyposh.dev/api/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Validate an oh-my-posh configuration against the schema. Supports JSON, YAML, and TOML formats.",
+      "inputSchema": {
+        "properties": {
+          "content": {
+            "description": "The configuration content as a string (JSON, YAML, or TOML)",
+            "type": "string"
+          },
+          "format": {
+            "default": "auto",
+            "description": "The format of the configuration (auto-detect if not specified)",
+            "enum": [
+              "json",
+              "yaml",
+              "toml",
+              "auto"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "type": "object"
+      },
+      "name": "validate_config"
+    },
+    {
+      "description": "Validate a segment snippet against the oh-my-posh schema. Useful for validating individual prompt segments before adding them to a configuration.",
+      "inputSchema": {
+        "properties": {
+          "content": {
+            "description": "The segment content as a string (JSON, YAML, or TOML)",
+            "type": "string"
+          },
+          "format": {
+            "default": "auto",
+            "description": "The format of the segment (auto-detect if not specified)",
+            "enum": [
+              "json",
+              "yaml",
+              "toml",
+              "auto"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "type": "object"
+      },
+      "name": "validate_segment"
+    }
+  ]
+}
+---

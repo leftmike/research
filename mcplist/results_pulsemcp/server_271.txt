@@ -1,0 +1,9 @@
+NAME: LangGraph Nutrition Analyzer
+URL: https://my-nutrition-server.onrender.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

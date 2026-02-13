@@ -1,0 +1,9 @@
+NAME: com.mintmcp/outlook-email
+URL: https://outlook-email.mintmcp.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: yes (confirmed by gmcpt)
+STATUS: auth_required
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Unauthorized
+---

@@ -1,0 +1,40 @@
+NAME: com.findyourfivepm/mcp-server
+URL: https://mcp.findyourfivepm.com
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Use findyourfivepm.com to find a city where it's currently 5PM showing all relevant details",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "find_random_fivepm_city"
+    },
+    {
+      "description": "Get detailed information about a specific city by its geonameid",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "geonameid": {
+            "description": "The unique geonames identifier for the city",
+            "type": "string"
+          }
+        },
+        "required": [
+          "geonameid"
+        ],
+        "type": "object"
+      },
+      "name": "get_city_info"
+    }
+  ]
+}
+---

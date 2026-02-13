@@ -1,0 +1,9 @@
+NAME: UIDriver
+URL: https://mcp.uidriver.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: listing resources: calling "resources/list": Method not found
+---

@@ -1,0 +1,56 @@
+NAME: com.apple-rag/mcp-server
+URL: https://mcp.apple-rag.com
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Search Apple's official developer documentation and video content using advanced RAG technology. Returns relevant content from Apple's technical documentation, frameworks, APIs, design guidelines, and educational resources.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "query": {
+            "description": "Search query for Apple's official developer documentation and video content. Queries must be written in English and focus on technical concepts, APIs, frameworks, features, and version numbers rather than temporal information.",
+            "maxLength": 10000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "result_count": {
+            "default": 4,
+            "description": "Number of results to return (1-10)",
+            "maximum": 10,
+            "minimum": 1,
+            "type": "number"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search"
+    },
+    {
+      "description": "Retrieve complete cleaned content for a specific Apple developer documentation or video by URL. Returns the full processed content from Apple's official knowledge base.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "url": {
+            "description": "URL of the Apple developer documentation or video to retrieve content for",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "fetch"
+    }
+  ]
+}
+---

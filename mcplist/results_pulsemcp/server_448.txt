@@ -1,0 +1,9 @@
+NAME: Outrun
+URL: https://0ut.run/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Service Unavailable
+---

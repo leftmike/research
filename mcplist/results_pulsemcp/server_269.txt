@@ -1,0 +1,165 @@
+NAME: travel.kismet/mcp-server
+URL: https://mcp.kismet.travel/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Search for hotels using natural language queries",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "default": 10,
+            "description": "Number of results (1-20)",
+            "maximum": 20,
+            "minimum": 1,
+            "type": "number"
+          },
+          "query": {
+            "description": "Natural language search query for hotels. Examples: 'luxury hotels with spa near Times Square in New York', 'budget-friendly hotels with free parking near Miami Beach', 'pet-friendly boutique hotels near downtown Chicago with pool and gym', 'business hotels near Central Park in Manhattan under $300', 'family hotels with kitchen near Disney World in Orlando'",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "semantic_search_hotels"
+    },
+    {
+      "description": "Get real-time availability, rates, and inventory for a specific hotel with detailed price breakdowns including daily pricing and tax splits",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "checkIn": {
+            "description": "Check-in date (YYYY-MM-DD format)",
+            "type": "string"
+          },
+          "checkOut": {
+            "description": "Check-out date (YYYY-MM-DD format)",
+            "type": "string"
+          },
+          "currency": {
+            "default": "USD",
+            "description": "Currency code (e.g., USD, EUR, GBP)",
+            "type": "string"
+          },
+          "guests": {
+            "default": 2,
+            "description": "Number of guests",
+            "maximum": 10,
+            "minimum": 1,
+            "type": "number"
+          },
+          "hotelSlug": {
+            "description": "Hotel slug identifier (e.g., 'marriott-north-charleston-charleston-sc')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "hotelSlug",
+          "checkIn",
+          "checkOut"
+        ],
+        "type": "object"
+      },
+      "name": "get_availability_rate_inventory"
+    },
+    {
+      "description": "Compare real-time prices across multiple hotels for the same dates and guest count",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "checkInDate": {
+            "description": "Check-in date (YYYY-MM-DD format)",
+            "type": "string"
+          },
+          "checkOutDate": {
+            "description": "Check-out date (YYYY-MM-DD format)",
+            "type": "string"
+          },
+          "filterStandardRates": {
+            "default": true,
+            "description": "Filter to show only standard/public rates in offers (excludes member/corporate rates)",
+            "type": "boolean"
+          },
+          "hotelSlugs": {
+            "description": "Array of hotel slugs to compare (e.g., ['marriott-north-charleston-charleston-sc', 'hilton-downtown'])",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 40,
+            "type": "array"
+          },
+          "includeSummaryStats": {
+            "default": false,
+            "description": "Include lowest/highest price summary (LLM can compute if false)",
+            "type": "boolean"
+          },
+          "numberOfGuests": {
+            "default": 2,
+            "description": "Number of guests",
+            "maximum": 10,
+            "minimum": 1,
+            "type": "number"
+          },
+          "preferredCurrency": {
+            "default": "USD",
+            "description": "Currency code (e.g., USD, EUR, GBP)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "hotelSlugs"
+        ],
+        "type": "object"
+      },
+      "name": "compare_hotel_prices"
+    },
+    {
+      "description": "Search for hotels and return results in OpenAI MCP format",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "description": "Search query string for finding hotels",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search"
+    },
+    {
+      "description": "Fetch full details for a specific hotel by ID",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Unique identifier for the hotel to fetch",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "fetch"
+    }
+  ]
+}
+---

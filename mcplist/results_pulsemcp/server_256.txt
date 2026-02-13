@@ -1,0 +1,9 @@
+NAME: Exotel
+URL: http://ec2-13-127-242-200.ap-south-1.compute.amazonaws.com:8080/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: listing prompts: connection closed: calling "prompts/list": client is closing: standalone SSE stream: failed to decode event: invalid message version tag ""; expected "2.0"
+---

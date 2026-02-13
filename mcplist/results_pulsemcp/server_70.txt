@@ -1,0 +1,166 @@
+NAME: Sideways
+URL: https://usesideways.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "description": "Get a Reframe strategy with 5 follow-up questions. Use when stuck in a single way of thinking, facing opposition, or need to see the problem from a completely different angle. Best for breaking out of mental ruts. Strategy type: Change your perspective, reverse assumptions, adopt alternative viewpoints. Returns a labeled strategy card followed by contextual questions to help you apply it.",
+      "name": "sideways-reframe"
+    },
+    {
+      "description": "Get a Reduce strategy with 5 follow-up questions. Use when overwhelmed by complexity, dealing with too many options, or when clarity is needed. Best for cutting through noise and finding the core. Strategy type: Simplify, subtract, remove, clarify, focus on essentials. Returns a labeled strategy card followed by contextual questions to help you apply it.",
+      "name": "sideways-reduce"
+    },
+    {
+      "description": "Get a Expand strategy with 5 follow-up questions. Use when solutions feel too minimal, when avoiding decisions, or when there's room to explore more possibilities. Best for breaking self-imposed limitations. Strategy type: Add more, elaborate, embrace abundance, do both. Returns a labeled strategy card followed by contextual questions to help you apply it.",
+      "name": "sideways-expand"
+    },
+    {
+      "description": "Get a Disrupt strategy with 5 follow-up questions. Use when stuck in safe patterns, avoiding risk, or when work feels too polished or predictable. Best for injecting energy and unpredictability. Strategy type: Break patterns, embrace chaos, make destructive moves, honor mistakes. Returns a labeled strategy card followed by contextual questions to help you apply it.",
+      "name": "sideways-disrupt"
+    },
+    {
+      "description": "Get a Embody strategy with 5 follow-up questions. Use when too much in your head, experiencing physical tension, or disconnected from intuition. Best for grounding abstract work in physical reality. Strategy type: Physical, sensory, body-based approaches to creative problems. Returns a labeled strategy card followed by contextual questions to help you apply it.",
+      "name": "sideways-embody"
+    },
+    {
+      "description": "Get a Pause strategy with 5 follow-up questions. Use when rushing, feeling frantic, or unable to see the forest for the trees. Best for gaining clarity through distance and reflection. Strategy type: Rest, reflect, step back, examine, take breaks. Returns a labeled strategy card followed by contextual questions to help you apply it.",
+      "name": "sideways-pause"
+    }
+  ],
+  "resources": [
+    {
+      "description": "List of all available strategy categories with descriptions and guidance. AI assistants should read this resource to understand which category best fits the user's creative challenge.",
+      "mimeType": "application/json",
+      "name": "Categories Index",
+      "uri": "categories://index"
+    },
+    {
+      "description": "Overall statistics and information about the strategy collection",
+      "mimeType": "application/json",
+      "name": "Strategies Metadata",
+      "uri": "strategies://metadata"
+    },
+    {
+      "description": "Detailed information about the Reframe category: Change your perspective, reverse assumptions, adopt alternative viewpoints",
+      "mimeType": "application/json",
+      "name": "Category: Reframe",
+      "uri": "categories://reframe"
+    },
+    {
+      "description": "Detailed information about the Reduce category: Simplify, subtract, remove, clarify, focus on essentials",
+      "mimeType": "application/json",
+      "name": "Category: Reduce",
+      "uri": "categories://reduce"
+    },
+    {
+      "description": "Detailed information about the Expand category: Add more, elaborate, embrace abundance, do both",
+      "mimeType": "application/json",
+      "name": "Category: Expand",
+      "uri": "categories://expand"
+    },
+    {
+      "description": "Detailed information about the Disrupt category: Break patterns, embrace chaos, make destructive moves, honor mistakes",
+      "mimeType": "application/json",
+      "name": "Category: Disrupt",
+      "uri": "categories://disrupt"
+    },
+    {
+      "description": "Detailed information about the Embody category: Physical, sensory, body-based approaches to creative problems",
+      "mimeType": "application/json",
+      "name": "Category: Embody",
+      "uri": "categories://embody"
+    },
+    {
+      "description": "Detailed information about the Pause category: Rest, reflect, step back, examine, take breaks",
+      "mimeType": "application/json",
+      "name": "Category: Pause",
+      "uri": "categories://pause"
+    }
+  ],
+  "tools": [
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a random Reframe strategy. Use when stuck in a single way of thinking, facing opposition, or need to see the problem from a completely different angle. Best for breaking out of mental ruts. Use this when: change your perspective, reverse assumptions, adopt alternative viewpoints. Returns a labeled strategy card to help shift your perspective and break through blocks.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get-sideways-strategy-category-reframe"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a random Reduce strategy. Use when overwhelmed by complexity, dealing with too many options, or when clarity is needed. Best for cutting through noise and finding the core. Use this when: simplify, subtract, remove, clarify, focus on essentials. Returns a labeled strategy card to help shift your perspective and break through blocks.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get-sideways-strategy-category-reduce"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a random Expand strategy. Use when solutions feel too minimal, when avoiding decisions, or when there's room to explore more possibilities. Best for breaking self-imposed limitations. Use this when: add more, elaborate, embrace abundance, do both. Returns a labeled strategy card to help shift your perspective and break through blocks.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get-sideways-strategy-category-expand"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a random Disrupt strategy. Use when stuck in safe patterns, avoiding risk, or when work feels too polished or predictable. Best for injecting energy and unpredictability. Use this when: break patterns, embrace chaos, make destructive moves, honor mistakes. Returns a labeled strategy card to help shift your perspective and break through blocks.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get-sideways-strategy-category-disrupt"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a random Embody strategy. Use when too much in your head, experiencing physical tension, or disconnected from intuition. Best for grounding abstract work in physical reality. Use this when: physical, sensory, body-based approaches to creative problems. Returns a labeled strategy card to help shift your perspective and break through blocks.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get-sideways-strategy-category-embody"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a random Pause strategy. Use when rushing, feeling frantic, or unable to see the forest for the trees. Best for gaining clarity through distance and reflection. Use this when: rest, reflect, step back, examine, take breaks. Returns a labeled strategy card to help shift your perspective and break through blocks.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get-sideways-strategy-category-pause"
+    }
+  ]
+}
+---

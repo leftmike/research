@@ -1,0 +1,9 @@
+NAME: WordPress REST API
+URL: https://wordpress-mcp.nodeflow.workers.dev/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": failed to connect (session ID: ): session not found
+---

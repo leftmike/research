@@ -1,0 +1,54 @@
+NAME: A Christmas Carol
+URL: https://wire-public.mcp.usewire.io/container/gUeioF26GkeQPHxj/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Search 'A Christmas Carol' by Charles Dickens using natural language. Find passages, characters, themes, and events through semantic search across the full text.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "fileIds": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "minScore": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "query": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "topK": {
+            "default": 5,
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "semantic_search_a_christmas_carol"
+    }
+  ]
+}
+---

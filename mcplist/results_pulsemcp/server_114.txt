@@ -1,0 +1,110 @@
+NAME: goog.workspace-developer/developer-tools
+URL: https://workspace-developer.goog/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Searches the latest official Google Workspace documentation, including API references, conceptual guides, tutorials, and code examples.",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "description": "The query to search.",
+            "maxLength": 100,
+            "minLength": 5,
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_toolArguments",
+        "type": "object"
+      },
+      "name": "search_workspace_docs",
+      "outputSchema": {
+        "$defs": {
+          "SearchResult": {
+            "properties": {
+              "title": {
+                "description": "The title of the search result.",
+                "title": "Title",
+                "type": "string"
+              },
+              "url": {
+                "description": "The URL of the search result.",
+                "title": "Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "url"
+            ],
+            "title": "SearchResult",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "results": {
+            "description": "The search results.",
+            "items": {
+              "$ref": "#/$defs/SearchResult"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "summary": {
+            "description": "The summary of the search results.",
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "results",
+          "summary"
+        ],
+        "title": "SearchResponse",
+        "type": "object"
+      },
+      "title": "Search Google Workspace Documentation"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Fetches the content of a Google Workspace documentation page such as those returned by the `search_workspace_docs` tool.",
+      "inputSchema": {
+        "properties": {
+          "url": {
+            "description": "The URL of the Google Workspace documentation page to fetch.",
+            "pattern": "^https://developers\\.google\\.com/.*",
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "title": "fetch_toolArguments",
+        "type": "object"
+      },
+      "name": "fetch_workspace_docs",
+      "title": "Fetch Google Workspace documentation page"
+    }
+  ]
+}
+---

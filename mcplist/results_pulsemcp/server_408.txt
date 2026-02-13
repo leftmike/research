@@ -1,0 +1,9 @@
+NAME: WordPress.org Trac
+URL: https://mcp-server-wporg-core-trac.meta-trac-wordpress.workers.dev/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: listing prompts: calling "prompts/list": Method not found: prompts/list
+---

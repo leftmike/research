@@ -1,0 +1,9 @@
+NAME: Sideways
+URL: https://sideways.aribadernatal.com/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": failed to write: 404 Not Found
+---

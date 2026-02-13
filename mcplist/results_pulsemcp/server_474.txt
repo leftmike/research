@@ -1,0 +1,108 @@
+NAME: io.github.Servicedsi/123elec-mcp
+URL: https://mcp.123elec.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Recherche de produits par mot-clé avec pagination",
+      "inputSchema": {
+        "properties": {
+          "currentPage": {
+            "default": 1,
+            "description": "Numéro de page",
+            "type": "number"
+          },
+          "pageSize": {
+            "default": 20,
+            "description": "Résultats par page (max 50)",
+            "type": "number"
+          },
+          "search": {
+            "description": "Terme de recherche",
+            "type": "string"
+          }
+        },
+        "required": [
+          "search"
+        ],
+        "type": "object"
+      },
+      "name": "search_products"
+    },
+    {
+      "description": "Détails complets d'un produit par SKU",
+      "inputSchema": {
+        "properties": {
+          "sku": {
+            "description": "SKU du produit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sku"
+        ],
+        "type": "object"
+      },
+      "name": "get_product"
+    },
+    {
+      "description": "Vérifie le stock de plusieurs produits",
+      "inputSchema": {
+        "properties": {
+          "skus": {
+            "description": "Liste des SKUs",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "skus"
+        ],
+        "type": "object"
+      },
+      "name": "check_stock"
+    },
+    {
+      "description": "Liste hiérarchique des catégories",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_categories"
+    },
+    {
+      "description": "Obtient des recommandations de produits basées sur un panier (modèle Transformer WattHelper)",
+      "inputSchema": {
+        "properties": {
+          "basket": {
+            "description": "Liste des SKUs dans le panier",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "k": {
+            "default": 6,
+            "description": "Nombre de recommandations à retourner (1-10)",
+            "maximum": 10,
+            "minimum": 1,
+            "type": "number"
+          }
+        },
+        "required": [
+          "basket"
+        ],
+        "type": "object"
+      },
+      "name": "get_recommendations"
+    }
+  ]
+}
+---

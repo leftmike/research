@@ -1,0 +1,481 @@
+NAME: Shopify Catalog
+URL: https://catalog.shopify.com/api/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Retrieves a universal cart for a given id.",
+      "inputSchema": {
+        "properties": {
+          "cart_id": {
+            "description": "The id of the universal cart to get.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cart_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_cart"
+    },
+    {
+      "description": "Perform updates to a universal cart, including adding, removing, and updating line items, replacing the delivery addresses, and updating buyer identity.",
+      "inputSchema": {
+        "properties": {
+          "add_external_items": {
+            "description": "Off Shopify items to add to the cart. At least one of items or external_items is required.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "item": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "alt_text": {
+                      "type": "string"
+                    },
+                    "currency_code": {
+                      "type": "string"
+                    },
+                    "image_height": {
+                      "type": "integer"
+                    },
+                    "image_url": {
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "image_width": {
+                      "type": "integer"
+                    },
+                    "price": {
+                      "type": "number"
+                    },
+                    "product_title": {
+                      "type": "string"
+                    },
+                    "product_url": {
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "quantity": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "variant_title": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "image_url",
+                    "product_title",
+                    "product_url",
+                    "price",
+                    "currency_code",
+                    "quantity"
+                  ],
+                  "type": "object"
+                },
+                "shop": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "checkout_url": {
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "logo_url": {
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "logo_url"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "shop",
+                "item"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "add_items": {
+            "description": "Shopify items to add to the cart. At least one of items or external_items is required.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "product_variant_id": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "product_variant_id",
+                "quantity"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "buyer_identity": {
+            "additionalProperties": false,
+            "description": "Information about the buyer including email, phone, and country code.",
+            "properties": {
+              "country_code": {
+                "description": "ISO country code, used for regional pricing.",
+                "type": "string"
+              },
+              "email": {
+                "format": "email",
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "cart_id": {
+            "description": "Identifier for the cart being updated.",
+            "type": "string"
+          },
+          "delivery_addresses_to_replace": {
+            "description": "Delivery addresses to apply to the cart.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "delivery_address": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "address1": {
+                      "type": "string"
+                    },
+                    "address2": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "country_code": {
+                      "description": "ISO country code, used for regional pricing.",
+                      "type": "string"
+                    },
+                    "first_name": {
+                      "type": "string"
+                    },
+                    "last_name": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "province_code": {
+                      "type": "string"
+                    },
+                    "zip": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selected": {
+                  "description": "Optional - should this address be selected for delivery (first address defaults true).",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "delivery_address"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "discount_codes": {
+            "description": "Discount code groups with optional shop targeting.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "codes": {
+                  "description": "Array of discount codes to apply.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "targets": {
+                  "description": "Optional array of shop GIDs to target. If not specified, codes apply to all shops.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "codes"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "remove_line_ids": {
+            "description": "List of line item IDs to remove explicitly.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "update_items": {
+            "description": "Existing cart line items to update quantities for. Use quantity 0 to remove an item.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id",
+                "quantity"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "cart_id"
+        ],
+        "type": "object"
+      },
+      "name": "update_cart"
+    },
+    {
+      "description": "Creates a new universal cart.",
+      "inputSchema": {
+        "properties": {
+          "buyer_identity": {
+            "additionalProperties": false,
+            "description": "Information about the buyer including email, phone, and country code.",
+            "properties": {
+              "country_code": {
+                "description": "ISO country code, used for regional pricing.",
+                "type": "string"
+              },
+              "email": {
+                "format": "email",
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "delivery_addresses": {
+            "description": "Delivery addresses to apply to the cart.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "delivery_address": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "address1": {
+                      "type": "string"
+                    },
+                    "address2": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "country_code": {
+                      "description": "ISO country code, used for regional pricing.",
+                      "type": "string"
+                    },
+                    "first_name": {
+                      "type": "string"
+                    },
+                    "last_name": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "province_code": {
+                      "type": "string"
+                    },
+                    "zip": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selected": {
+                  "description": "Optional - should this address be selected for delivery (first address defaults true).",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "delivery_address"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "discount_codes": {
+            "description": "Discount code groups with optional shop targeting.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "codes": {
+                  "description": "Array of discount codes to apply.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "targets": {
+                  "description": "Optional array of shop GIDs to target. If not specified, codes apply to all shops.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "codes"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "external_items": {
+            "description": "Off Shopify items to add to the cart. At least one of items or external_items is required.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "item": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "alt_text": {
+                      "type": "string"
+                    },
+                    "currency_code": {
+                      "type": "string"
+                    },
+                    "image_height": {
+                      "type": "integer"
+                    },
+                    "image_url": {
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "image_width": {
+                      "type": "integer"
+                    },
+                    "price": {
+                      "type": "number"
+                    },
+                    "product_title": {
+                      "type": "string"
+                    },
+                    "product_url": {
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "quantity": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "variant_title": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "image_url",
+                    "product_title",
+                    "product_url",
+                    "price",
+                    "currency_code",
+                    "quantity"
+                  ],
+                  "type": "object"
+                },
+                "shop": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "checkout_url": {
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "logo_url": {
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "logo_url"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "shop",
+                "item"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "items": {
+            "description": "Shopify items to add to the cart. At least one of items or external_items is required.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "product_variant_id": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "product_variant_id",
+                "quantity"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "name": "create_cart"
+    }
+  ]
+}
+---

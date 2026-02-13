@@ -1,0 +1,495 @@
+NAME: FinFeedAPI SEC API
+URL: https://mcp.sec.finfeedapi.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "File Download"
+          ]
+        }
+      },
+      "description": "Downloads a specific file from the SEC EDGAR archive using the accession number and filename.\nThe file is streamed directly from the SEC servers to the client.\n\n### Accession Number Format\nAccession numbers must be in the format: 0000000000-00-000000 (10 digits, dash, 2 digits, dash, 6 digits)\n\n### File Name Examples\n- Primary documents: `d123456d10k.htm`, `d789012d8k.htm`\n- XBRL files: `d123456d10k_htm.xml`, `FilingSummary.xml`\n- Exhibits: `d123456dexhibit99.htm`, `d123456dex101.htm`\n\n### File Types\nThe endpoint supports downloading various file types from SEC filings:\n- HTML documents (.htm, .html)\n- XBRL files (.xml, .xsd)\n- Text files (.txt)\n- PDF files (.pdf)\n- Other document formats as submitted to SEC\n\n:::tip\nYou can find available filenames for a specific filing using the `/v1/filings` endpoint first\n:::\n\n:::warning\nThis endpoint streams files directly from the SEC. Large files may take longer to download.\n:::",
+      "inputSchema": {
+        "properties": {
+          "accession_no": {
+            "description": "SEC filing accession number in format: 0000000000-00-000000",
+            "pattern": "^\\d{10}-\\d{2}-\\d{6}$",
+            "type": "string"
+          },
+          "file_name": {
+            "description": "Name of the file to download from the filing",
+            "type": "string"
+          }
+        },
+        "required": [
+          "accession_no",
+          "file_name"
+        ],
+        "type": "object"
+      },
+      "name": "Download_file_from_SEC_EDGAR_archive"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Content Extraction"
+          ]
+        }
+      },
+      "description": "Retrieves filing content from the EDGAR database and intelligently classifies it according to form type and item categories.\n\n### Supported Form Types\n\nForm Type | Description\n----------|------------\n8-K      | Current report filing\n10-K     | Annual report filing\n10-Q     | Quarterly report filing\n\n### Content Classification\n- 8-K forms: Content classified by item numbers (e.g., 1.01, 2.01)\n- 10-K/10-Q forms: Items categorized by their respective part and item structure\n\n:::note\nBoth HTML and plain text documents are supported for content extraction.\n:::",
+      "inputSchema": {
+        "properties": {
+          "accession_number": {
+            "description": "The SEC filing accession number used to retrieve the filing from EDGAR database.",
+            "type": "string"
+          },
+          "type": {
+            "description": "Result type (text or html, default: text)",
+            "enum": [
+              "text",
+              "html"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "accession_number"
+        ],
+        "type": "object"
+      },
+      "name": "Extract_and_classify_SEC_filing_content",
+      "outputSchema": {
+        "additionalProperties": {},
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Content Extraction"
+          ]
+        }
+      },
+      "description": "Retrieves filing content from the EDGAR database and returns only the text content of the specified item number.\n\n### Item Number Format\n\nForm Type | Item Format Examples\n-----------|-------------------\n8-K       | 1.01, 2.01, 7.01\n10-K      | 1, 2, 3\n10-K/10-Q | PartI 1, PartII 2\n\n:::tip\nFor best results, ensure the item number matches exactly with the filing's structure.\n:::",
+      "inputSchema": {
+        "properties": {
+          "accession_number": {
+            "description": "The SEC filing accession number used to retrieve the filing from EDGAR database.",
+            "type": "string"
+          },
+          "item_number": {
+            "description": "The specific item number to extract (e.g., \"1.01\", \"2.01\", \"7.01\").",
+            "type": "string"
+          },
+          "type": {
+            "description": "Result type (text or html, default: text)",
+            "enum": [
+              "text",
+              "html"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "accession_number",
+          "item_number"
+        ],
+        "type": "object"
+      },
+      "name": "Extract_specific_item_content_from_SEC_filing",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Filing Metadata"
+          ]
+        }
+      },
+      "description": "Retrieves metadata for SEC filings based on various filter criteria with pagination and sorting support.\n\n### Available Sort Fields\n\nField Name | Description\n-----------|-------------\nAccessionNumber | SEC filing accession number\nFilingDate | Date when filing was submitted\nAcceptanceDateTime | Date and time of filing acceptance\nReportDate | Date of the report\nSize | Size of the filing document\n\n### Date Format\nAll dates must be provided in YYYY-MM-DD format\n\n### Form Types\nForm types can be provided as comma-separated values, e.g.: \"10-K,8-K,10-Q\"\n\n:::tip\nFor optimal performance, use date ranges and form types to narrow down your search\n:::",
+      "inputSchema": {
+        "properties": {
+          "cik": {
+            "description": "Filter by Central Index Key (CIK)",
+            "format": "int64",
+            "type": "integer"
+          },
+          "filling_date_end": {
+            "description": "Filter by filling date end (inclusive), format YYYY-MM-DD",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "filling_date_start": {
+            "description": "Filter by filling date start (inclusive), format YYYY-MM-DD",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "form_type": {
+            "description": "Filter by form type(s) (e.g., \"10-K\", \"8-K\"). Multiple values can be comma-separated",
+            "type": "string"
+          },
+          "items_contain": {
+            "description": "Filter filings where the 'Items' field contains the specified text",
+            "type": "string"
+          },
+          "page_number": {
+            "description": "Page number to retrieve (default: 1)",
+            "format": "int32",
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "page_size": {
+            "description": "Number of results per page (default: 50, max: 200)",
+            "format": "int32",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "report_date_end": {
+            "description": "Filter by report date end (inclusive), format YYYY-MM-DD",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "report_date_start": {
+            "description": "Filter by report date start (inclusive), format YYYY-MM-DD",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "sort_by": {
+            "description": "Defines sorting options for the filing query.",
+            "enum": [
+              "AccessionNumber",
+              "FilingDate",
+              "ReportDate",
+              "AcceptanceDateTime",
+              "Size"
+            ],
+            "type": "string"
+          },
+          "sort_order": {
+            "default": "desc",
+            "description": "Sort order (asc or desc, default: desc)",
+            "pattern": "^(asc|desc)$",
+            "type": "string"
+          },
+          "ticker": {
+            "description": "Filter by stock ticker symbol",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "Query_SEC_filing_metadata",
+      "outputSchema": {
+        "$defs": {
+          "DTO.FilingMetadataDto": {
+            "additionalProperties": false,
+            "description": "Represents the response for a single SEC filing metadata record.\nMaps fields from the edgar_submissions table.",
+            "properties": {
+              "acceptance_date_time": {
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "accession_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "act": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cik": {
+                "format": "int64",
+                "type": "integer"
+              },
+              "core_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "file_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "filing_date": {
+                "format": "date",
+                "type": "string"
+              },
+              "film_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "form": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_inline_xbrl": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "is_xbrl": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "items": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "primary_doc_description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "primary_document": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "report_date": {
+                "format": "date",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "size": {
+                "format": "int32",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_file": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/DTO.FilingMetadataDto"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Full Text Search"
+          ]
+        }
+      },
+      "description": "Search across SEC filing documents with advanced filtering and sorting capabilities.\n\n### Available Sort Fields\n\nField Name | Description\n-----------|-------------\nAccessionNumber | SEC filing accession number\nFormType | Type of the filing document\nFilingDate | Date when filing was submitted\nCompanyName | Name of the company\nCIK | Central Index Key\nDocumentFilename | Name of the filing document\nDocumentDescription | Description of the document\n\n### Search Options\n\nOption | Description\n--------|-------------\ntext_contains | Keywords that must appear in the document\ntext_not_contain | Keywords that must not appear in the document\n\n### Date Format\nAll dates must be provided in YYYY-MM-DD format\n\n:::tip\nUse text_contains and text_not_contain with multiple keywords separated by commas for more precise searches\n:::\n\n:::note\nThe search is case-insensitive and supports partial word matches\n:::",
+      "inputSchema": {
+        "properties": {
+          "filling_date_end": {
+            "description": "Filter by filling date end (inclusive), format YYYY-MM-DD",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "filling_date_start": {
+            "description": "Filter by filling date start (inclusive), format YYYY-MM-DD",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "form_type": {
+            "description": "Filter by form type (e.g., \"10-K\", \"8-K\"). Multiple values can be comma-separated",
+            "type": "string"
+          },
+          "page_number": {
+            "description": "Page number to retrieve (default: 1)",
+            "format": "int32",
+            "type": "integer"
+          },
+          "page_size": {
+            "description": "Number of results per page (default: 100)",
+            "format": "int32",
+            "type": "integer"
+          },
+          "sort_by": {
+            "default": "AccessionNumber",
+            "description": "Field to sort by (default: AccessionNumber)",
+            "pattern": "^(AccessionNumber|FormType|FilingDate|CompanyName|CIK|DocumentFilename|DocumentDescription)$",
+            "type": "string"
+          },
+          "sort_order": {
+            "default": "asc",
+            "description": "Sort order (asc or desc). Defaults to asc",
+            "pattern": "^(asc|desc)$",
+            "type": "string"
+          },
+          "text_contains": {
+            "description": "Keywords that the text must contain. Multiple values can be comma-separated",
+            "type": "string"
+          },
+          "text_not_contain": {
+            "description": "Keywords that the text must not contain. Multiple values can be comma-separated",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "Full_text_search_of_SEC_filing_documents",
+      "outputSchema": {
+        "$defs": {
+          "DTO.SecFilingResultDto": {
+            "additionalProperties": false,
+            "properties": {
+              "accession_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cik": {
+                "format": "int64",
+                "type": "integer"
+              },
+              "company_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "document_description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "document_filename": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "filing_date": {
+                "format": "date",
+                "type": "string"
+              },
+              "form_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_file": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/DTO.SecFilingResultDto"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "XBRL Conversion"
+          ]
+        }
+      },
+      "description": "Converts XBRL data to JSON format using one of three possible input methods.\n\n### Input Methods\n\n1. HTML URL (htm-url)\n   - URL of the filing ending with .htm or .html\n   - Both filing URLs and index page URLs are accepted\n   - Example: https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231.htm\n\n2. XBRL URL (xbrl-url)\n   - URL of the XBRL file ending with .xml\n   - Can be found in the dataFiles array from Query API\n   - Example: https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231_htm.xml\n\n3. Accession Number (accession-no)\n   - The SEC filing accession number\n   - Example: 0001564590-21-004599\n\n:::note\nOnly one of the three parameters should be provided. If multiple parameters are provided, the priority order is:\n1. htm-url\n2. xbrl-url\n3. accession-no\n:::\n\n### Supported Filing Types\n\n- Annual Reports (10-K)\n- Quarterly Reports (10-Q)\n- Current Reports (8-K)\n- Registration Statements (S-1, S-3)\n- Foreign Private Issuer Reports (20-F, 40-F)\n\n### Response Format\n\nThe API returns a JSON object containing:\n- Financial statements (Income Statement, Balance Sheet, Cash Flow Statement)\n- Accounting policies and footnotes\n- Company information\n- Filing metadata\n\n### Example Response\n```json\n{\n  \"StatementsOfIncome\": {\n    \"RevenueFromContractWithCustomerExcludingAssessedTax\": [\n      {\n        \"decimals\": \"-6\",\n        \"unitRef\": \"U_USD\",\n        \"period\": {\n          \"startDate\": \"2023-07-01\",\n          \"endDate\": \"2024-06-30\"\n        },\n        \"value\": \"245122000000\"\n      }\n    ]\n  }\n}\n```",
+      "inputSchema": {
+        "properties": {
+          "accession-no": {
+            "description": "SEC filing accession number",
+            "type": "string"
+          },
+          "htm-url": {
+            "description": "URL of the filing ending with .htm or .html",
+            "type": "string"
+          },
+          "xbrl-url": {
+            "description": "URL of the XBRL file ending with .xml",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "Convert_XBRL_data_to_JSON_format",
+      "outputSchema": {
+        "additionalProperties": {},
+        "type": "object"
+      }
+    }
+  ]
+}
+---

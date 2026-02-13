@@ -1,0 +1,59 @@
+NAME: com.remote-mcp/registry-mcp
+URL: https://registry-mcp.remote-mcp.com
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "description": "Maximum number of servers to return",
+            "type": "number"
+          },
+          "query": {
+            "description": "Optional search query to filter servers, usally a substring of the server name",
+            "type": "string"
+          },
+          "search": {
+            "description": "Search servers by name (substring match). Example: 'filesystem'",
+            "type": "string"
+          },
+          "updated_since": {
+            "description": "Filter servers updated since timestamp (RFC3339 datetime). Example: '2025-08-07T13:15:04.280Z'",
+            "type": "string"
+          },
+          "version": {
+            "description": "Filter by version ('latest' for latest version, or an exact version like '1.2.3'). Example: 'latest'",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "ListMCPServers"
+    },
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "server_id": {
+            "description": "The UUID or name of the server to retrieve. If using the output of the ListMCPServers tool, its located uder the path _meta.io.modelcontextprotocol.registry/official.id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "server_id"
+        ],
+        "type": "object"
+      },
+      "name": "GetMCPServer"
+    }
+  ]
+}
+---

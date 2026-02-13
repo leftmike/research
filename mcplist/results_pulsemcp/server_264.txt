@@ -1,0 +1,9 @@
+NAME: Biel
+URL: https://mcp.biel.ai/sse?project_slug=YOUR_PROJECT_SLUG&domain=https://your-docs-domain.com
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

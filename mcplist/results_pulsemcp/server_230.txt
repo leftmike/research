@@ -1,0 +1,9 @@
+NAME: Supabase
+URL: https://sb-mcp.bifrotek.com/mcp
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: missing endpoint: malformed line in SSE stream: "no available server"
+---

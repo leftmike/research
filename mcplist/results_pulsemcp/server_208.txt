@@ -1,0 +1,556 @@
+NAME: Lenny's Podcast Transcripts
+URL: https://wire-public.mcp.usewire.io/container/ogYiGchr47Fcjb4i/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Retrieve a specific podcast by its ID",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "id": {},
+          "include": {
+            "description": "Related entity types to include. Available: Episode",
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_podcast"
+    },
+    {
+      "description": "List all podcasts with pagination",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "fields": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "include": {
+            "description": "Related entity types to include. Available: Episode",
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "orderBy": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "type": "string"
+              },
+              "field": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "field",
+              "direction"
+            ],
+            "type": "object"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "name": "list_podcasts"
+    },
+    {
+      "description": "Filter podcasts by structured fields",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "filters": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "field": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "operator": {
+                      "type": "string"
+                    },
+                    "value": {}
+                  },
+                  "required": [
+                    "field",
+                    "operator"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "include": {
+            "description": "Related entity types to include. Available: Episode",
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "default": 100,
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "orderBy": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "field",
+              "direction"
+            ],
+            "type": "object"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "filters"
+        ],
+        "type": "object"
+      },
+      "name": "filter_podcasts"
+    },
+    {
+      "description": "Search podcasts by text fields (title, description)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "include": {
+            "description": "Related entity types to include. Available: Episode",
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "default": 100,
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "query": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search_podcasts"
+    },
+    {
+      "description": "Retrieve a specific episode by its ID",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "id": {},
+          "include": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_episode"
+    },
+    {
+      "description": "List all episodes with pagination",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "fields": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "include": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "orderBy": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "type": "string"
+              },
+              "field": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "field",
+              "direction"
+            ],
+            "type": "object"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "name": "list_episodes"
+    },
+    {
+      "description": "Filter episodes by date published",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "filters": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "field": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "operator": {
+                      "type": "string"
+                    },
+                    "value": {}
+                  },
+                  "required": [
+                    "field",
+                    "operator"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "include": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "default": 100,
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "orderBy": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "field",
+              "direction"
+            ],
+            "type": "object"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "filters"
+        ],
+        "type": "object"
+      },
+      "name": "filter_episodes"
+    },
+    {
+      "description": "Search episodes by text fields (title, contentHtml, summary)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "include": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "default": 100,
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "query": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search_episodes"
+    },
+    {
+      "description": "Search across episode transcripts and podcast content using semantic understanding",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "fileIds": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "minScore": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "query": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "topK": {
+            "default": 5,
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "semantic_search"
+    }
+  ]
+}
+---

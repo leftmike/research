@@ -1,0 +1,9 @@
+NAME: mxHERO Mail2Cloud Advanced
+URL: https://lab4-api.mxhero.com/mcp/connect
+TRANSPORT: streamable-http
+AUTH_REQUIRED: yes (confirmed by gmcpt)
+STATUS: auth_required
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Unauthorized
+---

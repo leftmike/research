@@ -1,0 +1,184 @@
+NAME: Shutter Network
+URL: https://shutter-mcp-b76e270d48c5.herokuapp.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Get the current date and time in UTC.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_current_timeArguments",
+        "type": "object"
+      },
+      "name": "get_current_time",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_current_timeOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    Get Unix timestamp for a given time expression or current time.\n    \n    This tool helps convert natural language time expressions to Unix timestamps\n    that can be used with the Shutter API.\n    \n    Args:\n        time_expression: Time to convert. Can be:\n                        - \"now\" for current time\n                        - Natural language like \"3 months from now\", \"1 year from now\"\n                        - Absolute dates like \"2024-12-25\"\n    \n    Returns:\n        JSON string with Unix timestamp and human-readable date\n    ",
+      "inputSchema": {
+        "properties": {
+          "time_expression": {
+            "default": "now",
+            "title": "Time Expression",
+            "type": "string"
+          }
+        },
+        "title": "get_unix_timestampArguments",
+        "type": "object"
+      },
+      "name": "get_unix_timestamp",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_unix_timestampOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    Encrypt a message with timelock encryption using Shutter Network.\n    \n    This tool encrypts a message that can only be decrypted after a specified\n    future time. The encryption is handled by the Shutter Network's decentralized\n    keypers using threshold cryptography.\n    \n    IMPORTANT FOR LLM: This tool accepts BOTH Unix timestamps AND natural language time expressions.\n    - Unix timestamps: Use numeric values like \"1721905313\" for precise future times\n    - Natural language: Use expressions like \"3 months from now\", \"1 year from now\"\n    - Absolute dates: Use formats like \"2024-12-25\" or \"January 15, 2025\"\n    \n    The Shutter API works with Unix timestamps internally. When users provide natural language,\n    this tool converts it to Unix timestamps automatically.\n    \n    WORKFLOW: The LLM should directly call this tool with the user's time expression.\n    No need to call get_unix_timestamp first - this tool handles all time parsing.\n    \n    Args:\n        message: The text message to encrypt\n        unlock_time: When the message can be decrypted. Accepts:\n                    - Unix timestamp (e.g., \"1721905313\")\n                    - Natural language (e.g., \"3 months from now\", \"1 year from now\")\n                    - Absolute date (e.g., \"2024-12-25\", \"January 15, 2025\")\n    \n    Returns:\n        JSON string with encrypted data and instructions for future decryption\n    ",
+      "inputSchema": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "unlock_time": {
+            "title": "Unlock Time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "unlock_time"
+        ],
+        "title": "timelock_encryptArguments",
+        "type": "object"
+      },
+      "name": "timelock_encrypt",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "timelock_encryptOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    Check if a timelock encrypted message is ready for decryption.\n    \n    Args:\n        identity: The identity returned from timelock_encrypt\n    \n    Returns:\n        JSON string with status of the timelock and whether decryption is available\n    ",
+      "inputSchema": {
+        "properties": {
+          "identity": {
+            "title": "Identity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "identity"
+        ],
+        "title": "check_decryption_statusArguments",
+        "type": "object"
+      },
+      "name": "check_decryption_status",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "check_decryption_statusOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    Decrypt a timelock encrypted message if the timelock has expired.\n    \n    Args:\n        identity: The identity returned from timelock_encrypt\n        encrypted_data: The encrypted data returned from timelock_encrypt\n    \n    Returns:\n        JSON string with the decrypted message or error if timelock hasn't expired\n    ",
+      "inputSchema": {
+        "properties": {
+          "encrypted_data": {
+            "title": "Encrypted Data",
+            "type": "string"
+          },
+          "identity": {
+            "title": "Identity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "identity",
+          "encrypted_data"
+        ],
+        "title": "decrypt_timelock_messageArguments",
+        "type": "object"
+      },
+      "name": "decrypt_timelock_message",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "decrypt_timelock_messageOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    Explain how Shutter timelock encryption works and how to use this server.\n    \n    Returns:\n        JSON string with comprehensive explanation of timelock encryption\n    ",
+      "inputSchema": {
+        "properties": {},
+        "title": "explain_timelock_encryptionArguments",
+        "type": "object"
+      },
+      "name": "explain_timelock_encryption",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "explain_timelock_encryptionOutput",
+        "type": "object"
+      }
+    }
+  ]
+}
+---

@@ -1,0 +1,272 @@
+NAME: com.vaadin/docs-mcp
+URL: https://mcp.vaadin.com/docs/
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "IMPORTANT: Always use this tool FIRST before working with Vaadin. Returns a comprehensive primer document with current (2025+) information about modern Vaadin development. This addresses common AI misconceptions about Vaadin and provides up-to-date information about Java vs React development models, project structure, components, and best practices. Essential reading to avoid outdated assumptions. For legacy versions (7, 8, 14), returns guidance on version-specific resources.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "vaadin_version": {
+            "description": "Required. Vaadin version: \"7\", \"8\", \"14\", \"24\", \"25\", or \"25.1\". For legacy versions (7, 8, 14), returns guidance on version-specific resources.",
+            "enum": [
+              "7",
+              "8",
+              "14",
+              "24",
+              "25",
+              "25.1"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "vaadin_version"
+        ],
+        "type": "object"
+      },
+      "name": "get_vaadin_primer",
+      "title": "Vaadin Primer"
+    },
+    {
+      "description": "Search Vaadin documentation for relevant information about Vaadin development, components, and best practices. Uses hybrid semantic + keyword search. USE THIS TOOL for questions about: Vaadin components (Button, Grid, Dialog, etc.), TestBench, UI testing, unit testing, integration testing, @BrowserCallable, Binder, DataProvider, validation, styling, theming, security, Push, Collaboration Engine, PWA, production builds, Docker, deployment, performance, and any Vaadin-specific topics. When using this tool, try to deduce the correct development model from context: use \"java\" for Java-based views, \"react\" for React-based views, or \"common\" for both. Use get_full_document with file_paths containing the result's file_path when you need complete context.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "max_results": {
+            "description": "Maximum number of results to return (default: 5)",
+            "maximum": 20,
+            "minimum": 1,
+            "type": "number"
+          },
+          "max_tokens": {
+            "description": "Maximum number of tokens to return (default: 1500)",
+            "maximum": 5000,
+            "minimum": 100,
+            "type": "number"
+          },
+          "question": {
+            "description": "The search query or question about Vaadin. Will be used to query a vector database with hybrid search (semantic + keyword).",
+            "type": "string"
+          },
+          "ui_language": {
+            "description": "The UI implementation language: \"java\" for Java-based views, \"react\" for React-based views, or \"common\" for both. If not specified, the agent should try to deduce the correct language from context or asking the user for clarification.",
+            "enum": [
+              "java",
+              "react",
+              "common"
+            ],
+            "type": "string"
+          },
+          "vaadin_version": {
+            "description": "Required. Vaadin version: \"7\", \"8\", \"14\", \"24\", \"25\", or \"25.1\".",
+            "enum": [
+              "7",
+              "8",
+              "14",
+              "24",
+              "25",
+              "25.1"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "vaadin_version"
+        ],
+        "type": "object"
+      },
+      "name": "search_vaadin_docs",
+      "title": "Search Vaadin Documentation"
+    },
+    {
+      "description": "Retrieves complete documentation pages for one or more file paths. Use this when you need full context beyond what search results provide. Provide file_paths only (array).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "file_paths": {
+            "description": "Array of file paths from search results. Use this to fetch one or more documents in a single call.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "file_paths"
+        ],
+        "type": "object"
+      },
+      "name": "get_full_document",
+      "title": "Get Full Document"
+    },
+    {
+      "description": "Returns the latest stable version of Vaadin Core as a simple JSON object. This is useful when setting up new projects, checking for updates, or when helping with dependency management. Returns: {version, released}.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_vaadin_version",
+      "title": "Get Vaadin Version"
+    },
+    {
+      "description": "Returns a comprehensive list of components available in a specific Vaadin version, including component names, React component names, Java class names, and npm packages.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "description": "The Vaadin version as a minor version (e.g., '24.8', '24.9', '25.0')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "type": "object"
+      },
+      "name": "get_components_by_version",
+      "title": "Get Components by Version"
+    },
+    {
+      "description": "Returns the Java API documentation for a specific Vaadin component. The component name can be in any format (e.g., 'Button', 'button', 'vaadin-button').",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "component_name": {
+            "description": "The name of the component (e.g., 'Button', 'button', 'TextField', 'text-field')",
+            "type": "string"
+          },
+          "vaadin_version": {
+            "description": "Required. Vaadin version: \"7\", \"8\", \"14\", \"24\", \"25\", or \"25.1\".",
+            "enum": [
+              "7",
+              "8",
+              "14",
+              "24",
+              "25",
+              "25.1"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "component_name",
+          "vaadin_version"
+        ],
+        "type": "object"
+      },
+      "name": "get_component_java_api",
+      "title": "Get Component Java API"
+    },
+    {
+      "description": "Returns the React API documentation for a specific Vaadin component. The component name can be in any format (e.g., 'Button', 'button', 'vaadin-button').",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "component_name": {
+            "description": "The name of the component (e.g., 'Button', 'button', 'TextField', 'text-field')",
+            "type": "string"
+          },
+          "vaadin_version": {
+            "description": "Required. Vaadin version: \"7\", \"8\", \"14\", \"24\", \"25\", or \"25.1\".",
+            "enum": [
+              "7",
+              "8",
+              "14",
+              "24",
+              "25",
+              "25.1"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "component_name",
+          "vaadin_version"
+        ],
+        "type": "object"
+      },
+      "name": "get_component_react_api",
+      "title": "Get Component React API"
+    },
+    {
+      "description": "Returns the Web Component/TypeScript API documentation for a specific Vaadin component by fetching from external TypeScript API docs. The component name can be in any format (e.g., 'Button', 'button', 'vaadin-button').",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "component_name": {
+            "description": "The name of the component (e.g., 'Button', 'button', 'TextField', 'text-field')",
+            "type": "string"
+          },
+          "vaadin_version": {
+            "description": "Required. Vaadin version: \"7\", \"8\", \"14\", \"24\", \"25\", or \"25.1\".",
+            "enum": [
+              "7",
+              "8",
+              "14",
+              "24",
+              "25",
+              "25.1"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "component_name",
+          "vaadin_version"
+        ],
+        "type": "object"
+      },
+      "name": "get_component_web_component_api",
+      "title": "Get Component Web Component (TypeScript) API"
+    },
+    {
+      "description": "Returns the styling/theming documentation for a specific Vaadin component. Returns both Java and React styling documentation when available. The component name can be in any format (e.g., 'Button', 'button', 'vaadin-button').",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "component_name": {
+            "description": "The name of the component (e.g., 'Button', 'button', 'TextField', 'text-field')",
+            "type": "string"
+          },
+          "vaadin_version": {
+            "description": "Required. Vaadin version: \"7\", \"8\", \"14\", \"24\", \"25\", or \"25.1\".",
+            "enum": [
+              "7",
+              "8",
+              "14",
+              "24",
+              "25",
+              "25.1"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "component_name",
+          "vaadin_version"
+        ],
+        "type": "object"
+      },
+      "name": "get_component_styling",
+      "title": "Get Component Styling"
+    }
+  ]
+}
+---

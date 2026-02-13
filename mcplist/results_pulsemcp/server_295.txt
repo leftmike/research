@@ -1,0 +1,113 @@
+NAME: ai.shawndurrani/mcp-registry
+URL: https://mcp-registry.shawndurrani.ai/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Returns server health and registry source",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "health"
+    },
+    {
+      "description": "Search the public MCP Registry with safe pagination. Defaults to SSE-only results; set requireSse=false to include non-SSE remotes.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "activeOnly": {
+            "type": "boolean"
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "exclusiveMinimum": 0,
+            "maximum": 200,
+            "type": "integer"
+          },
+          "maxPages": {
+            "exclusiveMinimum": 0,
+            "maximum": 10,
+            "type": "integer"
+          },
+          "page": {
+            "exclusiveMinimum": 0,
+            "type": "integer"
+          },
+          "pageSize": {
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "integer"
+          },
+          "query": {
+            "maxLength": 120,
+            "type": "string"
+          },
+          "requireSse": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "name": "searchServers"
+    },
+    {
+      "description": "Check if an SSE URL responds with text/event-stream within a short timeout.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "timeoutMs": {
+            "exclusiveMinimum": 0,
+            "maximum": 15000,
+            "type": "integer"
+          },
+          "url": {
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "probeSse"
+    },
+    {
+      "description": "Generate a minimal client config snippet for ChatGPT/Claude (SSE).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "client": {
+            "enum": [
+              "chatgpt",
+              "claude",
+              "raw"
+            ],
+            "type": "string"
+          },
+          "nameOrId": {
+            "maxLength": 120,
+            "type": "string"
+          },
+          "sseUrl": {
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "makeClientConfig"
+    }
+  ]
+}
+---

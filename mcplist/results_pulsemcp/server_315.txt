@@ -1,0 +1,117 @@
+NAME: io.github.mcpcentral-io/mcp-time
+URL: https://mcp.time.mcpcentral.io
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Returns the current time in UTC and a specified or guessed timezone.",
+      "inputSchema": {
+        "properties": {
+          "format": {
+            "default": "YYYY-MM-DD HH:mm:ss",
+            "description": "The format for the returned time string.",
+            "type": "string"
+          },
+          "timezone": {
+            "description": "The IANA timezone name (e.g., \"America/New_York\"). Defaults to the server's guessed timezone.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "current_time",
+      "title": "Get Current Time"
+    },
+    {
+      "description": "Calculates the relative time from now to a given time string.",
+      "inputSchema": {
+        "properties": {
+          "time": {
+            "description": "The time to compare. Format: YYYY-MM-DD HH:mm:ss",
+            "type": "string"
+          }
+        },
+        "required": [
+          "time"
+        ],
+        "type": "object"
+      },
+      "name": "relative_time",
+      "title": "Get Relative Time"
+    },
+    {
+      "description": "Returns the number of days in the month of a given date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "description": "The date to check. Format: YYYY-MM-DD",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "days_in_month",
+      "title": "Get Days in Month"
+    },
+    {
+      "description": "Converts a date-time string to a Unix timestamp in milliseconds.",
+      "inputSchema": {
+        "properties": {
+          "time": {
+            "description": "The time to convert. Format: YYYY-MM-DD HH:mm:ss",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_timestamp",
+      "title": "Get Timestamp"
+    },
+    {
+      "description": "Converts a time from a source timezone to a target timezone.",
+      "inputSchema": {
+        "properties": {
+          "sourceTimezone": {
+            "description": "The source IANA timezone name (e.g., \"Asia/Shanghai\").",
+            "type": "string"
+          },
+          "targetTimezone": {
+            "description": "The target IANA timezone name (e.g., \"Europe/London\").",
+            "type": "string"
+          },
+          "time": {
+            "description": "The time to convert. e.g., \"2025-03-23 12:30:00\".",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sourceTimezone",
+          "targetTimezone",
+          "time"
+        ],
+        "type": "object"
+      },
+      "name": "convert_time",
+      "title": "Convert Timezone"
+    },
+    {
+      "description": "Returns the week and ISO week number for a given date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "description": "The date to check. e.g., \"2025-03-23\"",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_week_year",
+      "title": "Get Week of Year"
+    }
+  ]
+}
+---

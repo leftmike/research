@@ -1,0 +1,155 @@
+NAME: com.proxylink-mcp/mcp-server
+URL: https://proxylink-mcp.com
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "resources": [
+    {
+      "description": "Comprehensive guide for using knowledge base tools effectively in conversation",
+      "mimeType": "text/markdown",
+      "name": "Knowledge Base Usage Guide",
+      "uri": "kb://usage-guide"
+    }
+  ],
+  "tools": [
+    {
+      "description": "Find a company by name to access their knowledge base. Use this first before searching a company's knowledge base to get the tenant_id.",
+      "inputSchema": {
+        "properties": {
+          "company_name": {
+            "description": "The name of the company to look up (e.g., 'ABC Plumbing', 'ProTech HVAC')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "company_name"
+        ],
+        "type": "object"
+      },
+      "name": "lookup_company"
+    },
+    {
+      "description": "Search a company's knowledge base for policies, procedures, and documentation. First use lookup_company to get the tenant_id, then use this tool to search their knowledge base.",
+      "inputSchema": {
+        "properties": {
+          "original_question": {
+            "description": "The user's original question, verbatim. Always pass this for logging purposes. Do NOT extract keywords - pass the complete question as the user asked it. Example: 'How do I create an invite link for my fantasy football league?'",
+            "type": "string"
+          },
+          "query": {
+            "description": "The search query for embedding matching. Can be keywords extracted from the user's question if you believe it improves search results.",
+            "type": "string"
+          },
+          "tenant_id": {
+            "description": "Company tenant ID from lookup_company",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search_knowledge_base"
+    },
+    {
+      "description": "Provide feedback on a knowledge base answer to help improve the system. Use this after receiving an answer from search_knowledge_base to rate its quality and helpfulness.",
+      "inputSchema": {
+        "properties": {
+          "comment": {
+            "description": "Optional feedback comment to provide context",
+            "type": "string"
+          },
+          "helpful": {
+            "description": "Whether the answer was helpful (true or false)",
+            "type": "boolean"
+          },
+          "query_id": {
+            "description": "Query ID from the search_knowledge_base response",
+            "type": "string"
+          },
+          "rating": {
+            "description": "Rating from 1 (poor) to 5 (excellent)",
+            "maximum": 5,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query_id",
+          "rating",
+          "helpful"
+        ],
+        "type": "object"
+      },
+      "name": "rate_knowledge_base_answer"
+    },
+    {
+      "description": "Submit a support ticket request (e.g., address change, service cancellation). Use lookup_company first to get the tenant_id and see available ticket types with their required fields.",
+      "inputSchema": {
+        "properties": {
+          "conversation": {
+            "description": "Conversation history leading to this ticket. Only include messages that occured after the ticket request was initiated, until the ticket was created.",
+            "items": {
+              "properties": {
+                "message": {
+                  "description": "The message content",
+                  "type": "string"
+                },
+                "source": {
+                  "description": "The source of the message, either 'user' or 'agent'",
+                  "enum": [
+                    "user",
+                    "agent"
+                  ],
+                  "type": "string"
+                },
+                "timestamp": {
+                  "description": "ISO 8601 timestamp of the message",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "timestamp",
+                "source",
+                "message"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "fields": {
+            "description": "Key-value map of field IDs to their values based on the ticket type's form fields",
+            "type": "object"
+          },
+          "tenant_id": {
+            "description": "Company tenant ID from lookup_company",
+            "type": "string"
+          },
+          "ticket_type_id": {
+            "description": "The ticket type ID (e.g., 'change-address', 'cancel-service')",
+            "type": "string"
+          },
+          "ticket_type_name": {
+            "description": "The ticket type display name (e.g., 'Change Address', 'Cancel Service')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "ticket_type_id",
+          "ticket_type_name",
+          "fields",
+          "conversation"
+        ],
+        "type": "object"
+      },
+      "name": "create_support_ticket"
+    }
+  ]
+}
+---

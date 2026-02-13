@@ -1,0 +1,9 @@
+NAME: technology.draup/api-server
+URL: https://mcp.draup.technology/mcp/
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

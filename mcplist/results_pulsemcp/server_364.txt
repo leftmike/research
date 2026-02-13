@@ -1,0 +1,9 @@
+NAME: io.github.achildrenmile/oeradio-mcp
+URL: https://oeradio-mcp.oeradio.at/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

@@ -1,0 +1,9 @@
+NAME: Audioscrape Audio Intelligence
+URL: https://mcp.audioscrape.com
+TRANSPORT: streamable-http
+AUTH_REQUIRED: yes (confirmed by gmcpt)
+STATUS: auth_required
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Unauthorized
+---

@@ -1,0 +1,421 @@
+NAME: Hugging Face
+URL: https://huggingface.co/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "arguments": [
+        {
+          "name": "user_id",
+          "description": "Maximum length is 30 characters",
+          "required": true
+        }
+      ],
+      "description": "Generate a summary of a Hugging Face user including their profile, models, datasets, spaces, and papers. Enter either a username (e.g., \"clem\") or a Hugging Face profile URL (e.g., \"hf.co/julien-c\" or \"huggingface.co/thomwolf\").",
+      "name": "User Summary"
+    },
+    {
+      "arguments": [
+        {
+          "name": "paper_id",
+          "description": "Maximum length is 100 characters",
+          "required": true
+        }
+      ],
+      "description": "Generate a comprehensive summary of an arXiv paper including its details and related models, datasets, and spaces on Hugging Face. Accepts various formats: \"2502.16161\", \"arxiv:2502.16161\", \"https://arxiv.org/abs/2502.16161\", or Hugging Face paper URLs.",
+      "name": "Paper Summary"
+    },
+    {
+      "arguments": [
+        {
+          "name": "model_id",
+          "description": "The Model ID in author/model format (e.g. 'openai/gpt-oss-120b')",
+          "required": true
+        }
+      ],
+      "description": "Get detailed information about a model from the Hugging Face Hub. Includes README from the repository - review before use.",
+      "name": "Model Details"
+    },
+    {
+      "arguments": [
+        {
+          "name": "dataset_id",
+          "description": "The Dataset ID (e.g. 'Anthropic/hh-rlhf', 'squad')",
+          "required": true
+        }
+      ],
+      "description": "Get detailed information about a dataset from the Hugging Face Hub. Includes README from the repository - review before use.",
+      "name": "Dataset Details"
+    }
+  ],
+  "tools": [
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Hugging Face User Info"
+      },
+      "description": "Hugging Face tools are being used anonymously and may be rate limited. Call this tool for instructions on joining and authenticating.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {},
+        "type": "object"
+      },
+      "name": "hf_whoami"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Hugging Face Space Search"
+      },
+      "description": "Find Hugging Face Spaces using semantic search. IMPORTANT Only MCP Servers can be used with the dynamic_space toolInclude links to the Space when presenting the results.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "default": 10,
+            "description": "Number of results to return",
+            "type": "number"
+          },
+          "mcp": {
+            "default": false,
+            "description": "Only return MCP Server enabled Spaces",
+            "type": "boolean"
+          },
+          "query": {
+            "description": "Semantic Search Query",
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "space_search"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Model Search"
+      },
+      "description": "Find Machine Learning models hosted on Hugging Face. Returns comprehensive information about matching models including downloads, likes, tags, and direct links. Include links to the models in your response",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "author": {
+            "description": "Organization or user who created the model (e.g., 'google', 'meta-llama', 'microsoft')",
+            "type": "string"
+          },
+          "library": {
+            "description": "Framework the model uses (e.g., 'transformers', 'diffusers', 'timm')",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of results to return",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "query": {
+            "description": "Search term. Leave blank and specify \"sort\" and \"limit\" to get e.g. \"Top 20 trending models\", \"Top 10 most recent models\" etc\" ",
+            "type": "string"
+          },
+          "sort": {
+            "description": "Sort order: trendingScore, downloads , likes, createdAt, lastModified",
+            "enum": [
+              "trendingScore",
+              "downloads",
+              "likes",
+              "createdAt",
+              "lastModified"
+            ],
+            "type": "string"
+          },
+          "task": {
+            "description": "Model task type (e.g., 'text-generation', 'image-classification', 'translation')",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "model_search"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Paper Search"
+      },
+      "description": "Find Machine Learning research papers on the Hugging Face hub. Include 'Link to paper' When presenting the results. Consider whether tabulating results matches user intent.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "concise_only": {
+            "default": false,
+            "description": "Return a 2 sentence summary of the abstract. Use for broad search terms which may return a lot of results. Check with User if unsure.",
+            "type": "boolean"
+          },
+          "query": {
+            "description": "Semantic Search query",
+            "maxLength": 200,
+            "minLength": 3,
+            "type": "string"
+          },
+          "results_limit": {
+            "default": 12,
+            "description": "Number of results to return",
+            "type": "number"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "paper_search"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Dataset Search"
+      },
+      "description": "Find Datasets hosted on the Hugging Face hub. Returns comprehensive information about matching datasets including downloads, likes, tags, and direct links. Include links to the datasets in your response",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "author": {
+            "description": "Organization or user who created the dataset (e.g., 'google', 'facebook', 'allenai')",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of results to return",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "query": {
+            "description": "Search term. Leave blank and specify \"sort\" and \"limit\" to get e.g. \"Top 20 trending datasets\", \"Top 10 most recent datasets\" etc\" ",
+            "type": "string"
+          },
+          "sort": {
+            "description": "Sort order: trendingScore, downloads, likes, createdAt, lastModified",
+            "enum": [
+              "trendingScore",
+              "downloads",
+              "likes",
+              "createdAt",
+              "lastModified"
+            ],
+            "type": "string"
+          },
+          "tags": {
+            "description": "Tags to filter datasets (e.g., ['language:en', 'size_categories:1M\u003cn\u003c10M', 'task_categories:text-classification'])",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "name": "dataset_search"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Hub Repo Details"
+      },
+      "description": "Get details for one or more Hugging Face repos (model, dataset, or space). Auto-detects type unless specified.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "repo_ids": {
+            "description": "Repo IDs for (models|dataset/space) - usually in author/name format (e.g. openai/gpt-oss-120b)",
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "type": "array"
+          },
+          "repo_type": {
+            "description": "Specify lookup type; otherwise auto-detects",
+            "enum": [
+              "model",
+              "dataset",
+              "space"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "repo_ids"
+        ],
+        "type": "object"
+      },
+      "name": "hub_repo_details"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Hugging Face Documentation Search"
+      },
+      "description": "Search and Discover Hugging Face Product and Library documentation. Send an empty query to discover structure and navigation instructions. You MUST consult this tool for the most up-to-date information when using Hugging Face libraries. Combine with the Product filter to focus results.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "product": {
+            "description": "Filter by Product. Supply when known for focused results",
+            "type": "string"
+          },
+          "query": {
+            "description": "Start with an empty query for structure, endpoint discovery and navigation tips. Use semantic queries for targetted searches.",
+            "maxLength": 200,
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "hf_doc_search"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Fetch a document from the Hugging Face documentation library"
+      },
+      "description": "Fetch a document from the Hugging Face or Gradio documentation library. For large documents, use offset to get subsequent chunks.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "doc_url": {
+            "description": "Documentation URL (Hugging Face or Gradio)",
+            "maxLength": 200,
+            "type": "string"
+          },
+          "offset": {
+            "description": "Token offset for large documents (use the offset from truncation message)",
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "doc_url"
+        ],
+        "type": "object"
+      },
+      "name": "hf_doc_fetch"
+    },
+    {
+      "annotations": {
+        "openWorldHint": true,
+        "title": "mcp-tools/Z-Image-Turbo - Z_Image_Turbo_generate 🖼️"
+      },
+      "description": "Generate an image using the Z-Image model based on the provided prompt and settings. This function is triggered when the user clicks the \"Generate\" button. It processes the input prompt (optionally enhancing it), configures generation parameters, and produces an image using the Z-Image diffusion transformer pipeline. Returns: tuple: (gallery_images, seed_str, seed_int), - seed_str: String representation of the seed used for generation, - seed_int: Integer representation of the seed used for generation (from mcp-tools/Z-Image-Turbo)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "description": "Text prompt describing the desired image content",
+            "type": "string"
+          },
+          "random_seed": {
+            "default": true,
+            "description": "Whether to generate a new random seed, if True will ignore the seed input",
+            "type": "boolean"
+          },
+          "resolution": {
+            "default": "1024x1024 ( 1:1 )",
+            "description": "Output resolution in format \"WIDTHxHEIGHT ( RATIO )\" (e.g., \"1024x1024 ( 1:1 )\")",
+            "enum": [
+              "1024x1024 ( 1:1 )",
+              "1152x896 ( 9:7 )",
+              "896x1152 ( 7:9 )",
+              "1152x864 ( 4:3 )",
+              "864x1152 ( 3:4 )",
+              "1248x832 ( 3:2 )",
+              "832x1248 ( 2:3 )",
+              "1280x720 ( 16:9 )",
+              "720x1280 ( 9:16 )",
+              "1344x576 ( 21:9 )",
+              "576x1344 ( 9:21 )",
+              "1280x1280 ( 1:1 )",
+              "1440x1120 ( 9:7 )",
+              "1120x1440 ( 7:9 )",
+              "1472x1104 ( 4:3 )",
+              "1104x1472 ( 3:4 )",
+              "1536x1024 ( 3:2 )",
+              "1024x1536 ( 2:3 )",
+              "1536x864 ( 16:9 )",
+              "864x1536 ( 9:16 )",
+              "1680x720 ( 21:9 )",
+              "720x1680 ( 9:21 )",
+              "1536x1536 ( 1:1 )",
+              "1728x1344 ( 9:7 )",
+              "1344x1728 ( 7:9 )",
+              "1728x1296 ( 4:3 )",
+              "1296x1728 ( 3:4 )",
+              "1872x1248 ( 3:2 )",
+              "1248x1872 ( 2:3 )",
+              "2048x1152 ( 16:9 )",
+              "1152x2048 ( 9:16 )",
+              "2016x864 ( 21:9 )",
+              "864x2016 ( 9:21 )"
+            ],
+            "type": "string"
+          },
+          "seed": {
+            "default": 42,
+            "description": "Seed for reproducible generation"
+          },
+          "shift": {
+            "default": 3,
+            "description": "Time shift parameter for the flow matching scheduler",
+            "type": "number"
+          },
+          "steps": {
+            "default": 8,
+            "description": "Number of inference steps for the diffusion process",
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "name": "gr1_z_image_turbo_generate"
+    }
+  ]
+}
+---

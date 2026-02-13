@@ -1,0 +1,9 @@
+NAME: Payram Helper MCP Server
+URL: https://mcp.payram.com/mcp/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

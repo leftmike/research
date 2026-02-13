@@ -1,0 +1,9 @@
+NAME: echo3D
+URL: https://api.echo3d.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": json: cannot unmarshal bool into Go struct field ServerCapabilities.capabilities.tools of type mcp.ToolCapabilities
+---

@@ -1,0 +1,9 @@
+NAME: Kleros Court
+URL: https://kleros-mcp-server-new.fly.dev/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: connection_blocked
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://kleros-mcp-server-new.fly.dev/mcp": Forbidden
+---

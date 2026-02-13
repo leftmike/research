@@ -1,0 +1,9 @@
+NAME: com.mermaidchart/mermaid-mcp
+URL: https://mcp.mermaidchart.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

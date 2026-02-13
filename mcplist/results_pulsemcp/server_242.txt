@@ -1,0 +1,1593 @@
+NAME: Raindrop
+URL: https://mcp.raindrop.run/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Searches for documents in SmartBuckets. Input should be a natural language query, e.g., find all documents.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "buckets": {
+            "description": "Array of SmartBucket names to search within",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "input": {
+            "description": "Natural language search query to find documents",
+            "type": "string"
+          },
+          "request_id": {
+            "description": "Unique request identifier for tracking and pagination",
+            "type": "string"
+          }
+        },
+        "required": [
+          "input",
+          "request_id",
+          "buckets"
+        ],
+        "type": "object"
+      },
+      "name": "document-search"
+    },
+    {
+      "description": "Get the next page of an existing search result, using the same request_id as the original search.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "request_id": {
+            "description": "Request ID from the original search to get next page of results",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id"
+        ],
+        "type": "object"
+      },
+      "name": "next-page"
+    },
+    {
+      "description": "Directly ask questions about a specific document. Input should be a natural language query, e.g., what is the name of the person in the document?",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "bucket": {
+            "description": "Name of the SmartBucket containing the document",
+            "type": "string"
+          },
+          "input": {
+            "description": "Natural language question about the specific document",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Unique identifier of the document to query",
+            "type": "string"
+          },
+          "request_id": {
+            "description": "Unique request identifier for tracking",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bucket",
+          "input",
+          "object_id",
+          "request_id"
+        ],
+        "type": "object"
+      },
+      "name": "document-query"
+    },
+    {
+      "description": "Search for content (i.e., RAG input) in all documents in your smartbuckets. Should be a natural language query, e.g., find all content related to \u003cTOPIC\u003e.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "buckets": {
+            "description": "Array of SmartBucket names to search within",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "input": {
+            "description": "Natural language query to search for content chunks across documents",
+            "type": "string"
+          },
+          "request_id": {
+            "description": "Unique request identifier for tracking and pagination",
+            "type": "string"
+          }
+        },
+        "required": [
+          "input",
+          "request_id",
+          "buckets"
+        ],
+        "type": "object"
+      },
+      "name": "chunk-search"
+    },
+    {
+      "description": "Create a summary of a specific page from search results.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "page": {
+            "description": "Target page number to summarize",
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "page_size": {
+            "description": "Results per page - affects summary granularity",
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "request_id": {
+            "description": "Original search session identifier from the initial search",
+            "type": "string"
+          }
+        },
+        "required": [
+          "page",
+          "page_size",
+          "request_id"
+        ],
+        "type": "object"
+      },
+      "name": "summarize-page"
+    },
+    {
+      "description": "Upload/store an object in a SmartBucket.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Optional application name that owns the bucket",
+            "type": "string"
+          },
+          "bucket_name": {
+            "description": "Name of the SmartBucket to store the object in",
+            "type": "string"
+          },
+          "content": {
+            "description": "Binary content of the object to store",
+            "type": "string"
+          },
+          "content_type": {
+            "description": "MIME type of the object (e.g., 'text/plain', 'application/pdf')",
+            "type": "string"
+          },
+          "key": {
+            "description": "Object key/path within the bucket (e.g., 'folder/file.txt')",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the bucket",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bucket_name",
+          "key",
+          "content",
+          "content_type"
+        ],
+        "type": "object"
+      },
+      "name": "put-object"
+    },
+    {
+      "description": "Retrieve an object from a SmartBucket.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Optional application name that owns the bucket",
+            "type": "string"
+          },
+          "bucket_name": {
+            "description": "Name of the SmartBucket containing the object",
+            "type": "string"
+          },
+          "key": {
+            "description": "Object key/path within the bucket to retrieve",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the bucket",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bucket_name",
+          "key"
+        ],
+        "type": "object"
+      },
+      "name": "get-object"
+    },
+    {
+      "description": "Delete an object from a SmartBucket.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Optional application name that owns the bucket",
+            "type": "string"
+          },
+          "bucket_name": {
+            "description": "Name of the SmartBucket containing the object",
+            "type": "string"
+          },
+          "key": {
+            "description": "Object key/path within the bucket to delete",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the bucket",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bucket_name",
+          "key"
+        ],
+        "type": "object"
+      },
+      "name": "delete-object"
+    },
+    {
+      "description": "List all objects in a SmartBucket.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Optional application name that owns the bucket",
+            "type": "string"
+          },
+          "bucket_name": {
+            "description": "Name of the SmartBucket to list objects from",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the bucket",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bucket_name"
+        ],
+        "type": "object"
+      },
+      "name": "list-objects"
+    },
+    {
+      "description": "Create a new SmartBucket for storing and managing documents.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "bucket_name": {
+            "description": "Name for the new SmartBucket",
+            "type": "string"
+          },
+          "description": {
+            "description": "Optional description of the SmartBucket's purpose",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bucket_name"
+        ],
+        "type": "object"
+      },
+      "name": "create-smartbucket"
+    },
+    {
+      "description": "Retrieve an annotation by locator.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name for the annotation",
+            "type": "string"
+          },
+          "application_version_id": {
+            "description": "Optional application version identifier",
+            "type": "string"
+          },
+          "item": {
+            "description": "Optional item identifier",
+            "type": "string"
+          },
+          "key": {
+            "description": "Optional key for the annotation",
+            "type": "string"
+          },
+          "module_name": {
+            "description": "Optional module name",
+            "type": "string"
+          },
+          "revision": {
+            "description": "Optional revision identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "application_name"
+        ],
+        "type": "object"
+      },
+      "name": "get-annotation"
+    },
+    {
+      "description": "Create or update an annotation.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "annotation": {
+            "description": "Content/text of the annotation",
+            "type": "string"
+          },
+          "application_name": {
+            "description": "Application name for the annotation",
+            "type": "string"
+          },
+          "application_version_id": {
+            "description": "Optional application version identifier",
+            "type": "string"
+          },
+          "item": {
+            "description": "Optional item identifier",
+            "type": "string"
+          },
+          "key": {
+            "description": "Optional key for the annotation",
+            "type": "string"
+          },
+          "module_name": {
+            "description": "Optional module name",
+            "type": "string"
+          },
+          "revision": {
+            "description": "Optional revision identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "application_name",
+          "annotation"
+        ],
+        "type": "object"
+      },
+      "name": "put-annotation"
+    },
+    {
+      "description": "List annotations by application.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name to list annotations for",
+            "type": "string"
+          },
+          "application_version_id": {
+            "description": "Optional application version identifier",
+            "type": "string"
+          },
+          "item": {
+            "description": "Optional item identifier filter",
+            "type": "string"
+          },
+          "module_name": {
+            "description": "Optional module name filter",
+            "type": "string"
+          }
+        },
+        "required": [
+          "application_name"
+        ],
+        "type": "object"
+      },
+      "name": "list-annotations"
+    },
+    {
+      "description": "Store working memory.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "agent": {
+            "description": "Optional agent identifier that created this memory",
+            "type": "string"
+          },
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "content": {
+            "description": "Memory content to store",
+            "type": "string"
+          },
+          "key": {
+            "description": "Optional key for memory filtering and retrieval",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "Session identifier for memory isolation",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "timeline": {
+            "description": "Optional timeline categorization for the memory",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "session_id",
+          "content"
+        ],
+        "type": "object"
+      },
+      "name": "put-memory"
+    },
+    {
+      "description": "Retrieve working memories with optional filtering.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "key": {
+            "description": "Optional key filter to limit results",
+            "type": "string"
+          },
+          "n_most_recent": {
+            "description": "Optional limit on number of most recent memories to return",
+            "type": "number"
+          },
+          "session_id": {
+            "description": "Session identifier to retrieve memories from",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "timeline": {
+            "description": "Optional timeline filter to limit results",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "session_id"
+        ],
+        "type": "object"
+      },
+      "name": "get-memory"
+    },
+    {
+      "description": "Search working memories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Optional limit on number of search results (default: 10)",
+            "type": "number"
+          },
+          "query": {
+            "description": "Search query to find relevant memories",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "Session identifier to search within",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "timeline": {
+            "description": "Optional timeline filter to limit search scope",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "session_id",
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search-memory"
+    },
+    {
+      "description": "Delete working memory by ID.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "memory_id": {
+            "description": "Unique identifier of the memory to delete",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "Session identifier containing the memory",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "session_id",
+          "memory_id"
+        ],
+        "type": "object"
+      },
+      "name": "delete-memory"
+    },
+    {
+      "description": "Summarize working memories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "memory_ids": {
+            "description": "Array of memory IDs to summarize",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "session_id": {
+            "description": "Session identifier containing the memories",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "session_id",
+          "memory_ids"
+        ],
+        "type": "object"
+      },
+      "name": "summarize-memory"
+    },
+    {
+      "description": "Start a new SmartMemory session.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "metadata": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Optional metadata key-value pairs for the session",
+            "type": "object"
+          },
+          "session_name": {
+            "description": "Optional name for the new session",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name"
+        ],
+        "type": "object"
+      },
+      "name": "start-session"
+    },
+    {
+      "description": "End a SmartMemory session.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "flush": {
+            "description": "Whether to flush memories to episodic storage - use 'true' or 'false' (default: 'false')",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "Session identifier to end",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "system_prompt": {
+            "description": "Optional custom system prompt for memory summarization during flush",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "session_id"
+        ],
+        "type": "object"
+      },
+      "name": "end-session"
+    },
+    {
+      "description": "Restore a previous SmartMemory session from episodic storage.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "Session identifier to restore from episodic memory",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "summary_only": {
+            "description": "If 'true', only restore session summary. If 'false', restore all memories (default: 'false')",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "session_id"
+        ],
+        "type": "object"
+      },
+      "name": "rehydrate-session"
+    },
+    {
+      "description": "Refresh a previous SmartMemory session so we can resume where we left off.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "include_memories": {
+            "description": "Whether to include full memory details in response (default: false)",
+            "type": "boolean"
+          },
+          "key": {
+            "description": "Optional key filter for memory retrieval",
+            "type": "string"
+          },
+          "n_most_recent": {
+            "description": "Optional limit on number of memories to include in summary",
+            "type": "number"
+          },
+          "session_id": {
+            "description": "Session identifier to refresh and resume",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "timeline": {
+            "description": "Optional timeline filter for memory retrieval",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "session_id"
+        ],
+        "type": "object"
+      },
+      "name": "refresh-session"
+    },
+    {
+      "description": "Search across episodic memory documents to find relevant past sessions.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "n_most_recent": {
+            "description": "Optional limit on number of search results (default: 10)",
+            "type": "number"
+          },
+          "query": {
+            "description": "Natural language search query to find relevant episodic memory sessions",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search-episodic-memory"
+    },
+    {
+      "description": "Store a procedure (prompt, template, instruction, etc.) in procedural memory for reuse across sessions.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "key": {
+            "description": "Unique key to identify this procedure (e.g., 'TechnicalReportSystemPrompt')",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "value": {
+            "description": "The procedure content (prompt, template, instructions, etc.)",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "key",
+          "value"
+        ],
+        "type": "object"
+      },
+      "name": "put-procedure"
+    },
+    {
+      "description": "Retrieve a specific procedure by key from procedural memory.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "key": {
+            "description": "Unique key of the procedure to retrieve",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "key"
+        ],
+        "type": "object"
+      },
+      "name": "get-procedure"
+    },
+    {
+      "description": "Remove a specific procedure from procedural memory. This operation is permanent.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "key": {
+            "description": "Unique key of the procedure to delete",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "key"
+        ],
+        "type": "object"
+      },
+      "name": "delete-procedure"
+    },
+    {
+      "description": "List all procedures stored in procedural memory with their metadata.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name"
+        ],
+        "type": "object"
+      },
+      "name": "list-procedures"
+    },
+    {
+      "description": "Search procedures using text matching across keys and values with relevance scoring.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "n_most_recent": {
+            "description": "Optional limit on number of search results (default: 10)",
+            "type": "number"
+          },
+          "query": {
+            "description": "Search terms to match against procedure keys and values",
+            "type": "string"
+          },
+          "search_keys": {
+            "description": "Whether to search in procedure keys (default: true)",
+            "type": "boolean"
+          },
+          "search_values": {
+            "description": "Whether to search in procedure values (default: true)",
+            "type": "boolean"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search-procedures"
+    },
+    {
+      "description": "Store a semantic memory document for long-term knowledge retrieval. Semantic memory is used for storing structured knowledge, facts, and information that can be searched and retrieved across different sessions.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "document": {
+            "description": "JSON-encoded document content to store in semantic memory",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "document"
+        ],
+        "type": "object"
+      },
+      "name": "put-semantic-memory"
+    },
+    {
+      "description": "Retrieve a specific semantic memory document by its object ID. Returns the complete document with all its stored properties and metadata.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Unique object identifier of the document to retrieve",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "object_id"
+        ],
+        "type": "object"
+      },
+      "name": "get-semantic-memory"
+    },
+    {
+      "description": "Search across semantic memory documents using natural language queries. Uses vector embeddings and semantic similarity to find relevant knowledge documents regardless of exact keyword matches.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "needle": {
+            "description": "Natural language search query to find relevant documents",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "needle"
+        ],
+        "type": "object"
+      },
+      "name": "search-semantic-memory"
+    },
+    {
+      "description": "Remove a specific semantic memory document by its object ID. This operation permanently deletes the document and is irreversible.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "application_name": {
+            "description": "Application name that owns the SmartMemory",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Unique object identifier of the document to delete",
+            "type": "string"
+          },
+          "smartmemory_name": {
+            "description": "Name of the SmartMemory instance",
+            "type": "string"
+          },
+          "version": {
+            "description": "Optional version identifier for the SmartMemory",
+            "type": "string"
+          }
+        },
+        "required": [
+          "smartmemory_name",
+          "application_name",
+          "object_id"
+        ],
+        "type": "object"
+      },
+      "name": "delete-semantic-memory"
+    },
+    {
+      "annotations": {},
+      "description": "\nWhen building a new raindrop application this is the first item to call.\nIMPORTANT: BEFORE YOU CALL THIS TOOL FIRST DO WHAT THE DESCRIPTION OF THE TOOL TELLS YOU TO DO.\nIMPORTANT: Follow MCP tools guidance step by step\nIMPORTANT: Only do what the MCP tools tell you to do do not make your own plans",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "login"
+    },
+    {
+      "description": "Call this tool to set the team for the development session.\n\nInput format:\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n  \"stakeholders\": [{\"email\": \"email\", \"role\": \"role\"}]\n}",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "stakeholders": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "email",
+                "role"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id",
+          "stakeholders"
+        ],
+        "type": "object"
+      },
+      "name": "set_team"
+    },
+    {
+      "description": "Call this tool once the user has approved your PRD proposal.\n\nInput format:\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n  \"user_description\": \"user description\", \n  \"prd\": \"the complete PRD content you just created\",\n  \"user_approval\": \"ask the user for approval\",\n  \"pm_approval\": true\n}",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "pm_approval": {
+            "type": "boolean"
+          },
+          "prd": {
+            "type": "string"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          },
+          "user_approval": {
+            "type": "boolean"
+          },
+          "user_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id",
+          "user_description",
+          "prd"
+        ],
+        "type": "object"
+      },
+      "name": "prd_step"
+    },
+    {
+      "description": "Retrieve stored PRD from session",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_prd"
+    },
+    {
+      "description": "Use this tool to create the prisma files for each database in your manifest.\n\nInput format:\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n  \"tables\": [\"table1\", \"table2\", \"table3\"]\n}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "tables": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id",
+          "tables"
+        ],
+        "type": "object"
+      },
+      "name": "prisma_step"
+    },
+    {
+      "description": "Call this tool to retrieve the documentation for each component in your manifest. AI is never explicitly mentioned in the manifest. However you should include it if you use any ai models i.e llms, embeddings, voice models etc.\n\nInput format\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n  \"components\": [\"service\", \"sqlDatabase\", \"bucket\"]\n}\n\nAvailable components: actors, ai, bucket, shared, service, kvStore, observer, task, sqlDatabase, vectorIndex, queue, smartBucket, smartMemory, task, mcp",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "components": {
+            "items": {
+              "enum": [
+                "actors",
+                "ai",
+                "bucket",
+                "shared",
+                "service",
+                "kvStore",
+                "observer",
+                "task",
+                "sqlDatabase",
+                "vectorIndex",
+                "queue",
+                "smartBucket",
+                "smartMemory",
+                "mcp"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id",
+          "components"
+        ],
+        "type": "object"
+      },
+      "name": "documentation_step"
+    },
+    {
+      "description": "Call this tool to start writing the code for your Raindrop project\n\nInput format:\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id"
+        ],
+        "type": "object"
+      },
+      "name": "code_step"
+    },
+    {
+      "description": "Call this MCP tool to test the code you created",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id"
+        ],
+        "type": "object"
+      },
+      "name": "tests_step"
+    },
+    {
+      "description": "Call this tool to deploy and start your application\n\nInput format:\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id"
+        ],
+        "type": "object"
+      },
+      "name": "deployment_step"
+    },
+    {
+      "description": "call this tool to test the API you just created",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id"
+        ],
+        "type": "object"
+      },
+      "name": "endpoint_test_step"
+    },
+    {
+      "description": "If the user is here to continue working on a raindrop app you should call this endpoint first.\nYou can find the latest timeline ID in the .raindrop.config.local.json file. Or the user can tell you the old timeline ID it that file does not exist. This is the update app workflow.\n\nInput format\n{\n  \"session_id\": \"session_id\",\n  \"old_timeline_id\": \"old_timeline_id\",\n}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "old_timeline_id": {
+            "type": "string"
+          },
+          "session_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "old_timeline_id"
+        ],
+        "type": "object"
+      },
+      "name": "update_app_step"
+    },
+    {
+      "description": "Call this tool to update the PRD for the application. Only call this tool as part of the update app workflow.\n\nInput format\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n  \"prd\": \"the complete update PRD content you just created\",\n  \"user_approval\": \"ask the user for approval\",\n  \"pm_approval\": true\n}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "new_prd": {
+            "type": "string"
+          },
+          "pm_approval": {
+            "type": "boolean"
+          },
+          "prd": {
+            "type": "string"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          },
+          "user_approval": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id",
+          "new_prd",
+          "prd",
+          "user_approval",
+          "pm_approval"
+        ],
+        "type": "object"
+      },
+      "name": "update_prd_step"
+    },
+    {
+      "description": "IMPORTANT: BEFORE YOU CALL THIS TOOL FIRST DO WHAT THE DESCRIPTION OF THE TOOL TELLS YOU TO DO.\nIMPORTANT: Follow MCP tools guidance step by step\nIMPORTANT: Only do what the MCP tools tell you to do do not make your own plans\nWhen a user wants to reattach to a session you can call this tool.\n\nInput format\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id"
+        ],
+        "type": "object"
+      },
+      "name": "reattach_to_session"
+    },
+    {
+      "annotations": {},
+      "description": "Call this tool to configure the raindrop CLI.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "configure_raindrop"
+    },
+    {
+      "description": "Call this tool to update the conversation memory. Include all the messages between now and the last time you called this tool.\nIf this is the first time you are calling this tool, include all the messages between now and the start of the conversation.\n\ninput format\n{\n  \"session_id\": \"session_id\",\n  \"timeline_id\": \"timeline_id\",\n  \"conversation_memory\": [{\"role\": \"user\", \"content\": \"user message\"}, {\"role\": \"assistant\", \"content\": \"assistant message\"}]\n}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "conversation_memory": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id",
+          "conversation_memory"
+        ],
+        "type": "object"
+      },
+      "name": "update_conversation_memory"
+    },
+    {
+      "description": "Call this tool to test any MCP servers created by the user.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "timeline_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "timeline_id"
+        ],
+        "type": "object"
+      },
+      "name": "mcp_end_step"
+    },
+    {
+      "description": "Call this tool when a user wants to report a bug or issue with the Raindrop platform or development workflow.\n\nIMPORTANT: Before calling this tool, you must:\n1. Ask the user to describe the bug or issue they encountered in detail\n2. Ask for steps to reproduce the issue if applicable\n3. Ask what they expected to happen vs what actually happened\n4. Gather any error messages or symptoms they observed\n5. Include a summary of the last 20 or so messages in your conversation to provide context to the support team\n\nCRITICAL SECURITY NOTE: \n- NEVER include API keys, secrets, tokens, or any sensitive credentials in the bug report\n- Review all content before submission to ensure no sensitive information is included\n- If the user mentions API keys or credentials, explicitly exclude them and note \"[REDACTED - API KEY/CREDENTIAL REMOVED]\"\n\nInput format:\n{\n  \"bug_description\": \"detailed description of the bug from the user\",\n  \"steps_to_reproduce\": \"steps to reproduce the issue\",\n  \"expected_behavior\": \"what the user expected to happen\",\n  \"actual_behavior\": \"what actually happened\",\n  \"error_messages\": \"any error messages or logs (with sensitive info removed)\",\n  \"conversation_summary\": \"summary of the last ~20 messages between user and LLM for context\",\n  \"additional_context\": \"any other relevant information\"\n}",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "actual_behavior": {
+            "description": "What actually happened",
+            "type": "string"
+          },
+          "additional_context": {
+            "description": "Any other relevant information",
+            "type": "string"
+          },
+          "bug_description": {
+            "description": "Detailed description of the bug from the user",
+            "type": "string"
+          },
+          "conversation_summary": {
+            "description": "Summary of the last ~20 messages between user and LLM for context",
+            "type": "string"
+          },
+          "error_messages": {
+            "description": "Any error messages or logs (with sensitive info removed)",
+            "type": "string"
+          },
+          "expected_behavior": {
+            "description": "What the user expected to happen",
+            "type": "string"
+          },
+          "steps_to_reproduce": {
+            "description": "Steps to reproduce the issue",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bug_description",
+          "steps_to_reproduce",
+          "expected_behavior",
+          "actual_behavior",
+          "error_messages",
+          "conversation_summary"
+        ],
+        "type": "object"
+      },
+      "name": "submit_bug"
+    }
+  ]
+}
+---

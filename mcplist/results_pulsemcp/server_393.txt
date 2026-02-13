@@ -1,0 +1,117 @@
+NAME: Twig RAG Agents
+URL: https://mcp.twig.so/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "arguments": [
+        {
+          "name": "detail",
+          "required": true
+        },
+        {
+          "name": "name",
+          "description": "Your name for personalization"
+        }
+      ],
+      "description": "Learn about Twig AI platform",
+      "name": "WhatIsTwig",
+      "title": "What_is_Twig?"
+    }
+  ],
+  "tools": [
+    {
+      "description": "Check the health status of the MCP server",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "check_mcp_server_health",
+      "title": "Check MCP Server Health"
+    },
+    {
+      "description": "Perform semantic search on your Twig AI knowledge base. Returns relevant documents and sources based on natural language queries. Requires authentication via Authorization header (Bearer token) and X-Twig-Agent-Id header.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "agentId": {
+            "description": "Twig Agent ID (optional, prefer using X-Twig-Agent-Id header)",
+            "type": "string"
+          },
+          "apiKey": {
+            "description": "Twig API key for authentication (optional, prefer using Authorization header)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of results to return (default: 20)",
+            "type": "number"
+          },
+          "memory": {
+            "description": "Optional conversation memory context",
+            "type": "string"
+          },
+          "offset": {
+            "default": 0,
+            "description": "Offset for pagination (default: 0)",
+            "type": "number"
+          },
+          "query": {
+            "description": "The search query or question",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search_knowledge",
+      "title": "Search Knowledge"
+    },
+    {
+      "description": "Query your private Twig AI knowledge base for company-specific information. Use this tool for questions about your organization's products, services, documentation, internal processes, customer support policies, and technical documentation. Requires authentication via Authorization header (Bearer token) and X-Twig-Agent-Id header.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "agentId": {
+            "description": "Twig Agent ID (optional, prefer using X-Twig-Agent-Id header)",
+            "type": "string"
+          },
+          "apiKey": {
+            "description": "Twig API key for authentication (optional, prefer using Authorization header)",
+            "type": "string"
+          },
+          "question": {
+            "description": "The question to ask the AI agent",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Optional session ID to maintain conversation context",
+            "type": "string"
+          },
+          "userEmail": {
+            "description": "Optional user email (defaults to mcp@twig.so)",
+            "format": "email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "type": "object"
+      },
+      "name": "ask_a_question",
+      "title": "Ask a Question"
+    }
+  ]
+}
+---

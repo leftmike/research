@@ -1,0 +1,140 @@
+NAME: com.peek/mcp
+URL: https://mcp.peek.com
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Get availability information for a specific experience including dates, times, and pricing",
+      "inputSchema": {
+        "properties": {
+          "endDate": {
+            "description": "End date inclusive in YYYY-MM-DD format (e.g., '2025-06-20' would return things taking place ON or BEFORE the 20th)",
+            "type": "string"
+          },
+          "id": {
+            "description": "The ID of the experience",
+            "type": "string"
+          },
+          "quantity": {
+            "description": "Number of travelers",
+            "type": "integer"
+          },
+          "startDate": {
+            "description": "Start date inclusive YYYY-MM-DD format (e.g., '2025-06-19')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "quantity",
+          "startDate",
+          "endDate"
+        ],
+        "type": "object"
+      },
+      "name": "experience_availability"
+    },
+    {
+      "description": "Get detailed information about a specific experience by ID",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "description": "The ID of the experience to retrieve",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "experience_details"
+    },
+    {
+      "description": "List all category tags",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "list_tags"
+    },
+    {
+      "description": "Render activity tiles for a list of activity IDs, returning an embeddable widget URI",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "description": "ID or comma separate list of activity IDs to render as tiles",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "render_activity_tiles"
+    },
+    {
+      "description": "Search for travel experiences with comprehensive filtering options. Returns available categories, tags, and regions with IDs for further filtering.",
+      "inputSchema": {
+        "properties": {
+          "categoryId": {
+            "description": "Limit to only a specific activity category",
+            "type": "string"
+          },
+          "endDate": {
+            "description": "Return experiences that are available on or before this date in YYYY-MM-DD format (e.g., '2025-06-20' would return things taking place ON or BEFORE the 20th)",
+            "type": "string"
+          },
+          "latLng": {
+            "description": "When the user wants something NEAR a specific place, but not necessarily IN a specific place, limit to only those near a given lat_lng. ex: \"37.7799,-122.2822\". Don't use this for regions, instead use the search_regions and provide a region id. this is a good fallback if a specific region is lacking inventory.",
+            "type": "string"
+          },
+          "query": {
+            "description": "When the user wants something w/ a specific keyword (bike, beer, art, etc) limit to experiences whose title contain a keyword. Never include location information.",
+            "type": "string"
+          },
+          "regionId": {
+            "description": "When you have determined the user wants something in a specific region (found w/ search_regions) limit to only a specific region ID",
+            "type": "string"
+          },
+          "startDate": {
+            "description": "Return experiences that are available on or after this date. YYYY-MM-DD format (e.g., '2025-06-19')",
+            "type": "string"
+          },
+          "tagId": {
+            "description": "When you have determined the user is interest in a specific vibe of activity (family friendly, romantic, etc) limit to only experiences with a specific tag (single tag ID)",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "search_experiences"
+    },
+    {
+      "description": "Search for regions by name",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "description": "Maximum number of regions to return (default: 50)",
+            "type": "integer"
+          },
+          "query": {
+            "description": "Search query to match against region names",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search_regions"
+    }
+  ]
+}
+---

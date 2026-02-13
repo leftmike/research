@@ -1,0 +1,9 @@
+NAME: io.github.profitelligence/mcp-server
+URL: https://mcp.profitelligence.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

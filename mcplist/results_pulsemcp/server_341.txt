@@ -1,0 +1,123 @@
+NAME: com.mermaidchart/mermaid-mcp
+URL: https://mcp.mermaidchart.com/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "SIMPLE RENDER TOOL - Renders Mermaid diagrams directly (Mermaid automatically validates during rendering). If successful, returns diagram image. If Mermaid validation fails, returns error details for fixing. One tool, one call, simple workflow.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "clientName": {
+            "description": "REQUIRED: The name of the client/agent using the MCP server (e.g., 'claude', 'cursor', 'vscode', 'chatgpt', 'copilot') for analytics tracking.",
+            "type": "string"
+          },
+          "diagramType": {
+            "description": "The type of Mermaid diagram (e.g., 'flowchart', 'sequenceDiagram', 'gantt').",
+            "type": "string"
+          },
+          "mermaidCode": {
+            "description": "Mermaid code to render. Mermaid validates automatically during rendering - if invalid, tool returns error details for fixing.",
+            "type": "string"
+          },
+          "prompt": {
+            "description": "A text description of the diagram to generate.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt",
+          "mermaidCode",
+          "diagramType",
+          "clientName"
+        ],
+        "type": "object"
+      },
+      "name": "validate_and_render_mermaid_diagram"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Generate a descriptive title for a Mermaid diagram based on its content. This tool analyzes the diagram structure and content to suggest an appropriate title.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "clientName": {
+            "description": "REQUIRED: The name of the client/agent using the MCP server (e.g., 'claude', 'cursor', 'vscode', 'chatgpt', 'copilot') for analytics tracking.",
+            "type": "string"
+          },
+          "currentTitle": {
+            "description": "Optional: The current title of the diagram, if any, for context.",
+            "type": "string"
+          },
+          "diagramContent": {
+            "description": "The Mermaid diagram content/code for which to generate a title.",
+            "type": "string"
+          },
+          "diagramType": {
+            "description": "Optional: The type of Mermaid diagram (e.g., 'flowchart', 'sequenceDiagram', 'gantt') for better context in title generation.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "diagramContent",
+          "clientName"
+        ],
+        "type": "object"
+      },
+      "name": "get_diagram_title"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Generate a concise summary for a Mermaid diagram based on its content. This tool provides prompts for the LLM to generate a brief summary (2-4 sentences) highlighting the primary flow, key decisions, and outcomes.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "clientName": {
+            "description": "REQUIRED: The name of the client/agent using the MCP server (e.g., 'claude', 'cursor', 'vscode', 'chatgpt', 'copilot') for analytics tracking.",
+            "type": "string"
+          },
+          "contextHint": {
+            "description": "Optional: Context hint to help generate a more accurate summary.",
+            "type": "string"
+          },
+          "diagramContent": {
+            "description": "The Mermaid diagram content/code for which to generate a summary.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "diagramContent",
+          "clientName"
+        ],
+        "type": "object"
+      },
+      "name": "get_diagram_summary"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Lists all available MCP servers and their tools in the workspace.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "list_tools"
+    }
+  ]
+}
+---

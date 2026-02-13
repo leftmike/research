@@ -1,0 +1,9 @@
+NAME: ai.llmse/mcp
+URL: https://llmse.ai/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: connection_blocked
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Forbidden
+---

@@ -1,0 +1,89 @@
+NAME: Appwrite Docs
+URL: https://mcp-for-docs.appwrite.io
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "\"Get the content of a page from the Appwrite documentation by path\";\n  Note, for code examples and technology-specific information, it's best to use listFeatures and getFeatureExamples tools.",
+      "inputSchema": {
+        "properties": {
+          "path": {
+            "description": "The path of the page to get the content of. E.g. \"/docs/getting-started/introduction\"",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "name": "getDocsPage"
+    },
+    {
+      "description": "Get examples for a particular feature of an Appwrite SDK for a particular platform.\nBefore using this tool, identify the programming langauge in question (either by analyzing the code or by asking the user).",
+      "inputSchema": {
+        "properties": {
+          "feature": {
+            "description": "The name of the feature to get examples for. E.g. \"account\", \"databases\", \"storage\", etc.",
+            "type": "string"
+          },
+          "libraryId": {
+            "description": "The ID of the library to get examples for. E.g. \"client-react-native\"",
+            "type": "string"
+          }
+        },
+        "required": [
+          "libraryId",
+          "feature"
+        ],
+        "type": "object"
+      },
+      "name": "getFeatureExamples"
+    },
+    {
+      "description": "Get the table of contents for the Appwrite documentation\nNote, the TOC will not include code examples and technology-specific information. For that, it's best to use listFeatures and getFeatureExamples tools.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "getTableOfContents"
+    },
+    {
+      "description": "List the available features for an Appwrite SDK for a particular platform.\nBefore using this tool, identify the programming langauge in question (either by analyzing the code or by asking the user).\nYou will use the returned list of features to fetch code examples for particular features, using the getFeatureExamples tool. \n\nAvailable libraries:\n- Android - Java (ID: client-android)\n- Android - Kotlin (ID: client-android)\n- Apple (ID: client-apple)\n- Flutter (ID: client-flutter)\n- GraphQL (ID: client-graphql)\n- React Native (ID: client-react-native)\n- REST (ID: client-rest)\n- Web - JavaScript (including React, Vue, Svelte, Angular, etc) (ID: client-web)\n- Console CLI (ID: console-cli)\n- Dart (ID: server-dart)\n- Deno (ID: server-deno)\n- Dotnet (ID: server-dotnet)\n- Go (ID: server-go)\n- GraphQL (ID: server-graphql)\n- Kotlin - Java (ID: server-kotlin)\n- Kotlin - Kotlin (ID: server-kotlin)\n- Node.js (ID: server-nodejs)\n- PHP (ID: server-php)\n- Python (ID: server-python)\n- Ruby (ID: server-ruby)\n- Swift (ID: server-swift)",
+      "inputSchema": {
+        "properties": {
+          "libraryId": {
+            "description": "The ID of the library to list the features for. E.g. \"client-react-native\"",
+            "type": "string"
+          }
+        },
+        "required": [
+          "libraryId"
+        ],
+        "type": "object"
+      },
+      "name": "listFeatures"
+    },
+    {
+      "description": "Search the Appwrite documentation.\nNote, for code examples and technology-specific information, it's best to use listFeatures and getFeatureExamples tools.",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "description": "The query to search the documentation for",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search"
+    }
+  ]
+}
+---

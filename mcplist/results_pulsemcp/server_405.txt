@@ -1,0 +1,220 @@
+NAME: io.cycloid.mcp/server
+URL: https://mcp.cycloid.io/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "resources": [
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "Get all events as a resource with minimal formatting.",
+      "mimeType": "text/plain",
+      "name": "get_events_resource",
+      "uri": "cycloid://events"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "Get all available blueprints as a resource.",
+      "mimeType": "text/plain",
+      "name": "get_blueprints_resource",
+      "uri": "cycloid://blueprints"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "Get all available service catalog repositories as a resource.",
+      "mimeType": "text/plain",
+      "name": "get_service_catalogs_resource",
+      "uri": "cycloid://service-catalogs-repositories"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "Get all pipelines as a resource.",
+      "mimeType": "text/plain",
+      "name": "get_pipelines_resource",
+      "uri": "cycloid://pipelines"
+    }
+  ],
+  "tools": [
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "List organization events with optional filters (begin, end, severity, type).",
+      "inputSchema": {
+        "properties": {
+          "begin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "format": {
+            "default": "json",
+            "type": "string"
+          },
+          "severity": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "type": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "type": "object"
+      },
+      "name": "CYCLOID_EVENT_LIST"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "Create a new Cycloid stack from a blueprint. CRITICAL: When elicitation context (ctx) is provided, the tool will ALWAYS use interactive elicitation to ask for parameters one by one, REGARDLESS of any parameters provided. The LLM should ONLY provide the 'ref' parameter and let elicitation handle the rest. DO NOT provide name, use_case, or service_catalog_source_canonical when elicitation is available. 🚨 CRITICAL: The LLM should NEVER provide default values, suggestions, or examples. Let the user make their own choices. Do NOT call this tool with guessed parameters.",
+      "inputSchema": {
+        "properties": {
+          "ref": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ref"
+        ],
+        "type": "object"
+      },
+      "name": "CYCLOID_BLUEPRINT_STACK_CREATE"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "List all available blueprints with their details. The LLM can filter the results based on user requirements.",
+      "inputSchema": {
+        "properties": {
+          "format": {
+            "default": "table",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "CYCLOID_BLUEPRINT_LIST"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "Validate a StackForms (.forms.yml) file using the Cycloid CLI. This tool can validate StackForms configuration and provide detailed feedback for fixing issues.",
+      "inputSchema": {
+        "properties": {
+          "forms_content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "forms_content"
+        ],
+        "type": "object"
+      },
+      "name": "CYCLOID_STACKFORMS_VALIDATE"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "List all available service catalog repositories with their details. The LLM can filter the results based on user requirements.",
+      "inputSchema": {
+        "properties": {
+          "format": {
+            "default": "table",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "CYCLOID_CATALOG_REPO_LIST"
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "List all pipelines from Cycloid.",
+      "inputSchema": {
+        "properties": {
+          "format": {
+            "default": "summary",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "CYCLOID_PIPELINE_LIST"
+    }
+  ]
+}
+---

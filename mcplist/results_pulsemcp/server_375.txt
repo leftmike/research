@@ -1,0 +1,313 @@
+NAME: Flux (AO & Arweave)
+URL: https://flux-2esw.onrender.com/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "spawn a new AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "needsSqlite": {
+            "type": "boolean"
+          },
+          "tags": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "tags"
+        ],
+        "type": "object"
+      },
+      "name": "spawn"
+    },
+    {
+      "description": "send a message to an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "processId": {
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "processId",
+          "data"
+        ],
+        "type": "object"
+      },
+      "name": "send-message-to-process"
+    },
+    {
+      "description": "install a package in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "packageName": {
+            "type": "string"
+          },
+          "processId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "packageName",
+          "processId"
+        ],
+        "type": "object"
+      },
+      "name": "apm-install"
+    },
+    {
+      "description": "load the token blueprint in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "processId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "processId"
+        ],
+        "type": "object"
+      },
+      "name": "load-token-blueprint"
+    },
+    {
+      "description": "create a new sqlite based handler in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "handlerCode": {
+            "type": "string"
+          },
+          "processId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "processId",
+          "handlerCode"
+        ],
+        "type": "object"
+      },
+      "name": "create-sqlite-based-handler"
+    },
+    {
+      "description": "run a lua script in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "processId": {
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "code",
+          "processId"
+        ],
+        "type": "object"
+      },
+      "name": "run-lua-in-process"
+    },
+    {
+      "description": "load a blueprint in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "processId": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "processId"
+        ],
+        "type": "object"
+      },
+      "name": "load-blueprint"
+    },
+    {
+      "description": "load a local blueprint in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "blueprintCode": {
+            "type": "string"
+          },
+          "processId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "blueprintCode",
+          "processId"
+        ],
+        "type": "object"
+      },
+      "name": "load-local-blueprint"
+    },
+    {
+      "description": "load an official blueprint in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "blueprintName": {
+            "type": "string"
+          },
+          "processId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "blueprintName",
+          "processId"
+        ],
+        "type": "object"
+      },
+      "name": "load-official-blueprint"
+    },
+    {
+      "description": "list all available handlers in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "processId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "processId"
+        ],
+        "type": "object"
+      },
+      "name": "list-available-handlers"
+    },
+    {
+      "description": "create a new handler in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "handlerCode": {
+            "type": "string"
+          },
+          "processId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "processId",
+          "handlerCode"
+        ],
+        "type": "object"
+      },
+      "name": "create-handler"
+    },
+    {
+      "description": "run a handler using its name in an existing AO process",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "handlerName": {
+            "type": "string"
+          },
+          "processId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "processId",
+          "handlerName",
+          "data"
+        ],
+        "type": "object"
+      },
+      "name": "run-handler-using-handler-name"
+    }
+  ]
+}
+---

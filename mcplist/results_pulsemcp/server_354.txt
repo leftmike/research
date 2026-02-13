@@ -1,0 +1,333 @@
+NAME: AIStatusDashboard
+URL: https://aistatusdashboard.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "description": "Diagnose an outage and summarize blast radius.",
+      "name": "prompt://diagnose_outage"
+    },
+    {
+      "description": "Select a fallback plan based on current metrics.",
+      "name": "prompt://choose_fallback_plan"
+    },
+    {
+      "description": "Draft a customer update based on incident timeline.",
+      "name": "prompt://draft_customer_update"
+    },
+    {
+      "description": "Create a postmortem outline with action items.",
+      "name": "prompt://generate_postmortem_outline"
+    }
+  ],
+  "resources": [
+    {
+      "description": "List of providers monitored by AIStatusDashboard.",
+      "mimeType": "application/json",
+      "name": "Providers",
+      "uri": "resource://providers"
+    },
+    {
+      "description": "List supported surfaces/endpoints for a provider.",
+      "mimeType": "application/json",
+      "name": "Provider surfaces",
+      "uri": ""
+    },
+    {
+      "description": "List supported regions for a provider.",
+      "mimeType": "application/json",
+      "name": "Provider regions",
+      "uri": ""
+    },
+    {
+      "description": "List supported models for a provider.",
+      "mimeType": "application/json",
+      "name": "Provider models",
+      "uri": ""
+    },
+    {
+      "description": "Incident detail by stable ID.",
+      "mimeType": "application/json",
+      "name": "Incident",
+      "uri": ""
+    },
+    {
+      "description": "Metric time series for a provider.",
+      "mimeType": "application/json",
+      "name": "Metric series",
+      "uri": ""
+    },
+    {
+      "description": "Quickstart for MCP usage.",
+      "mimeType": "text/markdown",
+      "name": "MCP Quickstart",
+      "uri": "resource://docs/agent/quickstart"
+    }
+  ],
+  "tools": [
+    {
+      "description": "Summarize provider status across official and observed signals.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "lens": {
+            "enum": [
+              "official",
+              "observed",
+              "synthetic",
+              "crowd",
+              "my_org"
+            ],
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "surface": {
+            "type": "string"
+          },
+          "window_seconds": {
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "name": "status.get_summary"
+    },
+    {
+      "description": "Return health matrix tiles for provider models/endpoints/regions.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "lens": {
+            "enum": [
+              "observed",
+              "synthetic",
+              "crowd",
+              "my_org"
+            ],
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "window_seconds": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "provider"
+        ],
+        "type": "object"
+      },
+      "name": "status.get_health_matrix"
+    },
+    {
+      "description": "Search incidents with filters and pagination cursor.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "active_only": {
+            "type": "boolean"
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "model": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "q": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "since": {
+            "type": "string"
+          },
+          "until": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "incidents.search"
+    },
+    {
+      "description": "Fetch a single incident by stable ID.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "incident_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "incident_id"
+        ],
+        "type": "object"
+      },
+      "name": "incidents.get"
+    },
+    {
+      "description": "Query metric time series over a window.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "granularity_seconds": {
+            "type": "number"
+          },
+          "metric": {
+            "enum": [
+              "latency_p50_ms",
+              "latency_p95_ms",
+              "latency_p99_ms",
+              "first_token_latency_ms",
+              "http_429_rate",
+              "http_5xx_rate",
+              "tokens_per_sec",
+              "stream_disconnect_rate"
+            ],
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "since": {
+            "type": "string"
+          },
+          "surface": {
+            "type": "string"
+          },
+          "until": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "metric"
+        ],
+        "type": "object"
+      },
+      "name": "metrics.query"
+    },
+    {
+      "description": "Generate a fallback plan for a model/region/endpoint.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "http_429_rate": {
+            "type": "number"
+          },
+          "http_5xx_rate": {
+            "type": "number"
+          },
+          "latency_p50_ms": {
+            "type": "number"
+          },
+          "latency_p95_ms": {
+            "type": "number"
+          },
+          "latency_p99_ms": {
+            "type": "number"
+          },
+          "model": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "signal": {
+            "type": "string"
+          },
+          "stream_disconnect_rate": {
+            "type": "number"
+          },
+          "streaming": {
+            "type": "boolean"
+          },
+          "tier": {
+            "type": "string"
+          },
+          "tokens_per_sec": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "model",
+          "endpoint",
+          "region"
+        ],
+        "type": "object"
+      },
+      "name": "recommendations.get_fallback_plan"
+    },
+    {
+      "description": "Generate routing policy JSON for a model/region/endpoint.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "objective": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "streaming": {
+            "type": "boolean"
+          },
+          "tier": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "model",
+          "endpoint",
+          "region"
+        ],
+        "type": "object"
+      },
+      "name": "policy.generate"
+    }
+  ]
+}
+---

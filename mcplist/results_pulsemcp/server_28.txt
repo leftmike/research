@@ -1,0 +1,9 @@
+NAME: SchemaFlow
+URL: https://api.schemaflow.dev/mcp/?token=your-token-here
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: missing endpoint: first event is "", want "endpoint"
+---

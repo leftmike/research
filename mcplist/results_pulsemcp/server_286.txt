@@ -1,0 +1,9 @@
+NAME: Medical Agents AOP
+URL: https://medical-agents-aop-server-production.up.railway.app/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

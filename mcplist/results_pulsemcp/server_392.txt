@@ -1,0 +1,9 @@
+NAME: AI-Archive
+URL: https://ai-archive.io/docs/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Method Not Allowed
+---

@@ -1,0 +1,9 @@
+NAME: com.cryptorefills/mcp-server
+URL: https://api.cryptorefills.com/mcp/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

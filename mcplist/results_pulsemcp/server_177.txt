@@ -1,0 +1,108 @@
+NAME: ChainAware Behavioural Prediction MCP Server
+URL: https://prediction.mcp.chainaware.ai/sse
+TRANSPORT: sse
+AUTH_REQUIRED: yes (confirmed by gmcpt)
+STATUS: auth_required
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "\n    🔮 Predictive Fraud Detection Tool\n\n    This AI‑powered algorithm forecasts the likelihood of fraudulent activity\n    on a given wallet address *before* it happens (≈98% accuracy), and performs\n    AML/Anti‑Money‑Laundering checks. Use this when your user wants a risk\n    assessment or early‑warning on a blockchain address.\n\n    ———\n    📥 Input Arguments:\n      • apiKey (string, required): API key for authentication.\n      • network (string, required): Blockchain network identifier (e.g. ETH for Ethereum, BNB for Binance, POLYGON for Polygon,TON for Telegram(TON), BASE for Base, HAQQ for Haqq)\n      • walletAddress (string, required): The wallet address to evaluate.\n\n    ➡️ Use Cases:\n      • What is the fraudulent status of this address ?\n      • “Is my new wallet at risk of being used for fraud?”  \n      • “Monitor a high‑value address for suspicious future activity.”  \n\n    ———\n    📤 Expected Output (JSON):\n    ```json\n    {\n      \"message\": \"string\",              // Human‑readable status message\n      \"walletAddress\": \"string\",        // hex address \n      \"status\": \"safe\"|\"risky\"|\"high_risk\",\n      \"probabilityFraud\": \"0.00–1.00\",  // Decimal probability\n      \"token\": \"string\",                //\n      \"lastChecked\": \"ISO‑8601 timestamp\",\n      \"forensic_details\": {             // Deep forensic breakdown\n        \"suspiciousTransactions\": 12,\n        \"meltingPointScore\": 0.87,\n        /* ...other metrics... */\n      },\n      \"createdAt\": \"ISO‑8601 timestamp\", \n      \"updatedAt\": \"ISO‑8601 timestamp\"\n    }\n    ```\n    ———\n    Error cases:\n      • `401 Unauthorized` → invalid `apiKey`  \n      • `400 Bad Request` → malformed `network` or `walletAddress`  \n      • `500 Internal Server Error` → temporary downstream failure  \n    ",
+      "inputSchema": {
+        "properties": {
+          "apiKey": {
+            "title": "Apikey",
+            "type": "string"
+          },
+          "network": {
+            "title": "Network",
+            "type": "string"
+          },
+          "walletAddress": {
+            "title": "Walletaddress",
+            "type": "string"
+          }
+        },
+        "required": [
+          "apiKey",
+          "network",
+          "walletAddress"
+        ],
+        "title": "predictive_fraudArguments",
+        "type": "object"
+      },
+      "name": "predictive_fraud",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "predictive_fraudDictOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n\n    🔍 Predictive Behaviour Analysis Tool\n\n    This AI‑driven engine projects what a wallet address intentions or what address is likely to do next,\n    profiles its past on‑chain history, and recommends personalized actions.\n    Use this when you need:\n      • Next‑best‑action predictions and intentions(“Will this address deposit, trade, or stake?”)  \n      • A risk‑tolerance and experience profile  \n      • Category segmentation (e.g. NFT, DeFi, Bridge usage)  \n      • Custom recommendations based on historical patterns\n\n    📥 Input Arguments:\n      • apiKey        — (string, required) API key for authentication. \n      • network       — (string, required) Blockchain network (e.g. ETH for Ethereum, BNB for Binance, BASE for Base, HAQQ for Haqq)\n      • walletAddress — (string, required) The wallet or contract address to analyze  \n\n    ➡️ Example Use Cases:\n      – “What will this address do next?”  \n      – “Is the user high‑risk or experienced?”  \n      – “Recommend the best DeFi strategies for this address.”\n\n    ———\n    📤 Expected Output Schema (JSON):\n    {\n      \"message\":           \"string\",                    // e.g. “Success” or error text  \n      \"walletAddress\":     \"string\",                    // echoed input  \n      \"status\":            \"string\",                    // “Safe” | “Watchlist” | “Risky”  \n      \"probabilityFraud\":  \"0.00–1.00\",                 // decimal fraud score  \n      \"token\":             \"string|null\",               // request identifier  \n      \"lastChecked\":       \"ISO‑8601 timestamp\",        // e.g. “2025‑01‑03T16:19:13.000Z”  \n      \"forensic_details\":  { /* dict of forensic metrics */ },  \n      \"categories\":        [ { \"Category\":\"string\", \"Count\":int }, … ],  \n      \"riskProfile\":       [ { \"Category\":\"string\", \"Balance_age\":float }, … ],  \n      \"segmentInfo\":       \"JSON‑string of segment counts\",  \n      \"experience\":        { \"Type\":\"Experience\", \"Value\":int },  \n      \"intention\":         {                              \n        \"Type\":\"Intentions\",  \n        \"Value\": { \"Prob_Trade\":\"High\", \"Prob_Stake\":\"Medium\", … }  \n      },  \n      \"protocols\":         [ { \"Protocol\":\"string\",\"Count\":int }, … ],  \n      \"recommendation\":    { \"Type\":\"Recommendation\", \"Value\":[ \"string\", … ] },  \n      \"createdAt\":         \"ISO‑8601 timestamp\",  \n      \"updatedAt\":         \"ISO‑8601 timestamp\"  \n    }\n\n    ",
+      "inputSchema": {
+        "properties": {
+          "apiKey": {
+            "title": "Apikey",
+            "type": "string"
+          },
+          "network": {
+            "title": "Network",
+            "type": "string"
+          },
+          "walletAddress": {
+            "title": "Walletaddress",
+            "type": "string"
+          }
+        },
+        "required": [
+          "apiKey",
+          "network",
+          "walletAddress"
+        ],
+        "title": "predictive_behaviourArguments",
+        "type": "object"
+      },
+      "name": "predictive_behaviour",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "predictive_behaviourDictOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    🪂 Predictive Rug‑Pull Detection Tool\n\n    This AI‑powered engine forecasts which liquidity pools or contracts\n    are likely to perform a “rug pull” in the future. Use this when you\n    need to warn users before they deposit into risky pools or to monitor\n    smart‑contract security on-chain.\n\n    ———\n    📥 Input Arguments:\n      • apiKey        — (string, required) API key for authentication. \n      • network       — (string, required) (e.g. ETH for Ethereum, BNB for Binance, BASE for Base, HAQQ for Haqq) \n      • walletAddress — (string, required) The smart‑contract or pool address to evaluate  \n\n    ➡️ Example Use Cases:\n      – “Will this new DeFi pool rug‑pull if I stake my assets?”  \n      – “Monitor my LP position for potential future exploits.”  \n\n    ———\n    📤 Expected Output Schema (JSON):\n    {\n      \"message\":          \"string\",             // e.g. “Success” or error description  \n      \"contractAddress\":  \"string\",             // echoed input  \n      \"status\":           \"string\",             // “Safe” | “Watchlist” | “HighRisk”  \n      \"probabilityFraud\": \"0.00–1.00\",          // decimal rug‑pull probability  \n      \"lastChecked\":      \"ISO‑8601 timestamp\", // when the prediction was last run  \n      \"forensic_details\": { /* dict of on‑chain metrics */ },  \n      \"createdAt\":        \"ISO‑8601 timestamp\", \n      \"updatedAt\":        \"ISO‑8601 timestamp\"  \n    }    \n    ",
+      "inputSchema": {
+        "properties": {
+          "apiKey": {
+            "title": "Apikey",
+            "type": "string"
+          },
+          "network": {
+            "title": "Network",
+            "type": "string"
+          },
+          "walletAddress": {
+            "title": "Walletaddress",
+            "type": "string"
+          }
+        },
+        "required": [
+          "apiKey",
+          "network",
+          "walletAddress"
+        ],
+        "title": "preditcitive_rug_pullArguments",
+        "type": "object"
+      },
+      "name": "preditcitive_rug_pull",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "preditcitive_rug_pullDictOutput",
+        "type": "object"
+      }
+    }
+  ]
+}
+---

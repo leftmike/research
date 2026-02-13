@@ -1,0 +1,2235 @@
+NAME: FinFeedAPI Stock API
+URL: https://mcp-historical.stock.finfeedapi.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Native IEX"
+          ]
+        }
+      },
+      "description": "Get Admin Messages\n\n\n**Path Parameters:**\n\n- **symbol**: The symbol identifier",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "description": "Optional date in format YYYY-MM-DD (defaults to latest available data)",
+            "format": "date-time",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "The symbol identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "date"
+        ],
+        "type": "object"
+      },
+      "name": "Get_Admin_Messages",
+      "outputSchema": {
+        "$defs": {
+          "Admin.AdminMessageModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for IEX admin information, combining all symbol-based admin message types",
+            "properties": {
+              "auction_information": {
+                "$ref": "#/$defs/Admin.AuctionInformationModel"
+              },
+              "official_price": {
+                "$ref": "#/$defs/Admin.OfficialPriceModel"
+              },
+              "operational_halt_status": {
+                "$ref": "#/$defs/Admin.OperationalHaltStatusModel"
+              },
+              "retail_liquidity_indicator": {
+                "$ref": "#/$defs/Admin.RetailLiquidityIndicatorModel"
+              },
+              "security_directory": {
+                "$ref": "#/$defs/Admin.SecurityDirectoryModel"
+              },
+              "security_event": {
+                "$ref": "#/$defs/Admin.SecurityEventModel"
+              },
+              "short_sale_price_test": {
+                "$ref": "#/$defs/Admin.ShortSalePriceTestStatusModel"
+              },
+              "system_event": {
+                "$ref": "#/$defs/Admin.SystemEventModel"
+              },
+              "trading_status": {
+                "$ref": "#/$defs/Admin.TradingStatusModel"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.AuctionInformationModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for auction information",
+            "properties": {
+              "auction_book_clearing_price": {
+                "description": "Auction book clearing price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "auction_type": {
+                "description": "Type of auction as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "auction_type_code": {
+                "description": "Type of auction as character string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "auction_type_text": {
+                "description": "Human-readable description of the auction type",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "collar_reference_price": {
+                "description": "Collar reference price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "extension_number": {
+                "description": "Number of extensions to the auction",
+                "format": "int32",
+                "type": "integer"
+              },
+              "imbalance_shares": {
+                "description": "Number of unpaired shares at the Reference Price",
+                "format": "int32",
+                "type": "integer"
+              },
+              "imbalance_side": {
+                "description": "Side of the imbalance as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "imbalance_side_code": {
+                "description": "Side of the imbalance as character string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "imbalance_side_text": {
+                "description": "Human-readable description of the imbalance side",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "indicative_clearing_price": {
+                "description": "Indicative clearing price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "is_auction_type_closing": {
+                "description": "Indicates if the auction type is 'Closing Auction' ('C'/0x43).",
+                "type": "boolean"
+              },
+              "is_auction_type_halt": {
+                "description": "Indicates if the auction type is 'Halt Auction' ('H'/0x48).",
+                "type": "boolean"
+              },
+              "is_auction_type_ipo": {
+                "description": "Indicates if the auction type is 'IPO Auction' ('I'/0x49).",
+                "type": "boolean"
+              },
+              "is_auction_type_opening": {
+                "description": "Indicates if the auction type is 'Opening Auction' ('O'/0x4f).",
+                "type": "boolean"
+              },
+              "is_auction_type_volatility": {
+                "description": "Indicates if the auction type is 'Volatility Auction' ('V'/0x56).",
+                "type": "boolean"
+              },
+              "is_imbalance_side_buy": {
+                "description": "Indicates if there is a buy-side imbalance ('B'/0x42).",
+                "type": "boolean"
+              },
+              "is_imbalance_side_none": {
+                "description": "Indicates if there is no imbalance ('N'/0x4e).",
+                "type": "boolean"
+              },
+              "is_imbalance_side_sell": {
+                "description": "Indicates if there is a sell-side imbalance ('S'/0x53).",
+                "type": "boolean"
+              },
+              "lower_auction_collar": {
+                "description": "Lower auction collar as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "paired_shares": {
+                "description": "Number of shares paired at the Reference Price",
+                "format": "int32",
+                "type": "integer"
+              },
+              "reference_price": {
+                "description": "Reference price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "scheduled_auction_time": {
+                "description": "Scheduled time for the auction as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "scheduled_auction_time_seconds": {
+                "description": "Scheduled auction time in seconds since epoch",
+                "format": "int32",
+                "type": "integer"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the auction data was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              },
+              "upper_auction_collar": {
+                "description": "Upper auction collar as decimal",
+                "format": "double",
+                "type": "number"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.OfficialPriceModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for official price information",
+            "properties": {
+              "is_price_type_closing": {
+                "description": "Indicates if the price type is 'IEX Official Closing Price' ('M'/0x4d).",
+                "type": "boolean"
+              },
+              "is_price_type_opening": {
+                "description": "Indicates if the price type is 'IEX Official Opening Price' ('Q'/0x51).",
+                "type": "boolean"
+              },
+              "official_price": {
+                "description": "Official price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "price_type": {
+                "description": "Type of price as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "price_type_code": {
+                "description": "Type of price as character string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "price_type_text": {
+                "description": "Human-readable description of the price type",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the official price was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.OperationalHaltStatusModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for operational halt status information",
+            "properties": {
+              "is_not_operationally_halted": {
+                "description": "Indicates if the status is 'Not operationally halted on IEX' ('N'/0x4e).",
+                "type": "boolean"
+              },
+              "is_operationally_halted": {
+                "description": "Indicates if the status is 'IEX specific operational trading halt' ('O'/0x4f).",
+                "type": "boolean"
+              },
+              "operational_halt_status": {
+                "description": "Operational halt status as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "operational_halt_status_code": {
+                "description": "Operational halt status as character string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "operational_halt_status_text": {
+                "description": "Human-readable description of the operational halt status",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the operational halt status was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.RetailLiquidityIndicatorModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for retail liquidity indicator information",
+            "properties": {
+              "is_retail_indicator_buy_and_sell_interest": {
+                "description": "Indicates if there is 'Buy and sell interest for Retail' ('C'/0x43).",
+                "type": "boolean"
+              },
+              "is_retail_indicator_buy_interest": {
+                "description": "Indicates if there is 'Buy interest for Retail' ('A'/0x41).",
+                "type": "boolean"
+              },
+              "is_retail_indicator_not_applicable": {
+                "description": "Indicates if the indicator is 'Not Applicable' (' '/0x20).",
+                "type": "boolean"
+              },
+              "is_retail_indicator_sell_interest": {
+                "description": "Indicates if there is 'Sell interest for Retail' ('B'/0x42).",
+                "type": "boolean"
+              },
+              "retail_liquidity_indicator": {
+                "description": "Retail liquidity indicator as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "retail_liquidity_indicator_code": {
+                "description": "Retail liquidity indicator as character string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "retail_liquidity_indicator_text": {
+                "description": "Human-readable description of the retail liquidity indicator",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the retail liquidity indicator was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.SecurityDirectoryModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for security directory information",
+            "properties": {
+              "adjusted_poc_price": {
+                "description": "Adjusted previous official closing price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "flags": {
+                "description": "Flags for the security",
+                "format": "int32",
+                "type": "integer"
+              },
+              "is_luld_tier1": {
+                "description": "Indicates if LULD Tier is 'Tier 1 NMS Stock' (0x1).",
+                "type": "boolean"
+              },
+              "is_luld_tier2": {
+                "description": "Indicates if LULD Tier is 'Tier 2 NMS Stock' (0x2).",
+                "type": "boolean"
+              },
+              "is_luld_tier_not_applicable": {
+                "description": "Indicates if LULD Tier is 'Not applicable' (0x0).",
+                "type": "boolean"
+              },
+              "luld_tier": {
+                "description": "LULD tier as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "luld_tier_code": {
+                "description": "LULD tier as numeric string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "luld_tier_text": {
+                "description": "Human-readable description of the LULD tier",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "round_lot_size": {
+                "description": "Number of shares that represent a round lot",
+                "format": "int32",
+                "type": "integer"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the security directory information was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.SecurityEventModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for security event information",
+            "properties": {
+              "is_closing_process_complete": {
+                "description": "Indicates if the security event is 'Closing Process Complete' ('C'/0x43).",
+                "type": "boolean"
+              },
+              "is_opening_process_complete": {
+                "description": "Indicates if the security event is 'Opening Process Complete' ('O'/0x4f).",
+                "type": "boolean"
+              },
+              "security_event": {
+                "description": "Security event as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "security_event_code": {
+                "description": "Security event as character string ('O' or 'C')",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "security_event_text": {
+                "description": "Human-readable description of the security event",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the security event was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.ShortSalePriceTestStatusModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for short sale price test status information",
+            "properties": {
+              "detail": {
+                "description": "Detail of the short sale price test as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "detail_code": {
+                "description": "Detail of the short sale price test as character string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "detail_text": {
+                "description": "Human-readable description of the short sale price test detail",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_detail_activated": {
+                "description": "Indicates if the short sale price test restriction is in effect due to an intraday price drop",
+                "type": "boolean"
+              },
+              "is_detail_continued": {
+                "description": "Indicates if the short sale price test restriction remains in effect from prior day",
+                "type": "boolean"
+              },
+              "is_detail_deactivated": {
+                "description": "Indicates if the short sale price test restriction is deactivated",
+                "type": "boolean"
+              },
+              "is_detail_no_price_test": {
+                "description": "Indicates if there is no price test in place",
+                "type": "boolean"
+              },
+              "is_detail_not_available": {
+                "description": "Indicates if the detail is not available",
+                "type": "boolean"
+              },
+              "is_short_sale_price_test_in_effect": {
+                "description": "Indicates if the short sale price test is in effect",
+                "type": "boolean"
+              },
+              "is_short_sale_price_test_not_in_effect": {
+                "description": "Indicates if the short sale price test is not in effect",
+                "type": "boolean"
+              },
+              "short_sale_price_test_status": {
+                "description": "Short sale price test status as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "short_sale_price_test_status_code": {
+                "description": "Short sale price test status as hex string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "short_sale_price_test_status_text": {
+                "description": "Human-readable description of the short sale price test status",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the short sale price test status was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.SystemEventModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for system event information",
+            "properties": {
+              "is_system_event_end_of_messages": {
+                "description": "Indicates if the system event is 'End of Messages' (C).\nThis is always the last message sent in any trading session.",
+                "type": "boolean"
+              },
+              "is_system_event_end_of_regular_market_hours": {
+                "description": "Indicates if the system event is 'End of Regular Market Hours' (M).\nThis message indicates that DAY orders, market orders, and pegged orders \nare no longer accepted by IEX.",
+                "type": "boolean"
+              },
+              "is_system_event_end_of_system_hours": {
+                "description": "Indicates if the system event is 'End of System Hours' (E).\nThis message indicates that IEX is now closed and will not accept \nany new orders during this trading session. It is still possible \nto receive messages after the end of day.",
+                "type": "boolean"
+              },
+              "is_system_event_start_of_messages": {
+                "description": "Indicates if the system event is 'Start of Messages' (O).\nOutside of heartbeat messages on the lower level protocol, \nthe start of day message is the first message sent in any trading session.",
+                "type": "boolean"
+              },
+              "is_system_event_start_of_regular_market_hours": {
+                "description": "Indicates if the system event is 'Start of Regular Market Hours' (R).\nThis message indicates that DAY and GTX orders, as well as market orders and pegged orders, \nare available for execution on IEX.",
+                "type": "boolean"
+              },
+              "is_system_event_start_of_system_hours": {
+                "description": "Indicates if the system event is 'Start of System Hours' (S).\nThis message indicates that IEX is open and ready to start accepting orders.",
+                "type": "boolean"
+              },
+              "system_event": {
+                "description": "System event as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "system_event_code": {
+                "description": "System event as string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "system_event_text": {
+                "description": "Human-readable description of the system event",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the system event was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Admin.TradingStatusModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for trading status information",
+            "properties": {
+              "is_reason_halt_news_dissemination": {
+                "description": "Gets whether the order acceptance period reason is Halt News Dissemination",
+                "type": "boolean"
+              },
+              "is_reason_halt_news_pending": {
+                "description": "Gets whether the halt reason is News Pending",
+                "type": "boolean"
+              },
+              "is_reason_ipo_deferred": {
+                "description": "Gets whether the halt reason is IPO Deferred",
+                "type": "boolean"
+              },
+              "is_reason_ipo_not_yet_trading": {
+                "description": "Gets whether the halt reason is IPO Not Yet Trading",
+                "type": "boolean"
+              },
+              "is_reason_ipo_order_acceptance_period": {
+                "description": "Gets whether the order acceptance period reason is IPO Order Acceptance Period",
+                "type": "boolean"
+              },
+              "is_reason_ipo_pre_launch_period": {
+                "description": "Gets whether the order acceptance period reason is IPO Pre-Launch Period",
+                "type": "boolean"
+              },
+              "is_reason_market_wide_circuit_breaker_level1": {
+                "description": "Gets whether the order acceptance period reason is Market-Wide Circuit Breaker Level 1 – Breached",
+                "type": "boolean"
+              },
+              "is_reason_market_wide_circuit_breaker_level2": {
+                "description": "Gets whether the order acceptance period reason is Market-Wide Circuit Breaker Level 2 – Breached",
+                "type": "boolean"
+              },
+              "is_reason_market_wide_circuit_breaker_level3": {
+                "description": "Gets whether the halt reason is Market-Wide Circuit Breaker Level 3 – Breached",
+                "type": "boolean"
+              },
+              "is_reason_not_applicable": {
+                "description": "Gets whether the reason is Not Applicable",
+                "type": "boolean"
+              },
+              "is_reason_not_available": {
+                "description": "Gets whether the halt reason is Not Available",
+                "type": "boolean"
+              },
+              "is_trading_halted": {
+                "description": "Gets whether the security is halted across all US equity markets",
+                "type": "boolean"
+              },
+              "is_trading_in_order_acceptance_period": {
+                "description": "Gets whether the security is in Order Acceptance Period on IEX",
+                "type": "boolean"
+              },
+              "is_trading_live": {
+                "description": "Gets whether the security is currently trading on IEX",
+                "type": "boolean"
+              },
+              "is_trading_paused": {
+                "description": "Gets whether the security is paused and in Order Acceptance Period on IEX",
+                "type": "boolean"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the trading status was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/Admin.AdminMessageModel"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Metadata"
+          ]
+        }
+      },
+      "description": "List of exchanges",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "List_of_exchanges",
+      "outputSchema": {
+        "$defs": {
+          "FinFeedAPI.ExchangeModel": {
+            "additionalProperties": {},
+            "properties": {
+              "acronym": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "comments": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "creation_date": {
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "exchange_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "expiry_date": {
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "iso_country_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "last_datapoint_date": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "last_update_date": {
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "last_validation_date": {
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "legal_entity_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lei": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "market_category_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "market_name_institution_description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "mic": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "operating_mic": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "oprt_sgmt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "website": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/FinFeedAPI.ExchangeModel"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Native IEX"
+          ]
+        }
+      },
+      "description": "Get Level-3 Order Book\n\n\n**Path Parameters:**\n\n- **symbol**: The symbol identifier",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "description": "Optional date in format YYYY-MM-DD (defaults to latest available data)",
+            "format": "date-time",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "The symbol identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "date"
+        ],
+        "type": "object"
+      },
+      "name": "Get_Level_3_Order_Book",
+      "outputSchema": {
+        "$defs": {
+          "Level3.AddOrderModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for add order information",
+            "properties": {
+              "is_side_buy": {
+                "description": "Indicates if this is a Buy order ('8'/0x38).",
+                "type": "boolean"
+              },
+              "order_id": {
+                "description": "Order identifier",
+                "format": "int64",
+                "type": "integer"
+              },
+              "price": {
+                "description": "Price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "size": {
+                "description": "Quoted size in number of shares",
+                "format": "int32",
+                "type": "integer"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the order was added as DateTime (UTC)",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Level3.ClearBookModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for clear book information",
+            "properties": {
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the book was cleared as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Level3.DeleteOrderModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for order delete information",
+            "properties": {
+              "order_id_reference": {
+                "description": "Order identifier reference",
+                "format": "int64",
+                "type": "integer"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the order was deleted as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Level3.ExecutedOrderModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for order executed information",
+            "properties": {
+              "is_extended_hours_trade": {
+                "description": "Bit 6 (Mask 0x40): Extended Hours Flag\nTrue: Extended Hours Trade (i.e., Form T sale condition)\nFalse: Regular Market Session Trade",
+                "type": "boolean"
+              },
+              "is_intermarket_sweep": {
+                "description": "Bit 7 (Mask 0x80): Intermarket Sweep Flag\nTrue: Intermarket Sweep Order (\"ISO\")\nFalse: Non-Intermarket Sweep Order",
+                "type": "boolean"
+              },
+              "is_odd_lot_trade": {
+                "description": "Bit 5 (Mask 0x20): Odd Lot Flag\nTrue: Odd Lot Trade\nFalse: Round or Mixed Lot Trade",
+                "type": "boolean"
+              },
+              "is_single_price_cross_trade": {
+                "description": "Bit 3 (Mask 0x08): Single-price Cross Trade Flag\nTrue: Trade resulting from a single-price cross\nFalse: Execution during continuous trading",
+                "type": "boolean"
+              },
+              "is_trade_through_exempt": {
+                "description": "Bit 4 (Mask 0x10): Trade Through Exempt Flag\nTrue: Trade is not subject to Rule 611 (Trade Through) of SEC Reg. NMS\nFalse: Trade is subject to Rule 611 (Trade Through) of SEC Reg. NMS",
+                "type": "boolean"
+              },
+              "order_id_reference": {
+                "description": "Order identifier reference",
+                "format": "int64",
+                "type": "integer"
+              },
+              "price": {
+                "description": "Execution price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "sale_condition_flags": {
+                "description": "Sale condition flags for the execution as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "size": {
+                "description": "Trade volume in number of shares",
+                "format": "int32",
+                "type": "integer"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the order was executed as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              },
+              "trade_id": {
+                "description": "IEX trade identifier",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Level3.ModifyOrderModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for order modify information",
+            "properties": {
+              "is_priority_reset": {
+                "description": "Indicates if priority is reseted",
+                "type": "boolean"
+              },
+              "order_id_reference": {
+                "description": "Order identifier reference",
+                "format": "int64",
+                "type": "integer"
+              },
+              "price": {
+                "description": "Price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "size": {
+                "description": "New total quoted size in number of shares",
+                "format": "int32",
+                "type": "integer"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the order was modified as DateTime (UTC)",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "Level3.OrderBookModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for Level-3 order book information",
+            "properties": {
+              "add_order": {
+                "$ref": "#/$defs/Level3.AddOrderModel"
+              },
+              "clear_book": {
+                "$ref": "#/$defs/Level3.ClearBookModel"
+              },
+              "delete_order": {
+                "$ref": "#/$defs/Level3.DeleteOrderModel"
+              },
+              "executed_order": {
+                "$ref": "#/$defs/Level3.ExecutedOrderModel"
+              },
+              "modify_order": {
+                "$ref": "#/$defs/Level3.ModifyOrderModel"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/Level3.OrderBookModel"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Native IEX"
+          ]
+        }
+      },
+      "description": "Get Level-2 Price Level Book\n\n\n**Path Parameters:**\n\n- **symbol**: The symbol identifier",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "description": "Optional date in format YYYY-MM-DD (defaults to latest available data)",
+            "format": "date-time",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "The symbol identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "date"
+        ],
+        "type": "object"
+      },
+      "name": "Get_Level_2_Price_Level_Book",
+      "outputSchema": {
+        "$defs": {
+          "Level2.PriceLevelUpdateModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for price level update information",
+            "properties": {
+              "is_event_processing_complete": {
+                "description": "Indicates if event processing is complete.",
+                "type": "boolean"
+              },
+              "is_side_buy": {
+                "description": "Indicates if this is a price level update for the Buy Side.",
+                "type": "boolean"
+              },
+              "price": {
+                "description": "Price level as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "size": {
+                "description": "Aggregate quoted size at the price level",
+                "format": "int32",
+                "type": "integer"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the price level update was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/Level2.PriceLevelUpdateModel"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Native IEX"
+          ]
+        }
+      },
+      "description": "Get Level-1 Quotes\n\n\n**Path Parameters:**\n\n- **symbol**: The symbol identifier",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "description": "Optional date in format YYYY-MM-DD (defaults to latest available data)",
+            "format": "date-time",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "The symbol identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "date"
+        ],
+        "type": "object"
+      },
+      "name": "Get_Level_1_Quotes",
+      "outputSchema": {
+        "$defs": {
+          "Level1.QuoteUpdateModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for quote update information",
+            "properties": {
+              "ask_price": {
+                "description": "Ask price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "ask_size": {
+                "description": "Ask size in number of shares",
+                "format": "int32",
+                "type": "integer"
+              },
+              "bid_price": {
+                "description": "Bid price as decimal",
+                "format": "double",
+                "type": "number"
+              },
+              "bid_size": {
+                "description": "Bid size in number of shares",
+                "format": "int32",
+                "type": "integer"
+              },
+              "is_pre_post_market_session": {
+                "description": "Gets whether the market session is regular or pre/post-market\nTrue if pre/post-market session, False if regular market session",
+                "type": "boolean"
+              },
+              "is_symbol_available": {
+                "description": "Gets whether the symbol is available for trading\nTrue if active, False if halted, paused, or otherwise not available",
+                "type": "boolean"
+              },
+              "symbol": {
+                "description": "The stock symbol",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the quote update was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/Level1.QuoteUpdateModel"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Metadata"
+          ]
+        }
+      },
+      "description": "List of symbols for the exchange",
+      "inputSchema": {
+        "properties": {
+          "exchange_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "exchange_id"
+        ],
+        "type": "object"
+      },
+      "name": "List_of_symbols_for_the_exchange",
+      "outputSchema": {
+        "$defs": {
+          "FinFeedAPI.SymbolModel": {
+            "additionalProperties": {},
+            "properties": {
+              "asset_class": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_attribute1": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_attribute1_desc": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_attribute2": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_attribute2_desc": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_attribute3": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_attribute3_desc": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_attribute4": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_attribute4_desc": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_category": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_category_desc": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_group": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cfi_group_desc": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "date": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "exchange_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "security_category": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "symbol_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/FinFeedAPI.SymbolModel"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Native IEX"
+          ]
+        }
+      },
+      "description": "Get System Events",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "description": "Date in format YYYY-MM-DD",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "type": "object"
+      },
+      "name": "Get_System_Events",
+      "outputSchema": {
+        "$defs": {
+          "Admin.SystemEventModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for system event information",
+            "properties": {
+              "is_system_event_end_of_messages": {
+                "description": "Indicates if the system event is 'End of Messages' (C).\nThis is always the last message sent in any trading session.",
+                "type": "boolean"
+              },
+              "is_system_event_end_of_regular_market_hours": {
+                "description": "Indicates if the system event is 'End of Regular Market Hours' (M).\nThis message indicates that DAY orders, market orders, and pegged orders \nare no longer accepted by IEX.",
+                "type": "boolean"
+              },
+              "is_system_event_end_of_system_hours": {
+                "description": "Indicates if the system event is 'End of System Hours' (E).\nThis message indicates that IEX is now closed and will not accept \nany new orders during this trading session. It is still possible \nto receive messages after the end of day.",
+                "type": "boolean"
+              },
+              "is_system_event_start_of_messages": {
+                "description": "Indicates if the system event is 'Start of Messages' (O).\nOutside of heartbeat messages on the lower level protocol, \nthe start of day message is the first message sent in any trading session.",
+                "type": "boolean"
+              },
+              "is_system_event_start_of_regular_market_hours": {
+                "description": "Indicates if the system event is 'Start of Regular Market Hours' (R).\nThis message indicates that DAY and GTX orders, as well as market orders and pegged orders, \nare available for execution on IEX.",
+                "type": "boolean"
+              },
+              "is_system_event_start_of_system_hours": {
+                "description": "Indicates if the system event is 'Start of System Hours' (S).\nThis message indicates that IEX is open and ready to start accepting orders.",
+                "type": "boolean"
+              },
+              "system_event": {
+                "description": "System event as byte value",
+                "format": "int32",
+                "type": "integer"
+              },
+              "system_event_code": {
+                "description": "System event as string",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "system_event_text": {
+                "description": "Human-readable description of the system event",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the system event was recorded as DateTime",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/Admin.SystemEventModel"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Ohlcv"
+          ]
+        }
+      },
+      "description": "Get full list of supported time periods available for requesting OHLCV timeseries data.\n            \n### Available periods\n            \nTime unit | Period identifiers\n--------- | -----------\nSecond | 1SEC, 2SEC, 3SEC, 4SEC, 5SEC, 6SEC, 10SEC, 15SEC, 20SEC, 30SEC\nMinute | 1MIN, 2MIN, 3MIN, 4MIN, 5MIN, 6MIN, 10MIN, 15MIN, 20MIN, 30MIN\nHour | 1HRS, 2HRS, 3HRS, 4HRS, 6HRS, 8HRS, 12HRS\nDay | 1DAY, 2DAY, 3DAY, 5DAY, 7DAY, 10DAY\nMonth | 1MTH, 2MTH, 3MTH, 4MTH, 6MTH\nYear | 1YRS, 2YRS, 3YRS, 4YRS, 5YRS\n            \n:::tip\nYou can assume that we will not remove any periods from this response, however, we may add new ones.\n:::",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "List_all_periods",
+      "outputSchema": {
+        "$defs": {
+          "OHLCV.TimeseriesPeriod": {
+            "additionalProperties": false,
+            "description": "Represents a timeseries period used in exchange rate data.",
+            "properties": {
+              "display_name": {
+                "description": "Gets or sets the display name of the timeseries period.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "length_months": {
+                "description": "Gets or sets the length of the period in months.",
+                "format": "int32",
+                "type": "integer"
+              },
+              "length_seconds": {
+                "description": "Gets or sets the length of the period in seconds.",
+                "format": "int32",
+                "type": "integer"
+              },
+              "period_id": {
+                "description": "Gets or sets the period ID.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "unit_count": {
+                "description": "Gets or sets the unit count.",
+                "format": "int32",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "unit_name": {
+                "description": "Gets or sets the unit name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/OHLCV.TimeseriesPeriod"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Ohlcv"
+          ]
+        }
+      },
+      "description": "Get OHLCV timeseries data returned in time ascending order.\n\n\n**Path Parameters:**\n\n- **exchange_id**: Exchange identifier of requested timeseries (from the Metadata -\u003e Exchanges)\n\n- **symbol_id**: Symbol identifier of requested timeseries (from the Metadata -\u003e Symbols)",
+      "inputSchema": {
+        "properties": {
+          "exchange_id": {
+            "description": "Exchange identifier of requested timeseries (from the Metadata -\u003e Exchanges)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Amount of items to return (mininum is 1, maximum is 100000, default value is 100, if the parameter is used then every 100 output items are counted as one request)",
+            "format": "int32",
+            "type": "integer"
+          },
+          "period_id": {
+            "description": "Identifier of requested timeseries period (e.g. `5SEC` or `2MTH`)",
+            "type": "string"
+          },
+          "symbol_id": {
+            "description": "Symbol identifier of requested timeseries (from the Metadata -\u003e Symbols)",
+            "type": "string"
+          },
+          "time_end": {
+            "description": "Timeseries ending time in ISO 8601",
+            "type": "string"
+          },
+          "time_start": {
+            "description": "Timeseries starting time in ISO 8601",
+            "type": "string"
+          }
+        },
+        "required": [
+          "exchange_id",
+          "symbol_id",
+          "period_id"
+        ],
+        "type": "object"
+      },
+      "name": "Historical_data",
+      "outputSchema": {
+        "$defs": {
+          "OHLCV.TimeseriesItem": {
+            "additionalProperties": false,
+            "description": "Represents a timeseries item with price and volume information.",
+            "properties": {
+              "price_close": {
+                "description": "Gets or sets the closing price.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_high": {
+                "description": "Gets or sets the highest price during the time period.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_low": {
+                "description": "Gets or sets the lowest price during the time period.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_open": {
+                "description": "Gets or sets the opening price.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "time_close": {
+                "description": "Gets or sets the time when the price closed.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "time_open": {
+                "description": "Gets or sets the time when the price opened.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "time_period_end": {
+                "description": "Gets or sets the end time of the time period.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "time_period_start": {
+                "description": "Gets or sets the start time of the time period.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "trades_count": {
+                "description": "Gets or sets the number of trades executed during the time period.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "volume_traded": {
+                "description": "Gets or sets the total volume traded during the time period.",
+                "format": "double",
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/OHLCV.TimeseriesItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Ohlcv"
+          ]
+        }
+      },
+      "description": "Get OHLCV timeseries data returned in time ascending order. Data can be requested by the period and for the specific exchange.\n\n\n**Path Parameters:**\n\n- **exchange_id**: Exchange identifier of requested timeseries (from the Metadata -\u003e Exchanges)",
+      "inputSchema": {
+        "properties": {
+          "exchange_id": {
+            "description": "Exchange identifier of requested timeseries (from the Metadata -\u003e Exchanges)",
+            "type": "string"
+          },
+          "period_id": {
+            "description": "Identifier of requested timeseries period (e.g. `5SEC` or `1DAY`)",
+            "type": "string"
+          },
+          "time_end": {
+            "description": "Timeseries ending time in ISO 8601",
+            "type": "string"
+          },
+          "time_start": {
+            "description": "Timeseries starting time in ISO 8601",
+            "type": "string"
+          }
+        },
+        "required": [
+          "exchange_id",
+          "period_id",
+          "time_start",
+          "time_end"
+        ],
+        "type": "object"
+      },
+      "name": "Historical_data_by_exchange",
+      "outputSchema": {
+        "$defs": {
+          "OHLCV.ExchangeTimeseriesItem": {
+            "additionalProperties": false,
+            "description": "Represents a timeseries item with price and volume information.",
+            "properties": {
+              "price_close": {
+                "description": "Gets or sets the closing price.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_high": {
+                "description": "Gets or sets the highest price during the time period.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_low": {
+                "description": "Gets or sets the lowest price during the time period.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_open": {
+                "description": "Gets or sets the opening price.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "symbol_id_exchange": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "time_close": {
+                "description": "Gets or sets the time when the price closed.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "time_open": {
+                "description": "Gets or sets the time when the price opened.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "time_period_end": {
+                "description": "Gets or sets the end time of the time period.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "time_period_start": {
+                "description": "Gets or sets the start time of the time period.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "trades_count": {
+                "description": "Gets or sets the number of trades executed during the time period.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "volume_traded": {
+                "description": "Gets or sets the total volume traded during the time period.",
+                "format": "double",
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/OHLCV.ExchangeTimeseriesItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Ohlcv"
+          ]
+        }
+      },
+      "description": "Get OHLCV latest timeseries data returned in time descending order. Data can be requested by the period and for the specific symbol eg `BITSTAMP_SPOT_BTC_USD`, if you need to query timeseries by asset pairs eg. `BTC/USD`, then please reffer to the Exchange Rates Timeseries data\n            \n:::info\nOHLCV Latest endpoint is just the shortcut to the OHLCV Historical endpoint with substituted `time_start` and `time_end` parameters. \nThe OHLCV Historical endpoint data can be delayed a few seconds. Use OHLCV real-time data stream to get data without delay.\n:::\n\n\n**Path Parameters:**\n\n- **exchange_id**: Exchange identifier of requested timeseries (from the Metadata -\u003e Exchanges)\n\n- **symbol_id**: Symbol identifier of requested timeseries (from the Metadata -\u003e Symbols)",
+      "inputSchema": {
+        "properties": {
+          "exchange_id": {
+            "description": "Exchange identifier of requested timeseries (from the Metadata -\u003e Exchanges)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Amount of items to return (mininum is 1, maximum is 100000, default value is 100, if the parameter is used then every 100 output items are counted as one request)",
+            "format": "int32",
+            "type": "integer"
+          },
+          "period_id": {
+            "description": "Identifier of requested timeseries period (e.g. `5SEC` or `2MTH`)",
+            "type": "string"
+          },
+          "symbol_id": {
+            "description": "Symbol identifier of requested timeseries (from the Metadata -\u003e Symbols)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "exchange_id",
+          "symbol_id",
+          "period_id"
+        ],
+        "type": "object"
+      },
+      "name": "Latest_data",
+      "outputSchema": {
+        "$defs": {
+          "OHLCV.TimeseriesItem": {
+            "additionalProperties": false,
+            "description": "Represents a timeseries item with price and volume information.",
+            "properties": {
+              "price_close": {
+                "description": "Gets or sets the closing price.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_high": {
+                "description": "Gets or sets the highest price during the time period.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_low": {
+                "description": "Gets or sets the lowest price during the time period.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_open": {
+                "description": "Gets or sets the opening price.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "time_close": {
+                "description": "Gets or sets the time when the price closed.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "time_open": {
+                "description": "Gets or sets the time when the price opened.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "time_period_end": {
+                "description": "Gets or sets the end time of the time period.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "time_period_start": {
+                "description": "Gets or sets the start time of the time period.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "trades_count": {
+                "description": "Gets or sets the number of trades executed during the time period.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "volume_traded": {
+                "description": "Gets or sets the total volume traded during the time period.",
+                "format": "double",
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/OHLCV.TimeseriesItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Native IEX"
+          ]
+        }
+      },
+      "description": "Get Trades\n\n\n**Path Parameters:**\n\n- **symbol**: The symbol identifier",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "description": "Optional date in format YYYY-MM-DD (defaults to latest available data)",
+            "format": "date-time",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "The symbol identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "date"
+        ],
+        "type": "object"
+      },
+      "name": "Get_Trades",
+      "outputSchema": {
+        "$defs": {
+          "Trade.TradeModel": {
+            "additionalProperties": false,
+            "description": "Represents the response DTO for a single trade event (report or break).",
+            "properties": {
+              "is_extended_hours_trade": {
+                "description": "Bit 6 (Mask 0x40): Extended Hours Flag.\nTrue: Extended Hours Trade (i.e., Form T sale condition).\nFalse: Regular Market Session Trade.",
+                "type": "boolean"
+              },
+              "is_intermarket_sweep": {
+                "description": "Bit 7 (Mask 0x80): Intermarket Sweep Flag.\nTrue: Intermarket Sweep Order (\"ISO\").\nFalse: Non-Intermarket Sweep Order.",
+                "type": "boolean"
+              },
+              "is_odd_lot_trade": {
+                "description": "Bit 5 (Mask 0x20): Odd Lot Flag.\nTrue: Odd Lot Trade.\nFalse: Round or Mixed Lot Trade.",
+                "type": "boolean"
+              },
+              "is_single_price_cross_trade": {
+                "description": "Bit 3 (Mask 0x08): Single-price Cross Trade Flag.\nTrue: Trade resulting from a single-price cross.\nFalse: Execution during continuous trading.",
+                "type": "boolean"
+              },
+              "is_trade_break": {
+                "description": "Indicates if this record represents a trade break (true) or a trade report (false).",
+                "type": "boolean"
+              },
+              "is_trade_through_exempt": {
+                "description": "Bit 4 (Mask 0x10): Trade Through Exempt Flag.\nTrue: Trade is not subject to Rule 611 (Trade Through) of SEC Reg. NMS.\nFalse: Trade is subject to Rule 611 (Trade Through) of SEC Reg. NMS.\nApplied when the taking order was an ISO that traded through a protected quotation,\nOR the NBBO was crossed at the time of the trade,\nOR the trade occurred through a self-helped venue's quotation,\nOR the trade was a single-price cross.",
+                "type": "boolean"
+              },
+              "price": {
+                "description": "Trade price (or break price) as decimal.",
+                "format": "double",
+                "type": "number"
+              },
+              "size": {
+                "description": "Trade volume (or break volume) in number of shares.",
+                "format": "int32",
+                "type": "integer"
+              },
+              "symbol": {
+                "description": "The stock symbol.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "description": "Time when the event was recorded as DateTime (UTC).",
+                "format": "date-time",
+                "type": "string"
+              },
+              "timestamp_nanos": {
+                "description": "Original timestamp in nanoseconds since epoch.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "trade_id": {
+                "description": "IEX trade identifier (same for report and its corresponding break).",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/Trade.TradeModel"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    }
+  ]
+}
+---

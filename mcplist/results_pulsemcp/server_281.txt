@@ -1,0 +1,64 @@
+NAME: CurrentTimeUTC
+URL: https://a.currenttimeutc.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "resources": [
+    {
+      "description": "Complete list of supported timezones",
+      "mimeType": "application/json",
+      "name": "Timezone List",
+      "uri": "timezone://list"
+    }
+  ],
+  "tools": [
+    {
+      "description": "Get current UTC time in ISO 8601 format",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "get_utc_time"
+    },
+    {
+      "description": "Convert time between different timezones",
+      "inputSchema": {
+        "properties": {
+          "from_tz": {
+            "description": "Source timezone (IANA identifier)",
+            "type": "string"
+          },
+          "time": {
+            "description": "Time to convert (ISO 8601 or YYYY-MM-DD HH:MM:SS)",
+            "type": "string"
+          },
+          "to_tz": {
+            "description": "Target timezone (IANA identifier)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "from_tz",
+          "to_tz",
+          "time"
+        ],
+        "type": "object"
+      },
+      "name": "convert_time"
+    },
+    {
+      "description": "Get list of supported IANA timezone identifiers",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "list_timezones"
+    }
+  ]
+}
+---

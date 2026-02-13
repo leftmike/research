@@ -1,0 +1,9 @@
+NAME: TweekIT MCP Server
+URL: https://mcp.tweekit.io/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

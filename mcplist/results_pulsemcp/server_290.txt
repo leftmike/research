@@ -1,0 +1,9 @@
+NAME: AWS (Managed)
+URL: https://aws-mcp.us-east-1.api.aws/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: yes (confirmed by gmcpt)
+STATUS: auth_required
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Unauthorized
+---

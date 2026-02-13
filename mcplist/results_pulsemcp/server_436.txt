@@ -1,0 +1,9 @@
+NAME: Jinko MCP
+URL: https://mcp.gojinko.com
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

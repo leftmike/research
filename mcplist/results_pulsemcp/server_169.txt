@@ -1,0 +1,9 @@
+NAME: GoWeb3
+URL: https://mcp.goweb3.fyi/mcp/
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

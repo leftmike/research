@@ -1,0 +1,9 @@
+NAME: Ahrefs
+URL: https://api.ahrefs.com/mcp/mcpSse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: missing endpoint: malformed line in SSE stream: "[\"Error\",\"InternalError\"]"
+---

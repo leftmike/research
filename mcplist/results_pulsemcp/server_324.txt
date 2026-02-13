@@ -1,0 +1,219 @@
+NAME: webforJ MCP Server
+URL: https://mcp.webforj.com/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "arguments": [
+        {
+          "name": "appName",
+          "description": "Application name (e.g., MyApp, TodoList, Dashboard)",
+          "required": true
+        },
+        {
+          "name": "archetype",
+          "description": "blank, hello-world, tabs, sidemenu",
+          "required": true
+        },
+        {
+          "name": "runServer",
+          "description": "Automatically run the development server after creation (yes/no)"
+        }
+      ],
+      "description": "Create and run a webforJ Spring Boot application",
+      "name": "create-app"
+    },
+    {
+      "arguments": [
+        {
+          "name": "primaryColor",
+          "description": "Primary color in format: hex (#FF5733), rgb (255,87,51), or hsl (9,100,60)",
+          "required": true
+        }
+      ],
+      "description": "Generate a webforJ theme from a primary color",
+      "name": "create-theme"
+    },
+    {
+      "arguments": [
+        {
+          "name": "query",
+          "description": "Your webforJ question or problem",
+          "required": true
+        }
+      ],
+      "description": "Search webforJ documentation and resolve development questions",
+      "name": "search-webforj"
+    }
+  ],
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "webforJ Project Generator"
+      },
+      "description": "\nGenerate webforJ application setup using official Maven archetypes. Supports multiple\nproject templates including hello-world, blank, tabs, and sidemenu layouts.\n\nCreates Maven project structure with proper dependencies, configuration files, and\nstarter code. Returns setup instructions for both startforJ UI tool and Maven\ncommand-line approaches.\n\nAvailable archetypes:\n- hello-world: Basic application with sample components\n- blank: Minimal project structure\n- tabs: Tabbed interface layout\n- sidemenu: Side navigation menu layout\n\nAvailable flavors:\n- webforj: Standard webforJ application\n- webforj-spring: webforJ with Spring Boot (default, requires webforJ 25.02+)\n",
+      "inputSchema": {
+        "properties": {
+          "appName": {
+            "description": "webforj application name",
+            "type": "string"
+          },
+          "archetype": {
+            "description": "webforj archetype template (default: hello-world)",
+            "enum": [
+              "blank",
+              "hello-world",
+              "tabs",
+              "sidemenu"
+            ],
+            "type": "string"
+          },
+          "archetypeVersion": {
+            "default": "LATEST",
+            "description": "webforj archetype version (default: LATEST)",
+            "type": "string"
+          },
+          "artifactId": {
+            "description": "Maven artifact ID (default: derived from appName in lowercase with hyphens)",
+            "type": "string"
+          },
+          "flavor": {
+            "description": "Project flavor: webforj (standard) or webforj-spring (Spring Boot). Default: webforj-spring",
+            "enum": [
+              "webforj",
+              "webforj-spring"
+            ],
+            "type": "string"
+          },
+          "groupId": {
+            "description": "Maven group ID for the webforj project (default: derived from appName, e.g. com.myapp)",
+            "type": "string"
+          },
+          "showOptions": {
+            "default": false,
+            "description": "Include both startforJ GUI and Maven CLI setup instructions in the response.",
+            "type": "boolean"
+          },
+          "version": {
+            "default": "1.0-SNAPSHOT",
+            "description": "webforj project version (default: 1.0-SNAPSHOT)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "appName"
+        ],
+        "type": "object"
+      },
+      "name": "webforj-create-project"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "webforJ Knowledge Base Search"
+      },
+      "description": "\nSearch the webforJ knowledge base using semantic vector similarity to find relevant documentation,\ncode examples, and API information. Returns structured JSON data with search results, relevance\nscores, and confidence metrics for result quality assessment.\n\nSupports natural language queries across webforJ documentation, JavaDoc API references, and\nreal-world code samples. Results include metadata for filtering and confidence indicators\nfor quality evaluation.\n\nQuery examples:\n- \"Button component creation and styling\"\n- \"Form validation with data binding patterns\"\n- \"@Route annotation and navigation setup\"\n- \"FlexLayout container and responsive design\"\n- \"ElementComposite web component integration\"\n",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 25,
+            "description": "Maximum number of search results to return. Higher values provide more comprehensive coverage but increased response size.",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "query": {
+            "description": "Natural language query to search the webforJ knowledge base. Examples: \"how to create buttons\", \"form validation\", \"data binding\", \"routing with @Route annotation\"",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "webforj-knowledge-base"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "webforJ Theme Generator"
+      },
+      "description": "\nGenerate comprehensive webforJ application themes using color theory algorithms. Creates\ncomplete color palettes with proper contrast ratios and accessibility compliance.\n\nProduces CSS custom properties for primary, secondary, success, warning, danger, and\nneutral color variants. Each color includes light, base, dark, and alternative shades\noptimized for UI components and readability.\n\nOutput includes @AppTheme annotation code and App.setTheme() integration examples.\nSupports named themes for multi-theme applications or global CSS overrides for\nsingle-theme setups.\n\nInput format: HSL color values [hue (0-360), saturation (0-100), lightness (0-100)]\n",
+      "inputSchema": {
+        "properties": {
+          "contrastSensitiveLightness": {
+            "default": false,
+            "description": "Use contrast-sensitive lightness calculations (default: false)",
+            "type": "boolean"
+          },
+          "detectPrimaryColorCategory": {
+            "default": true,
+            "description": "Auto-detect color category for optimization (default: true)",
+            "type": "boolean"
+          },
+          "infoDegree": {
+            "default": 180,
+            "description": "Degree offset for info/secondary color (default: 180)",
+            "maximum": 360,
+            "minimum": 0,
+            "type": "number"
+          },
+          "primaryColor": {
+            "description": "Primary color in HSL format: [hue (0-360), saturation (0-100), lightness (0-100)]. Example: [220, 70, 50] for blue.",
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 3,
+            "minItems": 3,
+            "type": "array"
+          },
+          "step": {
+            "default": 5,
+            "description": "Step size for contrast calculations (default: 5)",
+            "maximum": 20,
+            "minimum": 1,
+            "type": "number"
+          },
+          "themeName": {
+            "description": "Optional theme name for multi-theme applications. Omit for global CSS overrides.",
+            "type": "string"
+          },
+          "tintBaseSaturation": {
+            "default": 10,
+            "description": "Base saturation for neutral grey tints (default: 10)",
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          },
+          "tintScaleFactor": {
+            "default": 0,
+            "description": "Scale factor for tint generation (default: 0)",
+            "type": "number"
+          }
+        },
+        "required": [
+          "primaryColor"
+        ],
+        "type": "object"
+      },
+      "name": "webforj-create-theme"
+    }
+  ]
+}
+---

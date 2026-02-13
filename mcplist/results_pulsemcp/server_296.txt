@@ -1,0 +1,303 @@
+NAME: Vintage Chocolate Recipes
+URL: https://wire-public.mcp.usewire.io/container/iLleTz6882Fru1XK/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Get a specific recipe by ID",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "id": {},
+          "include": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_recipe"
+    },
+    {
+      "description": "List all recipes with pagination support",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "fields": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "include": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "orderBy": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "type": "string"
+              },
+              "field": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "field",
+              "direction"
+            ],
+            "type": "object"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "name": "list_recipes"
+    },
+    {
+      "description": "Filter recipes by category or other criteria",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "filters": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "field": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "operator": {
+                      "type": "string"
+                    },
+                    "value": {}
+                  },
+                  "required": [
+                    "field",
+                    "operator"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "include": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "default": 100,
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "orderBy": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "field",
+              "direction"
+            ],
+            "type": "object"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "filters"
+        ],
+        "type": "object"
+      },
+      "name": "filter_recipes"
+    },
+    {
+      "description": "Search recipes by text fields (name, author, ingredients, instructions, notes)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "include": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "limit": {
+            "default": 100,
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "query": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relatedLimit": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "relatedOffset": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search_recipes"
+    },
+    {
+      "description": "Semantic search across recipes and reference documents using embeddings",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "fileIds": {
+            "items": {
+              "anyOf": [
+                {
+                  "not": {}
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "minScore": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "query": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "topK": {
+            "default": 5,
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "semantic_search_recipes"
+    }
+  ]
+}
+---

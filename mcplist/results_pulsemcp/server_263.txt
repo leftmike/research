@@ -1,0 +1,9 @@
+NAME: Flight Search
+URL: https://flights.fctolabs.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

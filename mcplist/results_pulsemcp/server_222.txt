@@ -1,0 +1,9 @@
+NAME: Kollektiv Document Management
+URL: https://mcp.thekollektiv.ai/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: connection_blocked
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://mcp.thekollektiv.ai/mcp": Forbidden
+---

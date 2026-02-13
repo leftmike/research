@@ -1,0 +1,101 @@
+NAME: Currency Conversion
+URL: https://currency-mcp.wesbos.com/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "description": "Amount to convert",
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "from": {
+            "description": "Source currency code (e.g., USD, EUR)",
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string"
+          },
+          "to": {
+            "description": "Target currency code (e.g., USD, EUR)",
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "amount"
+        ],
+        "type": "object"
+      },
+      "name": "convert_currency"
+    },
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "base": {
+            "description": "Base currency code (default: EUR)",
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string"
+          },
+          "symbols": {
+            "description": "Comma-separated currency codes to limit results (e.g., USD,GBP,JPY)",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_latest_rates"
+    },
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_currencies"
+    },
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "base": {
+            "description": "Base currency code (default: EUR)",
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string"
+          },
+          "date": {
+            "description": "Date in YYYY-MM-DD format",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "symbols": {
+            "description": "Comma-separated currency codes to limit results",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "type": "object"
+      },
+      "name": "get_historical_rates"
+    }
+  ]
+}
+---

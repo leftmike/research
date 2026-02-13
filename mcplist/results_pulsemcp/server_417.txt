@@ -1,0 +1,9 @@
+NAME: io.github.outris-dev-user/outris-identity-mcp
+URL: https://mcp-server.outris.com/http
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: listing prompts: calling "prompts/list": Method not found
+---

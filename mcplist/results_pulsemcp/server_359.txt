@@ -1,0 +1,9 @@
+NAME: La Palma 24 - Vacation Rentals
+URL: https://mcp.la-palma24.net
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Bad Gateway
+---

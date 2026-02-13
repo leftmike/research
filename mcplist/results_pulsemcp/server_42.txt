@@ -1,0 +1,9 @@
+NAME: MCP Registry Server
+URL: https://registry.run.mcp.com.ai/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

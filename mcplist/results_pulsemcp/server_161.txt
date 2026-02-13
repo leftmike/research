@@ -1,0 +1,9 @@
+NAME: Helm
+URL: https://mcp-helm.zekker.dev/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: missing endpoint: malformed line in SSE stream: "404 page not found"
+---

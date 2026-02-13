@@ -1,0 +1,148 @@
+NAME: BlogCaster MCP
+URL: https://blogcaster-mcp.rrpb2580.workers.dev/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Get a login link to authenticate and manage your tokens",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "getLoginLink"
+    },
+    {
+      "description": "Check current authenticated user",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "whoami"
+    },
+    {
+      "description": "Clear current authentication",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "logout"
+    },
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "contentMarkdown": {
+            "type": "string"
+          },
+          "coverImageURL": {
+            "type": "string"
+          },
+          "platforms": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "contentMarkdown",
+          "platforms"
+        ],
+        "type": "object"
+      },
+      "name": "publishPost"
+    },
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "contentMarkdown": {
+            "type": "string"
+          },
+          "coverImageURL": {
+            "type": "string"
+          },
+          "platforms": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "postId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "postId",
+          "title",
+          "contentMarkdown",
+          "platforms"
+        ],
+        "type": "object"
+      },
+      "name": "updatePost"
+    },
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "platforms": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "platforms"
+        ],
+        "type": "object"
+      },
+      "name": "getBlogs"
+    },
+    {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "platforms": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "postId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "platforms",
+          "postId"
+        ],
+        "type": "object"
+      },
+      "name": "deletePost"
+    }
+  ]
+}
+---

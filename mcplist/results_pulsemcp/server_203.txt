@@ -1,0 +1,824 @@
+NAME: xportalx
+URL: https://fflpdljiuruqdnewvwkk.supabase.co/functions/v1/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Fetch structured JSON/XML data from any API endpoint. Best for REST APIs and data feeds. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "body": {
+            "description": "Optional request body for POST/PUT",
+            "type": "object"
+          },
+          "headers": {
+            "description": "Optional HTTP headers",
+            "type": "object"
+          },
+          "method": {
+            "default": "GET",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "description": "The API endpoint URL to fetch",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "fetch_api"
+    },
+    {
+      "description": "Fetch raw HTML content from any web page. Best for static HTML scraping. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "method": {
+            "default": "GET",
+            "enum": [
+              "GET",
+              "POST"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "description": "The web page URL to fetch",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "fetch_page"
+    },
+    {
+      "description": "Fetch and extract text content from PDF documents. Returns structured text with page numbers. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "url": {
+            "description": "The URL of the PDF document to fetch and parse",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "fetch_pdf"
+    },
+    {
+      "description": "Extract structured data from a web page using a JSON schema. AI-powered extraction. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "intent": {
+            "description": "Natural language description of what to extract",
+            "type": "string"
+          },
+          "schema": {
+            "description": "JSON schema string defining the data structure to extract",
+            "type": "string"
+          },
+          "url": {
+            "description": "The web page URL to extract from",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "schema"
+        ],
+        "type": "object"
+      },
+      "name": "extract"
+    },
+    {
+      "description": "Crawl a website starting from a URL, following links up to specified depth. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "maxDepth": {
+            "default": 2,
+            "description": "Maximum link depth (default: 2)",
+            "type": "number"
+          },
+          "maxPages": {
+            "default": 10,
+            "description": "Maximum pages to crawl (default: 10)",
+            "type": "number"
+          },
+          "url": {
+            "description": "The starting URL to crawl",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "crawl"
+    },
+    {
+      "description": "Convert a web page to clean Markdown format. Great for LLM consumption. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "url": {
+            "description": "The web page URL to convert",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "markdown_convert"
+    },
+    {
+      "description": "Get real-time token price and market data from DexScreener. FREE - no payment required.",
+      "inputSchema": {
+        "properties": {
+          "chain": {
+            "default": "base",
+            "description": "Blockchain (e.g., 'base', 'ethereum')",
+            "type": "string"
+          },
+          "tokenAddress": {
+            "description": "The token contract address",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ],
+        "type": "object"
+      },
+      "name": "dexscreener_token"
+    },
+    {
+      "description": "Get cryptocurrency prices and exchange rates from Coinbase. FREE - no payment required.",
+      "inputSchema": {
+        "properties": {
+          "currency": {
+            "default": "USD",
+            "description": "Fiat currency (e.g., 'USD')",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "Crypto symbol (e.g., 'BTC', 'ETH')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      },
+      "name": "coinbase_price"
+    },
+    {
+      "description": "Verify a wallet signature (EIP-191) to authenticate an agent. FREE - no payment required.",
+      "inputSchema": {
+        "properties": {
+          "message": {
+            "description": "The message that was signed",
+            "type": "string"
+          },
+          "signature": {
+            "description": "The signature to verify",
+            "type": "string"
+          },
+          "wallet_address": {
+            "description": "The wallet address that signed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "signature",
+          "wallet_address"
+        ],
+        "type": "object"
+      },
+      "name": "verify_agent"
+    },
+    {
+      "description": "x402 payment facilitation - get payment info, verify transactions, check rates. FREE",
+      "inputSchema": {
+        "properties": {
+          "action": {
+            "description": "Facilitator action",
+            "enum": [
+              "info",
+              "verify"
+            ],
+            "type": "string"
+          },
+          "expectedAmount": {
+            "description": "Expected amount (for verify)",
+            "type": "string"
+          },
+          "expectedRecipient": {
+            "description": "Expected recipient (for verify)",
+            "type": "string"
+          },
+          "token": {
+            "description": "Token address (for verify)",
+            "type": "string"
+          },
+          "txHash": {
+            "description": "Transaction hash (for verify)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object"
+      },
+      "name": "coinbase_facilitator"
+    },
+    {
+      "description": "Access x402-protected APIs with automatic payment. Dynamic pricing: 0.01 USDC fee + target cost. Supports USDC on Base.",
+      "inputSchema": {
+        "properties": {
+          "paymentProof": {
+            "description": "Transaction hash of USDC payment (required after initial 402 response)",
+            "type": "string"
+          },
+          "targetBody": {
+            "description": "Request body for POST/PUT requests",
+            "type": "object"
+          },
+          "targetHeaders": {
+            "description": "Additional headers to send to target",
+            "type": "object"
+          },
+          "targetMethod": {
+            "default": "GET",
+            "description": "HTTP method",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE"
+            ],
+            "type": "string"
+          },
+          "targetUrl": {
+            "description": "The x402-protected URL to access",
+            "type": "string"
+          }
+        },
+        "required": [
+          "targetUrl"
+        ],
+        "type": "object"
+      },
+      "name": "x402_proxy"
+    },
+    {
+      "description": "Get dynamic pricing for x402 proxy requests. FREE - returns total cost (proxy fee + target cost).",
+      "inputSchema": {
+        "properties": {
+          "targetUrl": {
+            "description": "The x402-protected target URL to probe for pricing",
+            "type": "string"
+          }
+        },
+        "required": [
+          "targetUrl"
+        ],
+        "type": "object"
+      },
+      "name": "x402_proxy_price"
+    },
+    {
+      "description": "Register your AI agent on-chain with ERC-8004 Trustless Agent Identity. Cost: 0.01 USDC. You receive an NFT representing your agent identity.",
+      "inputSchema": {
+        "properties": {
+          "agentDescription": {
+            "description": "Description of what your agent does",
+            "type": "string"
+          },
+          "agentEndpoints": {
+            "description": "Optional array of endpoints [{name, endpoint, version}]",
+            "items": {
+              "properties": {
+                "endpoint": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "agentName": {
+            "description": "Name of your agent (e.g., 'MyAwesomeAgent')",
+            "type": "string"
+          },
+          "paymentProof": {
+            "description": "Transaction hash of payment (required after initial 402 response)",
+            "type": "string"
+          },
+          "recipientWallet": {
+            "description": "Your wallet address (0x...) to receive the Agent NFT",
+            "type": "string"
+          }
+        },
+        "required": [
+          "agentName",
+          "agentDescription",
+          "recipientWallet"
+        ],
+        "type": "object"
+      },
+      "name": "erc8004_register"
+    },
+    {
+      "description": "Understand why a job failed. FREE - lookup job failures or get failure code reference.",
+      "inputSchema": {
+        "properties": {
+          "failure_code": {
+            "description": "Any failure code to explain (e.g., 'RATE_LIMIT_429')",
+            "type": "string"
+          },
+          "jobId": {
+            "description": "xportalx job ID to look up failure details",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "failure_reason"
+    },
+    {
+      "description": "Get pricing information for all MCP tools. FREE - returns cost breakdown for each tool.",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "mcp_pricing"
+    },
+    {
+      "description": "Solve captchas on protected pages and extract content. Uses 2Captcha to bypass reCAPTCHA/hCaptcha, then Claude AI selects the best tool to retrieve content. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "captchaType": {
+            "default": "recaptcha_v2",
+            "description": "Type of captcha to solve",
+            "enum": [
+              "recaptcha_v2",
+              "recaptcha_v3",
+              "hcaptcha",
+              "turnstile",
+              "image"
+            ],
+            "type": "string"
+          },
+          "intent": {
+            "description": "What you want to extract from the page after solving captcha",
+            "type": "string"
+          },
+          "siteKey": {
+            "description": "Site key for reCAPTCHA/hCaptcha (optional - auto-detected if not provided)",
+            "type": "string"
+          },
+          "url": {
+            "description": "The captcha-protected URL to access",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "solve_captcha"
+    },
+    {
+      "description": "Get comprehensive Zora NFT wallet data: NFTs minted, NFTs owned, creator profile, total mints/collections, and estimated earnings. FREE - no payment required.",
+      "inputSchema": {
+        "properties": {
+          "address": {
+            "description": "Wallet address (EOA or contract) to look up",
+            "type": "string"
+          },
+          "chain": {
+            "default": "zora",
+            "description": "Chain to query (e.g., 'zora', 'base', 'ethereum')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "address"
+        ],
+        "type": "object"
+      },
+      "name": "zora_wallet"
+    },
+    {
+      "description": "Execute a token swap on Base via 0x DEX Aggregator. AI-ENHANCED: Accepts natural language like 'swap 10 USDC for VIRTUAL'. THREE MODES: (1) PRIVY MODE (RECOMMENDED): Provide owner_wallet - uses your secure Privy custodial wallet (create one first with create_wallet tool). (2) PRIVATE KEY MODE: Provide privateKey - server signs with your key (less secure). (3) BRIDGE MODE: Provide takerAddress only - returns a URL where you sign with browser wallet. Cost: 0.10 USDC",
+      "inputSchema": {
+        "properties": {
+          "buyToken": {
+            "description": "Token symbol (USDC, WETH, VIRTUAL, DEGEN, cbBTC, DAI, AERO, BRETT) OR token address (0x...)",
+            "type": "string"
+          },
+          "owner_wallet": {
+            "description": "RECOMMENDED: Your wallet address (0x...) that owns a Privy custodial wallet. The swap will be executed securely through your Privy wallet. Create one first using the create_wallet tool.",
+            "type": "string"
+          },
+          "privateKey": {
+            "description": "LEGACY: Private key (0x... hex) to sign and broadcast transactions server-side. Consider using owner_wallet with Privy instead for better security.",
+            "type": "string"
+          },
+          "request": {
+            "description": "Natural language swap request (e.g., 'swap 10 USDC for VIRTUAL', 'buy 100 DEGEN with USDC'). AI will extract the parameters automatically.",
+            "type": "string"
+          },
+          "sellAmount": {
+            "description": "Amount to sell. Use human-readable (e.g., '1.5' for 1.5 tokens) or atomic units (e.g., '1000000' for 1 USDC). Human-readable is auto-detected.",
+            "type": "string"
+          },
+          "sellToken": {
+            "description": "Token symbol (USDC, WETH, VIRTUAL, DEGEN, cbBTC, DAI, AERO, BRETT) OR token address (0x...)",
+            "type": "string"
+          },
+          "slippageBps": {
+            "description": "Slippage in basis points (e.g., '50' = 0.50%). Takes precedence over slippagePercentage.",
+            "type": "string"
+          },
+          "slippagePercentage": {
+            "default": "0.5",
+            "description": "Slippage tolerance in percent (e.g., '0.5' for 0.5%). Default: 0.5",
+            "type": "string"
+          },
+          "takerAddress": {
+            "description": "User's wallet address (0x...). When provided WITHOUT owner_wallet or privateKey, returns a secure web bridge URL where user can sign transactions with their browser wallet.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "swap"
+    },
+    {
+      "description": "Create a custodial wallet for an AI agent using Privy. Cost: 0.01 USDC. The owner wallet is automatically detected from your x402 payment - no need to provide it explicitly. The wallet can be used for automated transactions including swaps.",
+      "inputSchema": {
+        "properties": {
+          "label": {
+            "description": "Optional friendly name for this wallet (e.g., 'Trading Bot', 'Payment Agent')",
+            "type": "string"
+          },
+          "owner_wallet": {
+            "description": "Your signing wallet address (0x...) that will own this custodial wallet. Used as the lookup key for future operations. TIP: many clients can also pass just the address string as arguments.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "owner_wallet"
+        ],
+        "type": "object"
+      },
+      "name": "create_wallet"
+    },
+    {
+      "description": "Fund your custodial wallet with USDC. DYNAMIC PRICING: You pay (amount + 0.01 USDC fee). The owner wallet is auto-detected from your x402 payment. Example: To deposit 5 USDC, you pay 5.01 USDC and 5 USDC is transferred to your custodial wallet.",
+      "inputSchema": {
+        "properties": {
+          "amount": {
+            "description": "Amount of USDC to deposit into your custodial wallet (e.g., '5' for 5 USDC). You will pay this amount plus a 0.01 USDC platform fee.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount"
+        ],
+        "type": "object"
+      },
+      "name": "fund_wallet"
+    },
+    {
+      "description": "Fund your custodial wallet with ETH for gas. DYNAMIC PRICING: You pay the USDC equivalent of (ETH amount + 0.01 USDC fee). The owner wallet is auto-detected from your x402 payment. Example: To deposit 0.001 ETH, you pay ~$3.50 USDC (ETH value) + 0.01 USDC fee.",
+      "inputSchema": {
+        "properties": {
+          "amount": {
+            "description": "Amount of ETH to deposit into your custodial wallet (e.g., '0.001' for 0.001 ETH). You will pay the USDC equivalent plus a 0.01 USDC platform fee.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount"
+        ],
+        "type": "object"
+      },
+      "name": "fund_wallet_eth"
+    },
+    {
+      "description": "Withdraw USDC from your custodial wallet to your owner wallet. Cost: 0.01 USDC. The owner wallet is auto-detected from your x402 payment.",
+      "inputSchema": {
+        "properties": {
+          "amount": {
+            "description": "Amount of USDC to withdraw from custodial wallet (e.g., '5' for 5 USDC). Must have sufficient balance.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount"
+        ],
+        "type": "object"
+      },
+      "name": "withdraw_wallet"
+    },
+    {
+      "description": "Send USDC from your custodial wallet to ANY wallet address. Cost: 0.01 USDC. The sender (your custodial wallet) is auto-detected from your x402 payment. Use this to pay other agents, transfer to exchanges, or send to any address.",
+      "inputSchema": {
+        "properties": {
+          "amount": {
+            "description": "Amount of USDC to send (e.g., '5' for 5 USDC). Must have sufficient balance in your custodial wallet.",
+            "type": "string"
+          },
+          "to_address": {
+            "description": "Destination wallet address (0x...) to send USDC to. Can be any valid EVM address.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "to_address",
+          "amount"
+        ],
+        "type": "object"
+      },
+      "name": "send_tokens"
+    },
+    {
+      "description": "Check the balance of your custodial wallet. FREE - no payment required. Returns ETH and USDC balances on Base network.",
+      "inputSchema": {
+        "properties": {
+          "owner_wallet": {
+            "description": "Your signing wallet address (0x...) to look up the linked custodial wallet balance.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "owner_wallet"
+        ],
+        "type": "object"
+      },
+      "name": "get_wallet_balance"
+    },
+    {
+      "description": "Send USDC directly to ANY wallet address via x402 payment. Just provide to_address and amount - the flow auto-completes: 1) Pay 0.01 USDC platform fee 2) Pay the amount directly to destination. Tokens go from you to recipient. Perfect for paying agents, tipping, or sending to any address.",
+      "inputSchema": {
+        "properties": {
+          "amount": {
+            "description": "Amount of USDC to send (e.g., '5' for 5 USDC).",
+            "type": "string"
+          },
+          "to_address": {
+            "description": "Destination wallet address (0x...) to receive the USDC.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "to_address",
+          "amount"
+        ],
+        "type": "object"
+      },
+      "name": "x402_send"
+    },
+    {
+      "description": "Screen tokens with Smart Money activity using Nansen Token Screener. Supports natural language like 'what are whales buying on base?' or 'trending tokens on solana'. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "chain": {
+            "default": "base",
+            "description": "Single chain (alternative to chains array)",
+            "type": "string"
+          },
+          "chains": {
+            "default": [
+              "base"
+            ],
+            "description": "Chains to query (e.g., ['ethereum', 'base', 'solana', 'arbitrum'])",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "input": {
+            "description": "Natural language query (e.g., 'what are whales buying on base?', 'trending tokens this week')",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Number of results (default: 20, max: 100)",
+            "type": "number"
+          },
+          "query": {
+            "description": "Natural language query (alternative)",
+            "type": "string"
+          },
+          "sortBy": {
+            "default": "smart_money_netflow_24h",
+            "description": "Sort field",
+            "enum": [
+              "smart_money_netflow_24h",
+              "volume_24h",
+              "holders_change_24h",
+              "price_change_24h"
+            ],
+            "type": "string"
+          },
+          "sortDir": {
+            "default": "desc",
+            "description": "Sort direction",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "nansen_smart_money_holdings"
+    },
+    {
+      "description": "Track net capital flows from Smart Money wallets. Supports natural language like 'are whales accumulating ETH?' or 'smart money flows for PEPE last 7 days'. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "chain": {
+            "default": "ethereum",
+            "description": "Single chain (alternative to chains array)",
+            "type": "string"
+          },
+          "chains": {
+            "default": [
+              "ethereum"
+            ],
+            "description": "Chains to query (e.g., ['ethereum', 'base', 'solana'])",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "input": {
+            "description": "Natural language query (e.g., 'are smart money accumulating ETH?', 'whale flows last week')",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Number of results (default: 20)",
+            "type": "number"
+          },
+          "query": {
+            "description": "Natural language query (alternative)",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "24h",
+            "description": "Timeframe for netflow data",
+            "enum": [
+              "1h",
+              "4h",
+              "12h",
+              "24h",
+              "7d",
+              "30d"
+            ],
+            "type": "string"
+          },
+          "tokenAddress": {
+            "description": "Filter by specific token address OR symbol (e.g., 'PEPE', 'VIRTUAL', '0x...')",
+            "type": "string"
+          },
+          "token_address": {
+            "description": "Filter by token address (alternative)",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "nansen_smart_money_netflows"
+    },
+    {
+      "description": "Full token analytics with Nansen TGM. Supports natural language like 'analyze VIRTUAL token' or 'who holds the most PEPE?'. Auto-resolves token symbols to addresses. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "chain": {
+            "default": "ethereum",
+            "description": "Blockchain (e.g., 'ethereum', 'base', 'solana', 'arbitrum')",
+            "type": "string"
+          },
+          "input": {
+            "description": "Natural language query (e.g., 'analyze VIRTUAL token', 'show me PEPE holders')",
+            "type": "string"
+          },
+          "query": {
+            "description": "Natural language query (alternative)",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "24h",
+            "description": "Timeframe for flow data",
+            "enum": [
+              "1h",
+              "4h",
+              "12h",
+              "24h",
+              "7d",
+              "30d"
+            ],
+            "type": "string"
+          },
+          "tokenAddress": {
+            "description": "Token contract address OR symbol (e.g., 'VIRTUAL', 'PEPE', '0x...')",
+            "type": "string"
+          },
+          "token_address": {
+            "description": "Token contract address (alternative)",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "nansen_token_god_mode"
+    },
+    {
+      "description": "Comprehensive wallet analysis. Supports natural language like 'profile vitalik.eth' or 'what labels does 0x... have?'. Returns balances, Nansen labels, and transactions. Cost: 0.01 USDC",
+      "inputSchema": {
+        "properties": {
+          "address": {
+            "description": "Wallet address (0x...) or ENS name to analyze",
+            "type": "string"
+          },
+          "chain": {
+            "default": "ethereum",
+            "description": "Single chain (alternative)",
+            "type": "string"
+          },
+          "chains": {
+            "default": [
+              "ethereum"
+            ],
+            "description": "Chains to query for balances/transactions",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "includeTransactions": {
+            "default": true,
+            "description": "Include recent transactions (default: true)",
+            "type": "boolean"
+          },
+          "input": {
+            "description": "Natural language query (e.g., 'profile this wallet 0x...', 'analyze vitalik.eth')",
+            "type": "string"
+          },
+          "query": {
+            "description": "Natural language query (alternative)",
+            "type": "string"
+          },
+          "wallet": {
+            "description": "Wallet address (alternative)",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "nansen_wallet_profiler"
+    }
+  ]
+}
+---

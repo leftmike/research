@@ -1,0 +1,9 @@
+NAME: BigQuery
+URL: https://bigquery.googleapis.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: connection_failed
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://bigquery.googleapis.com/mcp": dial tcp: lookup bigquery.googleapis.com on [::1]:53: read udp [::1]:18423->[::1]:53: read: connection refused
+---

@@ -1,0 +1,44 @@
+NAME: ProSearch (Tencent)
+URL: https://agent.html5.qq.com/prosearch/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "针对用户主动搜索的问题（query），基于问答搜索的海量数据 \u0026 权威内容 \u0026 智能化答案抽取 生成具体的答案内容",
+      "inputSchema": {
+        "properties": {
+          "from_time": {
+            "description": "起始时间, 当query具有强时效性可使用该参数, 搭配to_time参数进行使用，获取指定的时间段的搜索结果。例如：2025-01-21 15:57:01, 需要和to_time参数搭配使用，单用会报错",
+            "type": "string"
+          },
+          "mode": {
+            "description": "返回结果类型，0-自然检索结果(默认)，1-多模态VR结果，2-混合结果（多模态VR结果+自然检索结果）",
+            "type": "integer"
+          },
+          "query": {
+            "description": "查询语",
+            "type": "string"
+          },
+          "site": {
+            "description": "指定域名站内搜索（用于过滤自然检索结果），注意： mode=1模式下，参数无效；mode=0模式下，对所有结果生效；mode=2模式下，对输出的自然结果生效，示例值：zhihu.com",
+            "type": "string"
+          },
+          "to_time": {
+            "description": "结束时间，例如：2025-01-21 16:57:03，需要和from_time参数搭配使用，单用会报错",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "prosearch"
+    }
+  ]
+}
+---

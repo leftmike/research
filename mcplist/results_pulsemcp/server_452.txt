@@ -1,0 +1,1120 @@
+NAME: Riksdag & Regering MCP
+URL: https://riksdag-regering-ai.onrender.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "arguments": [
+        {
+          "name": "query",
+          "description": "Sökord, titel eller fritext"
+        },
+        {
+          "name": "document_type",
+          "description": "Dokumenttyp (prop, bet, mot, etc.)"
+        },
+        {
+          "name": "rm",
+          "description": "Riksmöte (2023/24)"
+        }
+      ],
+      "description": "Sök dokument i Riksdagen med avancerade filter",
+      "name": "search-documents"
+    },
+    {
+      "arguments": [
+        {
+          "name": "namn",
+          "description": "Förnamn, efternamn eller sökfråga"
+        },
+        {
+          "name": "parti",
+          "description": "Parti (S, M, SD)"
+        },
+        {
+          "name": "valkrets",
+          "description": "Valkrets"
+        }
+      ],
+      "description": "Hitta ledamöter utifrån namn, parti eller område",
+      "name": "search-ledamoter"
+    },
+    {
+      "arguments": [
+        {
+          "name": "rm",
+          "description": "Riksmöte"
+        },
+        {
+          "name": "bet",
+          "description": "Beteckning"
+        },
+        {
+          "name": "groupBy",
+          "description": "Gruppera per parti, valkrets eller namn"
+        }
+      ],
+      "description": "Sök voteringar med beteckning, punkt eller gruppering",
+      "name": "search-voteringar"
+    },
+    {
+      "arguments": [
+        {
+          "name": "from",
+          "description": "Från datum (YYYY-MM-DD)"
+        },
+        {
+          "name": "tom",
+          "description": "Till datum (YYYY-MM-DD)"
+        },
+        {
+          "name": "org",
+          "description": "Organ (KU, FiU, etc.)"
+        }
+      ],
+      "description": "Hämtar händelser från kalendern (kammaren/utskott)",
+      "name": "get-calendar-events"
+    },
+    {
+      "arguments": [
+        {
+          "name": "report",
+          "description": "Identifierare (ledamotsstatistik, kontaktutskott, aldersstatistik, konstatsstatistik, mandatperiod, diarium)",
+          "required": true
+        }
+      ],
+      "description": "Hämtar en rapport (ledamotsstatistik, könsstatistik, diarium)",
+      "name": "fetch-report"
+    }
+  ],
+  "resources": [
+    {
+      "description": "Lista över aktuella ledamöter hämtade direkt från personlista API",
+      "mimeType": "application/json",
+      "name": "Riksdagens ledamöter",
+      "uri": "riksdagen://ledamoter"
+    },
+    {
+      "description": "Partistatistik baserad på ledamöternas parti-etiketter",
+      "mimeType": "application/json",
+      "name": "Politiska partier",
+      "uri": "riksdagen://partier"
+    },
+    {
+      "description": "Aktuella dokumenttyper från dokumentlistan",
+      "mimeType": "application/json",
+      "name": "Dokumenttyper",
+      "uri": "riksdagen://dokument/typer"
+    },
+    {
+      "description": "Lista över koder för riksmöten/år",
+      "mimeType": "application/json",
+      "name": "Riksmöten",
+      "uri": "riksdagen://riksmoten"
+    },
+    {
+      "description": "Departementsaktivitet baserat på pressmeddelanden och propositioner (via g0v.se)",
+      "mimeType": "application/json",
+      "name": "Regeringens departement",
+      "uri": "regeringen://departement"
+    },
+    {
+      "description": "Sammanfattning av antal dokument och ledamöter från API:erna",
+      "mimeType": "application/json",
+      "name": "Riksdagsstatistik",
+      "uri": "riksdagen://statistik"
+    },
+    {
+      "description": "Definitioner och fältbeskrivningar",
+      "mimeType": "application/json",
+      "name": "Begrepp och dataprodukter",
+      "uri": "docs://data-dictionary"
+    },
+    {
+      "description": "Steg-för-steg hur lagstiftningsprocessen fungerar",
+      "mimeType": "application/json",
+      "name": "Processguide",
+      "uri": "docs://workflow-guide"
+    },
+    {
+      "description": "En detaljerad guide för hur man använder MCP-serverns verktyg",
+      "mimeType": "text/markdown",
+      "name": "Verktygsguide",
+      "uri": "docs://tool-guide"
+    },
+    {
+      "description": "Projektets README renderad som text",
+      "mimeType": "text/markdown",
+      "name": "README",
+      "uri": "docs://readme"
+    }
+  ],
+  "tools": [
+    {
+      "description": "Sök efter ledamöter i Riksdagen",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "intressent_id": {
+            "description": "Ledamots-ID",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max antal resultat",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "namn": {
+            "description": "Namn att söka efter (förnamn eller efternamn)",
+            "type": "string"
+          },
+          "page": {
+            "default": 1,
+            "description": "Sida för paginering",
+            "minimum": 1,
+            "type": "number"
+          },
+          "parti": {
+            "description": "Parti (t.ex. S, M, SD, V, MP, C, L, KD)",
+            "type": "string"
+          },
+          "status": {
+            "description": "Status (tjänstgörande, tjänstledig, etc.)",
+            "type": "string"
+          },
+          "valkrets": {
+            "description": "Valkrets",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "search_ledamoter"
+    },
+    {
+      "description": "Sök efter riksdagsdokument",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "avd": {
+            "description": "Avdelning",
+            "type": "string"
+          },
+          "bet": {
+            "description": "Beteckning (t.ex. AU10)",
+            "type": "string"
+          },
+          "doktyp": {
+            "description": "Dokumenttyp (t.ex. mot, prop, bet, skr)",
+            "type": "string"
+          },
+          "exakt": {
+            "description": "Kräv exakt matchning",
+            "type": "boolean"
+          },
+          "facets": {
+            "description": "Facetteringar",
+            "type": "string"
+          },
+          "from_date": {
+            "description": "Från datum (YYYY-MM-DD)",
+            "type": "string"
+          },
+          "iid": {
+            "description": "Ledamots-ID",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max antal resultat",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "mottagare": {
+            "description": "Mottagare",
+            "type": "string"
+          },
+          "nummer": {
+            "description": "Dokumentnummer",
+            "type": "string"
+          },
+          "organ": {
+            "description": "Organ (t.ex. KU, FiU, UU)",
+            "type": "string"
+          },
+          "parti": {
+            "description": "Parti",
+            "type": "string"
+          },
+          "planering": {
+            "description": "Inkludera planeringsdata",
+            "type": "boolean"
+          },
+          "rapport": {
+            "description": "Rapporttyp (rdlstat etc.)",
+            "type": "string"
+          },
+          "relaterat_id": {
+            "description": "Relaterat dokument-ID",
+            "type": "string"
+          },
+          "rm": {
+            "description": "Riksmöte (t.ex. 2024/25)",
+            "type": "string"
+          },
+          "sort": {
+            "description": "Sorteringsordning",
+            "type": "string"
+          },
+          "sortorder": {
+            "description": "Sorteringsriktning",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          },
+          "status": {
+            "description": "Status (planerat, antaget etc.)",
+            "type": "string"
+          },
+          "subtitle": {
+            "description": "Undertitel",
+            "type": "string"
+          },
+          "subtyp": {
+            "description": "Undertyp",
+            "type": "string"
+          },
+          "talare": {
+            "description": "Talare",
+            "type": "string"
+          },
+          "tempbeteckning": {
+            "description": "Temporär beteckning",
+            "type": "string"
+          },
+          "titel": {
+            "description": "Titel eller fritext att söka efter",
+            "type": "string"
+          },
+          "to_date": {
+            "description": "Till datum (YYYY-MM-DD)",
+            "type": "string"
+          },
+          "typ": {
+            "description": "Huvudtyp för dokumentet",
+            "type": "string"
+          },
+          "webbtv": {
+            "description": "Hitta dokument med webbtv",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "name": "search_dokument"
+    },
+    {
+      "description": "Fulltextsök i dokument",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "default": 50,
+            "description": "Max antal resultat (ökad från 20 till 50)",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "query": {
+            "description": "Text att söka efter",
+            "minLength": 2,
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search_dokument_fulltext"
+    },
+    {
+      "description": "Sök efter anföranden",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "debattnamn": {
+            "description": "Debattnamn",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max antal resultat",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "parti": {
+            "description": "Parti",
+            "type": "string"
+          },
+          "rm": {
+            "description": "Riksmöte",
+            "type": "string"
+          },
+          "talare": {
+            "description": "Talare att söka efter",
+            "type": "string"
+          },
+          "text": {
+            "description": "Text att söka i anförandet",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "search_anforanden"
+    },
+    {
+      "description": "Sök efter voteringar och röster",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "avser": {
+            "description": "Vad voteringen avser",
+            "type": "string"
+          },
+          "bet": {
+            "description": "Beteckning",
+            "type": "string"
+          },
+          "groupBy": {
+            "description": "Vill du gruppera resultatet?",
+            "enum": [
+              "parti",
+              "valkrets",
+              "namn"
+            ],
+            "type": "string"
+          },
+          "iid": {
+            "description": "Ledamots-ID",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "parti": {
+            "description": "Parti",
+            "type": "string"
+          },
+          "punkt": {
+            "description": "Punkt",
+            "type": "string"
+          },
+          "rm": {
+            "description": "Riksmöte",
+            "type": "string"
+          },
+          "rost": {
+            "description": "Röst (Ja, Nej, Avstår, Frånvarande)",
+            "type": "string"
+          },
+          "valkrets": {
+            "description": "Valkrets",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "search_voteringar"
+    },
+    {
+      "description": "Sök i Regeringskansliets dokument via g0v.se",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "dateFrom": {
+            "description": "Från datum (YYYY-MM-DD)",
+            "type": "string"
+          },
+          "dateTo": {
+            "description": "Till datum (YYYY-MM-DD)",
+            "type": "string"
+          },
+          "departement": {
+            "description": "Departement",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Max antal resultat (default: 10 för att minska response-storlek)",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "title": {
+            "description": "Titel att söka efter",
+            "type": "string"
+          },
+          "type": {
+            "description": "Dokumenttyp (t.ex. pressmeddelanden, propositioner, sou, ds, dir, remisser, regeringsuppdrag, rapporter, tal, debattartiklar, uttalanden, artiklar)",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "search_regering"
+    },
+    {
+      "description": "Hämta en lista över tillgängliga dokumenttyper från Regeringskansliet (via g0v.se)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_g0v_document_types"
+    },
+    {
+      "description": "Hämta en lista över kategorikoder från Regeringskansliet (via g0v.se)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_g0v_category_codes"
+    },
+    {
+      "description": "Hämta information om senaste uppdateringen från Regeringskansliet (via g0v.se)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_g0v_latest_update"
+    },
+    {
+      "description": "Hämta innehållet i ett specifikt dokument från Regeringskansliet (via g0v.se) i Markdown-format",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "regeringenUrl": {
+            "description": "The URL of the document on regeringen.se to fetch its Markdown content from g0v.se.",
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "regeringenUrl"
+        ],
+        "type": "object"
+      },
+      "name": "get_g0v_document_content"
+    },
+    {
+      "description": "Analysera dokument från Regeringskansliet (via g0v.se) per departement",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "dateFrom": {
+            "description": "Från datum (YYYY-MM-DD)",
+            "type": "string"
+          },
+          "dateTo": {
+            "description": "Till datum (YYYY-MM-DD)",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "analyze_g0v_by_department"
+    },
+    {
+      "description": "Hämta detaljer om ett specifikt riksdagsdokument",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "dok_id": {
+            "description": "Dokument ID, t.ex. H901FiU1",
+            "minLength": 2,
+            "type": "string"
+          },
+          "include_full_text": {
+            "default": false,
+            "description": "Inkludera fulltext (kan vara mycket stor data)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "dok_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_dokument"
+    },
+    {
+      "description": "Hämta detaljer om en ledamot",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "intressent_id": {
+            "description": "Ledamotens intressent ID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "intressent_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_ledamot"
+    },
+    {
+      "description": "Senaste motionerna",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "rm": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_motioner"
+    },
+    {
+      "description": "Senaste propositionerna",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "rm": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_propositioner"
+    },
+    {
+      "description": "Senaste betänkandena",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "organ": {
+            "type": "string"
+          },
+          "rm": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_betankanden"
+    },
+    {
+      "description": "Skriftliga frågor",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "rm": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_fragor"
+    },
+    {
+      "description": "Interpellationer",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "rm": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_interpellationer"
+    },
+    {
+      "description": "Lista kända utskott",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_utskott"
+    },
+    {
+      "description": "Hämta regeringsdokument (alla typer: pressmeddelanden, propositioner, SOU, etc.)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "document_id": {
+            "description": "ID eller URL-del för dokumentet",
+            "type": "string"
+          },
+          "type": {
+            "description": "Dokumenttyp (om känd). Om inte angiven, söks i alla typer.",
+            "enum": [
+              "pressmeddelanden",
+              "propositioner",
+              "sou",
+              "ds",
+              "dir",
+              "remisser",
+              "regeringsuppdrag",
+              "rapporter",
+              "tal",
+              "debattartiklar",
+              "uttalanden",
+              "artiklar"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "document_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_regering_document"
+    },
+    {
+      "description": "Sammanfatta regeringsdokument (alla typer)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "document_id": {
+            "description": "ID eller URL-del för dokumentet",
+            "type": "string"
+          },
+          "max_length": {
+            "default": 500,
+            "description": "Max längd på sammanfattning",
+            "type": "number"
+          },
+          "type": {
+            "description": "Dokumenttyp (om känd)",
+            "enum": [
+              "pressmeddelanden",
+              "propositioner",
+              "sou",
+              "ds",
+              "dir",
+              "remisser",
+              "regeringsuppdrag",
+              "rapporter",
+              "tal",
+              "debattartiklar",
+              "uttalanden",
+              "artiklar"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "document_id"
+        ],
+        "type": "object"
+      },
+      "name": "summarize_regering_document"
+    },
+    {
+      "description": "Hämta dokumentinnehåll och sammanfattning",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "dok_id": {
+            "description": "Dokument ID",
+            "type": "string"
+          },
+          "include_full_text": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "dok_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_dokument_innehall"
+    },
+    {
+      "description": "Paginerad hämtning av dokument",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "doktyp": {
+            "description": "Dokumenttyp (mot, prop, bet, etc.)",
+            "type": "string"
+          },
+          "fetchAll": {
+            "default": false,
+            "description": "Hämta alla sidor (varning: kan vara långsamt!)",
+            "type": "boolean"
+          },
+          "maxPages": {
+            "default": 10,
+            "description": "Max antal sidor att hämta om fetchAll=true",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "number"
+          },
+          "page": {
+            "default": 1,
+            "description": "Sidnummer (1-indexerad)",
+            "maximum": 10000,
+            "minimum": 1,
+            "type": "number"
+          },
+          "pageSize": {
+            "default": 50,
+            "description": "Antal resultat per sida",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "rm": {
+            "description": "Riksmöte (t.ex. 2024/25)",
+            "type": "string"
+          },
+          "sok": {
+            "description": "Sökterm",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "fetch_paginated_documents"
+    },
+    {
+      "description": "Paginerad hämtning av anföranden",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "fetchAll": {
+            "default": false,
+            "description": "Hämta alla sidor",
+            "type": "boolean"
+          },
+          "maxPages": {
+            "default": 10,
+            "description": "Max antal sidor",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "number"
+          },
+          "page": {
+            "default": 1,
+            "description": "Sidnummer",
+            "maximum": 10000,
+            "minimum": 1,
+            "type": "number"
+          },
+          "pageSize": {
+            "default": 100,
+            "description": "Antal per sida",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "number"
+          },
+          "parti": {
+            "description": "Parti",
+            "type": "string"
+          },
+          "rm": {
+            "description": "Riksmöte",
+            "type": "string"
+          },
+          "sok": {
+            "description": "Sökterm i anförande-text",
+            "type": "string"
+          },
+          "talare": {
+            "description": "Talarens namn",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "fetch_paginated_anforanden"
+    },
+    {
+      "description": "Batch-hämta dokument för flera riksmöten",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "doktyp": {
+            "description": "Dokumenttyp",
+            "type": "string"
+          },
+          "maxPerRiksmote": {
+            "default": 100,
+            "description": "Max dokument per riksmöte",
+            "maximum": 300,
+            "minimum": 1,
+            "type": "number"
+          },
+          "riksmoten": {
+            "description": "Lista av riksmöten",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "doktyp",
+          "riksmoten"
+        ],
+        "type": "object"
+      },
+      "name": "batch_fetch_documents"
+    },
+    {
+      "description": "Hämta kalenderhändelser",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "akt": {
+            "description": "Aktivitetstyp eller kombinationskod",
+            "type": "string"
+          },
+          "from": {
+            "description": "Från datum (YYYY-MM-DD)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 200,
+            "maximum": 500,
+            "minimum": 1,
+            "type": "number"
+          },
+          "org": {
+            "description": "Organ (UTSK, kammaren etc.)",
+            "type": "string"
+          },
+          "sort": {
+            "description": "Sorteringsordning (t.ex. \"DTSTART\")",
+            "type": "string"
+          },
+          "tom": {
+            "description": "Till datum (YYYY-MM-DD)",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_calendar_events"
+    },
+    {
+      "description": "Hämta voteringar grupperade per parti/valkrets",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "bet": {
+            "description": "Beteckning",
+            "type": "string"
+          },
+          "groupBy": {
+            "description": "Grupperingsnivå",
+            "enum": [
+              "parti",
+              "valkrets",
+              "namn"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 200,
+            "maximum": 500,
+            "minimum": 1,
+            "type": "number"
+          },
+          "punkt": {
+            "description": "Punkt",
+            "type": "string"
+          },
+          "rm": {
+            "description": "Riksmöte",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_voting_group"
+    },
+    {
+      "description": "Lista tillgängliga rapporter",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "list_reports"
+    },
+    {
+      "description": "Hämta en rapport (HTML/JSON)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "default": 200,
+            "maximum": 500,
+            "minimum": 1,
+            "type": "number"
+          },
+          "report": {
+            "enum": [
+              "ledamotsstatistik",
+              "kontaktutskott",
+              "aldersstatistik",
+              "konstatsstatistik",
+              "mandatperiod",
+              "diarium"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "report"
+        ],
+        "type": "object"
+      },
+      "name": "fetch_report"
+    },
+    {
+      "description": "Kombinerad sökning i Riksdagen och Regeringen",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "includeRegeringen": {
+            "default": true,
+            "description": "Inkludera resultat från Regeringskansliet",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max antal resultat per kategori (Riksdagen dokument/anföranden)",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "query": {
+            "description": "Sökterm som används mot alla källor",
+            "minLength": 2,
+            "type": "string"
+          },
+          "regeringenLimit": {
+            "default": 5,
+            "description": "Max antal resultat per regeringskategori (för att begränsa response-storlek)",
+            "maximum": 20,
+            "minimum": 1,
+            "type": "number"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "enhanced_government_search"
+    },
+    {
+      "description": "Visa enklare status för datakällor",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_sync_status"
+    },
+    {
+      "description": "Visa dataset och fältbeskrivningar",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "dataset": {
+            "description": "Valfritt dataset-ID att filtrera på",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_data_dictionary"
+    }
+  ]
+}
+---

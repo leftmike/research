@@ -1,0 +1,175 @@
+NAME: Agentic Commerce
+URL: https://mcp-agentic-commerce.netlify.app/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Find nearby restaurants by city/state and optional query.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "city": {
+            "default": "Austin",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "maximum": 25,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "find_restaurants"
+    },
+    {
+      "description": "Determine if a seller uses Square and return detection details.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "business_id": {
+            "type": "string"
+          },
+          "website_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "business_id"
+        ],
+        "type": "object"
+      },
+      "name": "detect_seller_square"
+    },
+    {
+      "description": "View restaurant details by id.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "business_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "business_id"
+        ],
+        "type": "object"
+      },
+      "name": "view_restaurant"
+    },
+    {
+      "description": "Simulate placing a takeout order for items.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "business_id": {
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "price": {
+                  "default": 0,
+                  "type": "number"
+                },
+                "qty": {
+                  "default": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "business_id",
+          "items"
+        ],
+        "type": "object"
+      },
+      "name": "order_takeout"
+    },
+    {
+      "description": "Read a seller's menu (if Square) and display items with price and image.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "business_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "business_id"
+        ],
+        "type": "object"
+      },
+      "name": "view_menu"
+    },
+    {
+      "description": "Render a playful receipt for an order (demo only).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "business_id": {
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "price": {
+                  "default": 0,
+                  "type": "number"
+                },
+                "qty": {
+                  "default": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "business_id",
+          "items"
+        ],
+        "type": "object"
+      },
+      "name": "view_receipt"
+    }
+  ]
+}
+---

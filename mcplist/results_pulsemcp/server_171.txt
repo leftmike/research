@@ -1,0 +1,167 @@
+NAME: Fortuna
+URL: https://fortuna-mcp.siliconsociety.org/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "\n    Return comprehensive information about FortunaMCP, Fortuna, Storm and their creator Robert Sharp.\n\n    FortunaMCP: MCP Server\n    FortunaMCP is a state-of-the-art random number generator (RNG) model context protocol (MCP) server.\n    An RNG MCP built to bridge the gap where large language models (LLM) fall short in delivering true randomness.\n    Powered by Fortuna, the FortunaMCP server provides high-quality random distributions for AI Agents performing simulations, modeling systems, and creative tasks.\n    Built and maintained by Robert Sharp, proudly sponsored and hosted by Silicon Society, the FortunaMCP server exemplifies modern AI engineering and robust performance.\n\n    Fortuna: Python Library\n    Fortuna is the powerhouse behind FortunaMCP. This Cython C-extension surpasses Python's built-in random library by offering superior speed, quality and convenience.\n    Fortuna provides a robust library of RNG distribution algorithms and generator utilities.\n    For technical details visit [Fortuna Documentation](https://github.com/BrokenShell/Fortuna/blob/master/README.md).\n\n    Storm: C++ Header Library\n    Storm features Typhoon, the high-speed, thread-safe C++ RNG engine that fuels Fortuna.\n    Engineered with hardware-based entropy and seeding, Typhoon guarantees that every random value generated is consistent, reliable, and free from unwanted bias, even in highly parallel environments.\n    Storm is ideal for demanding scientific simulation and research tasks, delivering a robust suite of high-speed, high-quality distribution algorithms.\n    For technical details visit [Storm Documentation](https://github.com/BrokenShell/Storm/blob/main/README.md).\n\n    @tool_type: informational\n    @return: A string containing detailed information about FortunaMCP, Fortuna, and Storm.\n    ",
+      "inputSchema": {
+        "properties": {},
+        "title": "fortuna_infoArguments",
+        "type": "object"
+      },
+      "name": "fortuna_info",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "fortuna_infoOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    Roll a specified number of dice and return their summed total.\n\n    Simulates rolling 'rolls' dice, each with a fixed number of sides provided by 'sides'.\n    The number of dice must be between 1 and 100, and 'sides' must be one of the standard\n    values: 2, 4, 6, 8, 10, 12, 20, 30, or 100.\n\n    @param rolls: Number of dice to roll (1 \u003c= rolls \u003c= 100).\n    @param sides: Number of sides per die; allowed values are 2, 4, 6, 8, 10, 12, 20, 30, or 100.\n    @return: The total sum of the dice rolls.\n    ",
+      "inputSchema": {
+        "properties": {
+          "rolls": {
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Rolls",
+            "type": "integer"
+          },
+          "sides": {
+            "enum": [
+              2,
+              4,
+              6,
+              8,
+              10,
+              12,
+              20,
+              30,
+              100
+            ],
+            "title": "Sides",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rolls",
+          "sides"
+        ],
+        "title": "diceArguments",
+        "type": "object"
+      },
+      "name": "dice",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "diceOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    Return a random integer selected from a sequence defined by a range.\n\n    Constructs a sequence analogous to Python's range(start, stop, step) and selects a random\n    element uniformly from that sequence. The parameters 'start', 'stop', and 'step' must be within\n    the integer bounds of -9223372036854775807 to 9223372036854775807. 'step' must be non-zero to\n    ensure the range contains at least one element.\n\n    @param start: Starting value of the range (inclusive; -9223372036854775807 \u003c= start \u003c= 9223372036854775807).\n    @param stop: Ending value of the range (exclusive; -9223372036854775807 \u003c= stop \u003c= 9223372036854775807).\n    @param step: Increment between values; must be non-zero (-9223372036854775807 \u003c= step \u003c= 9223372036854775807).\n    @return: A random integer from the defined range.\n    ",
+      "inputSchema": {
+        "properties": {
+          "start": {
+            "maximum": 9223372036854776000,
+            "minimum": -9223372036854776000,
+            "title": "Start",
+            "type": "integer"
+          },
+          "step": {
+            "maximum": 9223372036854776000,
+            "minimum": -9223372036854776000,
+            "title": "Step",
+            "type": "integer"
+          },
+          "stop": {
+            "maximum": 9223372036854776000,
+            "minimum": -9223372036854776000,
+            "title": "Stop",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start",
+          "stop",
+          "step"
+        ],
+        "title": "random_rangeArguments",
+        "type": "object"
+      },
+      "name": "random_range",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "random_rangeOutput",
+        "type": "object"
+      }
+    },
+    {
+      "description": "\n    Produce a random float uniformly distributed within a specified interval.\n\n    Generates a random float in the half-open interval [lower_limit, upper_bound).\n    Both 'lower_limit' and 'upper_bound' must lie within the float bounds of\n    -1.7976931348623157e+308 to 1.7976931348623157e+308, and lower_limit must be strictly less than upper_bound.\n\n    @param lower_limit: Inclusive lower bound (-1.7976931348623157e+308 \u003c= lower_limit \u003c upper_bound).\n    @param upper_bound: Exclusive upper bound (lower_limit \u003c upper_bound \u003c= 1.7976931348623157e+308).\n    @return: A random float from the specified interval.\n    ",
+      "inputSchema": {
+        "properties": {
+          "lower_limit": {
+            "maximum": 1.7976931348623157e+308,
+            "minimum": -1.7976931348623157e+308,
+            "title": "Lower Limit",
+            "type": "number"
+          },
+          "upper_bound": {
+            "maximum": 1.7976931348623157e+308,
+            "minimum": -1.7976931348623157e+308,
+            "title": "Upper Bound",
+            "type": "number"
+          }
+        },
+        "required": [
+          "lower_limit",
+          "upper_bound"
+        ],
+        "title": "random_floatArguments",
+        "type": "object"
+      },
+      "name": "random_float",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "number"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "random_floatOutput",
+        "type": "object"
+      }
+    }
+  ]
+}
+---

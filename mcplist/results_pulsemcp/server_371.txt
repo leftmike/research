@@ -1,0 +1,9 @@
+NAME: io.globalping/mcp
+URL: https://mcp.globalping.io/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: connection_blocked
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: Get "https://mcp.globalping.io/sse": Forbidden
+---

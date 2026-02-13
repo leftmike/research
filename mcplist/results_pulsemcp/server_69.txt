@@ -1,0 +1,655 @@
+NAME: LunarCrush
+URL: https://lunarcrush.ai/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "resources": [
+    {
+      "description": "Get all available API endpoints and documentation for the JSON API.",
+      "mimeType": "text/markdown",
+      "name": "LunarCrush API Docs",
+      "uri": "https://lunarcrush.ai/api"
+    }
+  ],
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a list of social topics within a category sorted and filtered by available metrics and sectors.\nid/path lunarcrush.ai/list/{category}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "enum": [
+                  "",
+                  "fashion-brands",
+                  "technology-brands",
+                  "social-networks",
+                  "bundesliga",
+                  "nhl",
+                  "products",
+                  "travel-destinations",
+                  "la-liga",
+                  "automotive-brands",
+                  "vc-firms",
+                  "ncaa-football",
+                  "luxury-brands",
+                  "gaming",
+                  "nba",
+                  "nascar",
+                  "ufc",
+                  "agencies",
+                  "musicians",
+                  "nfts",
+                  "exchanges",
+                  "currencies",
+                  "celebrities",
+                  "stocks",
+                  "ncaa-basketball",
+                  "events",
+                  "countries",
+                  "mls",
+                  "mlb",
+                  "formula-1",
+                  "nfl",
+                  "premier-league",
+                  "finance",
+                  "cryptocurrencies",
+                  "champions-league",
+                  "pga-golfers",
+                  "liga-mx"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "leave blank for all categories"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "default": 10,
+                "maximum": 1000,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sort": {
+            "anyOf": [
+              {
+                "enum": [
+                  "interactions",
+                  "posts_active",
+                  "contributors_active",
+                  "sentiment",
+                  "social_dominance",
+                  "topic_rank"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "One of: interactions: Engagements, posts_active: Mentions, contributors_active: Creators, sentiment: Sentiment, social_dominance: Social Dominance, topic_rank: TopicRank™"
+          }
+        },
+        "type": "object"
+      },
+      "name": "List"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a sorted list of cryptocurrencies sorted by available metrics and filtered by a sector.\nid/path lunarcrush.ai/list/cryptocurrencies/{sector}/{sort}/{limit}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "default": 100,
+                "maximum": 1000,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sector": {
+            "anyOf": [
+              {
+                "enum": [
+                  "stablecoin",
+                  "defi",
+                  "nft",
+                  "dot",
+                  "bsc",
+                  "meme",
+                  "algorand",
+                  "dao",
+                  "wallets",
+                  "ai",
+                  "gaming",
+                  "layer-1",
+                  "layer-2",
+                  "lending-borrowing",
+                  "liquid-staking-tokens",
+                  "brc20",
+                  "exchange-tokens",
+                  "real-world-assets",
+                  "depin",
+                  "fan",
+                  "gambling",
+                  "runes",
+                  "desci",
+                  "sports",
+                  "socialfi",
+                  "analytics",
+                  "events",
+                  "real-estate",
+                  "bitcoin-ecosystem",
+                  "stacks-ecosystem",
+                  "base-ecosystem",
+                  "solana-ecosystem",
+                  "ai-agents",
+                  "defai",
+                  "zk",
+                  "oracle",
+                  "storage",
+                  "made-in-usa",
+                  "sui",
+                  "inj",
+                  "cardano",
+                  "pow",
+                  "pos",
+                  "music",
+                  "insurance",
+                  "privacy",
+                  "energy",
+                  "pump-fun",
+                  "prediction",
+                  "entertainment",
+                  "healthcare",
+                  "btcfi",
+                  "interoperability",
+                  "move-to-earn"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "One of: stablecoin: Stablecoin, defi: DeFi, nft: NFTs \u0026 Collectibles, dot: Polkadot Ecosystem, bsc: BNB Chain Ecosystem, meme: Memecoins, algorand: Algorand Ecosystem, dao: DAO, wallets: Wallets, ai: AI, gaming: Gaming \u0026 Metaverse, layer-1: Layer 1, layer-2: Layer 2, lending-borrowing: Lending/Borrowing, liquid-staking-tokens: Liquid Staking Derivatives, brc20: BRC-20, exchange-tokens: Exchange Tokens, real-world-assets: Real-World Assets, depin: DePin, fan: Fan Tokens, gambling: Gambling, runes: Runes, desci: DeSci, sports: Sports, socialfi: SocialFi, analytics: Analytics, events: Events, real-estate: Real Estate, bitcoin-ecosystem: Bitcoin Ecosystem, stacks-ecosystem: Stacks Ecosystem, base-ecosystem: Base Ecosystem, solana-ecosystem: Solana Ecosystem, ai-agents: AI Agents, defai: DeFAI, zk: Zero Knowledge Proofs, oracle: Oracles, storage: Storage, made-in-usa: Made In USA, sui: SUI Ecosystem, inj: Injective Ecosystem, cardano: Cardano Ecosystem, pow: Proof of Work (PoW), pos: Proof of Stake (PoS), music: Music, insurance: Insurance, privacy: Privacy, energy: Energy, pump-fun: Pump.Fun Ecosystem, prediction: Prediction Markets, entertainment: Entertainment, healthcare: Healthcare, btcfi: BTCfi, interoperability: Interoperability, move-to-earn: Move to Earn"
+          },
+          "sort": {
+            "anyOf": [
+              {
+                "enum": [
+                  "alt_rank",
+                  "galaxy_score",
+                  "close",
+                  "percent_change_1h",
+                  "percent_change_24h",
+                  "percent_change_7d",
+                  "interactions",
+                  "posts_active",
+                  "contributors_active",
+                  "sentiment",
+                  "social_dominance",
+                  "market_cap",
+                  "market_dominance",
+                  "volume_24h",
+                  "circulating_supply",
+                  "topic_rank"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "One of: alt_rank: AltRank™, galaxy_score: Galaxy Score™, close: Price, percent_change_1h: 1h %, percent_change_24h: 24h %, percent_change_7d: 7d %, interactions: Engagements, posts_active: Mentions, contributors_active: Creators, sentiment: Sentiment, social_dominance: Social Dominance, market_cap: Market Cap, market_dominance: Market Dominance, volume_24h: Trading Volume, circulating_supply: Circulating Supply, topic_rank: TopicRank™"
+          }
+        },
+        "type": "object"
+      },
+      "name": "Cryptocurrencies"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a sorted list of stocks sorted by available metrics and filtered by a sector.\nid/path lunarcrush.ai/list/stocks/{sector}/{sort}/{limit}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "default": 100,
+                "maximum": 1000,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sector": {
+            "anyOf": [
+              {
+                "enum": [
+                  "basic-materials",
+                  "communication-services",
+                  "consumer-cyclical",
+                  "consumer-defensive",
+                  "energy",
+                  "financial-services",
+                  "healthcare",
+                  "industrials",
+                  "real-estate",
+                  "technology",
+                  "utilities",
+                  "banks",
+                  "etf",
+                  "bitcoin-spot-etf",
+                  "bitcoin-futures-etf",
+                  "ethereum-spot-etf",
+                  "bitcoin-treasuries",
+                  "crypto-etfs"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Leave blank for all stocks. Options are: basic-materials: Basic Materials, communication-services: Communication Services, consumer-cyclical: Consumer Cyclical, consumer-defensive: Consumer Defensive, energy: Energy, financial-services: Financial Services, healthcare: Healthcare, industrials: Industrials, real-estate: Real Estate, technology: Technology, utilities: Utilities, banks: Banks, etf: ETFs, bitcoin-spot-etf: Bitcoin Spot ETFs, bitcoin-futures-etf: Bitcoin Futures ETFs, ethereum-spot-etf: Ethereum Spot ETFs, bitcoin-treasuries: Bitcoin Treasuries, crypto-etfs: Crypto ETFs"
+          },
+          "sort": {
+            "anyOf": [
+              {
+                "enum": [
+                  "alt_rank",
+                  "galaxy_score",
+                  "close",
+                  "percent_change_24h",
+                  "interactions",
+                  "posts_active",
+                  "contributors_active",
+                  "sentiment",
+                  "social_dominance",
+                  "market_cap",
+                  "market_dominance",
+                  "volume",
+                  "topic_rank"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Leave blank for no sorting. Options are: alt_rank: AltRank™, galaxy_score: Galaxy Score™, close: Price, percent_change_24h: 24h %, interactions: Engagements, posts_active: Mentions, contributors_active: Creators, sentiment: Sentiment, social_dominance: Social Dominance, market_cap: Market Cap, market_dominance: Market Dominance, volume: Trading Volume, topic_rank: TopicRank™"
+          }
+        },
+        "type": "object"
+      },
+      "name": "Stocks"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get full details for a social topic, keyword, cryptocurrency, or stock.\nUse this tool for the most current and popular popular social posts, social metrics, market metrics like price and volume, sentiment analysis, and more.\nid/path lunarcrush.ai/topic/{topic}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "topic": {
+            "description": "Examples: bitcoin, $btc, $aapl, apple inc, $tsla, donald trump, elon musk, drake, lebron james, javascript, python, stacks-ecosystem",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "type": "object"
+      },
+      "name": "Topic"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get historical time series metrics for a social topic, keyword, cryptocurrency, or stock.\nid/path lunarcrush.ai/topic/{topic}/time-series/{interval}/{metrics}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "interval": {
+            "anyOf": [
+              {
+                "default": "1y",
+                "enum": [
+                  "1w",
+                  "1m",
+                  "3m",
+                  "6m",
+                  "1y",
+                  "all"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "One of 1d, 1w, 1m, 3m, 6m, 1y, all"
+          },
+          "metrics": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "alt_rank",
+                    "circulating_supply",
+                    "close",
+                    "galaxy_score",
+                    "high",
+                    "low",
+                    "market_cap",
+                    "market_dominance",
+                    "open",
+                    "volume_24h",
+                    "contributors_active",
+                    "contributors_created",
+                    "interactions",
+                    "posts_active",
+                    "posts_created",
+                    "sentiment",
+                    "spam",
+                    "social_dominance"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Leave blank to show all metrics or isolate to one or more of alt_rank: AltRank™, galaxy_score: Galaxy Score™, close: Price, interactions: Engagements, posts_active: Mentions, posts_created: Posts Created, contributors_active: Creators, contributors_created: Creators Posting, sentiment: Sentiment, social_dominance: Social Dominance, market_cap: Market Cap, market_dominance: Market Dominance, volume_24h: Trading Volume, circulating_supply: Circulating Supply"
+          },
+          "topic": {
+            "description": "Topic examples: bitcoin, $btc, $aapl, apple inc, $tsla, donald trump, elon musk, drake, lebron james, javascript, python, stacks-ecosystem",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "type": "object"
+      },
+      "name": "Topic_Time_Series"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get the most popular news and social posts that mention a topic including the creator, follower count, creation time, and engagements.\nReturns the most popular posts by number of engagements for a specific date range based on when the post received the most engagements, not when the post was created.\nid/path lunarcrush.ai/topic/{topic}/posts/{interval}/{from_date}/{to_date}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "provide a date range instead of interval with from_date and to_date to get posts for a specific day or range"
+          },
+          "interval": {
+            "anyOf": [
+              {
+                "enum": [
+                  "1d",
+                  "1w",
+                  "1m",
+                  "3m",
+                  "6m",
+                  "1y",
+                  "all"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Time interval is optional to look back further than 24 hours or look back one of: 1d, 1w, 1m, 3m, 6m, 1y, all"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "optional to_date for date range, leave blank to get posts only from the from_date"
+          },
+          "topic": {
+            "description": "Topics must be lower case a-z, 0-9, #, $, _ and spaces are allowed. Topic examples: bitcoin, $btc, $aapl, apple inc, $tsla, donald trump, elon musk, drake, lebron james, javascript, python, stacks-ecosystem",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "type": "object"
+      },
+      "name": "Topic_Posts"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a specific creator's social posts, metrics, and insights. Use this tool for information about a social media handle or personality.\nLeave network empty to assume it is twitter/x. Use best guess for screenName.\nid/path lunarcrush.ai/creator/{network}/{screenName}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "network": {
+            "anyOf": [
+              {
+                "description": "This argument is optional, leave blank for twitter/x.",
+                "enum": [
+                  "x",
+                  "twitter",
+                  "tiktok",
+                  "youtube",
+                  "reddit"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "This argument is optional, leave blank for twitter/x."
+          },
+          "screenName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "screenName"
+        ],
+        "type": "object"
+      },
+      "name": "Creator"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get details of a specific post by network and unique post ID. Ids of posts can be inferred by the public URL link to the post.\nLink format /post/{network}/{id}\n",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "network": {
+            "anyOf": [
+              {
+                "description": "If no network is specified it will assume it is twitter/x",
+                "enum": [
+                  "x",
+                  "twitter",
+                  "tiktok",
+                  "youtube",
+                  "reddit"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "If no network is specified it will assume it is twitter/x"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "Post"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Search for any topic, category, creator, post, metric, or api documentation. Include additional keywords, metrics, or time intervals to expand the results with more context.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "description": "Search query or phrase. Include keywords, metrics, or time intervals to expand the results with more context.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "Search"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Fetch a lunarcrush.ai context using a specific path like /topic/bitcoin or /topic/bitcoin/posts/full or /list/cryptocurrencies/altrank or /creator/x/lunarcrush or /post/x/1234567890",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "id is a url-friendly path. Use slashes (/) to separate path parts. Example: topic/bitcoin/posts/1m or list/cryptocurrencies/altrank/100",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "Fetch"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get subscription and rate limit information. Optionally provide an API key to test.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "apiKey": {
+            "description": "Optionally provide an alternate API key to test",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "name": "Authentication"
+    }
+  ]
+}
+---

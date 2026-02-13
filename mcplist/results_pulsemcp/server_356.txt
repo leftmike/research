@@ -1,0 +1,5333 @@
+NAME: ScanMalware.com URL Scanner
+URL: https://mcp.scanmalware.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Recent Scans"
+      },
+      "description": "Get recent public scans (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "title": "get_recent_scansArguments",
+        "type": "object"
+      },
+      "name": "get_recent_scans",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_recent_scansDictOutput",
+        "type": "object"
+      },
+      "title": "Get Recent Scans"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "title": "Submit Scan"
+      },
+      "description": "Submit a URL for scanning.",
+      "inputSchema": {
+        "properties": {
+          "options": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Options"
+          },
+          "scan_type": {
+            "default": "public",
+            "title": "Scan Type",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "user_agent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "User Agent"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "title": "submit_scanArguments",
+        "type": "object"
+      },
+      "name": "submit_scan",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "submit_scanDictOutput",
+        "type": "object"
+      },
+      "title": "Submit Scan"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Scan Summary"
+      },
+      "description": "Get compact scan summary by scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_scan_summaryArguments",
+        "type": "object"
+      },
+      "name": "get_scan_summary",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_scan_summaryDictOutput",
+        "type": "object"
+      },
+      "title": "Get Scan Summary"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Wait For Scan"
+      },
+      "description": "Poll until a scan reaches a terminal status, returning the final summary.",
+      "inputSchema": {
+        "properties": {
+          "poll_interval_s": {
+            "default": 2,
+            "title": "Poll Interval S",
+            "type": "number"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          },
+          "timeout_s": {
+            "default": 180,
+            "title": "Timeout S",
+            "type": "number"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "wait_for_scanArguments",
+        "type": "object"
+      },
+      "name": "wait_for_scan",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "wait_for_scanDictOutput",
+        "type": "object"
+      },
+      "title": "Wait For Scan"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Scan Result"
+      },
+      "description": "Get full scan result by scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_scan_resultArguments",
+        "type": "object"
+      },
+      "name": "get_scan_result",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_scan_resultDictOutput",
+        "type": "object"
+      },
+      "title": "Get Scan Result"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Scans"
+      },
+      "description": "Search scans (q must be at least 3 characters).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "q": {
+            "title": "Q",
+            "type": "string"
+          },
+          "search_type": {
+            "default": "all",
+            "title": "Search Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "q"
+        ],
+        "title": "search_scansArguments",
+        "type": "object"
+      },
+      "name": "search_scans",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_scansDictOutput",
+        "type": "object"
+      },
+      "title": "Search Scans"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get AI Analysis"
+      },
+      "description": "Get AI analysis for a scan_id (if available).",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_ai_analysisArguments",
+        "type": "object"
+      },
+      "name": "get_ai_analysis",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ai_analysisDictOutput",
+        "type": "object"
+      },
+      "title": "Get AI Analysis"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Scan Progress"
+      },
+      "description": "Get scan progress by scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_scan_progressArguments",
+        "type": "object"
+      },
+      "name": "get_scan_progress",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_scan_progressDictOutput",
+        "type": "object"
+      },
+      "title": "Get Scan Progress"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Scan IOC"
+      },
+      "description": "Get IOC matches for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_scan_iocArguments",
+        "type": "object"
+      },
+      "name": "get_scan_ioc",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_scan_iocDictOutput",
+        "type": "object"
+      },
+      "title": "Get Scan IOC"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get TLS Details"
+      },
+      "description": "Get TLS details for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_tls_detailsArguments",
+        "type": "object"
+      },
+      "name": "get_tls_details",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_tls_detailsDictOutput",
+        "type": "object"
+      },
+      "title": "Get TLS Details"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get TLS ASN1"
+      },
+      "description": "Get TLS certificate ASN.1 data for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_tls_asn1Arguments",
+        "type": "object"
+      },
+      "name": "get_tls_asn1",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_tls_asn1DictOutput",
+        "type": "object"
+      },
+      "title": "Get TLS ASN1"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Technologies By Scan"
+      },
+      "description": "Get detected technologies for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_technologies_by_scanArguments",
+        "type": "object"
+      },
+      "name": "get_technologies_by_scan",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_technologies_by_scanDictOutput",
+        "type": "object"
+      },
+      "title": "Get Technologies By Scan"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Bot Protection"
+      },
+      "description": "Get bot-protection detection for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_bot_protectionArguments",
+        "type": "object"
+      },
+      "name": "get_bot_protection",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_bot_protectionDictOutput",
+        "type": "object"
+      },
+      "title": "Get Bot Protection"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get YARA Matches"
+      },
+      "description": "Get YARA matches for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_yara_matchesArguments",
+        "type": "object"
+      },
+      "name": "get_yara_matches",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_yara_matchesDictOutput",
+        "type": "object"
+      },
+      "title": "Get YARA Matches"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JARM Signatures"
+      },
+      "description": "Get JARM signatures for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_jarm_signaturesArguments",
+        "type": "object"
+      },
+      "name": "get_jarm_signatures",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jarm_signaturesDictOutput",
+        "type": "object"
+      },
+      "title": "Get JARM Signatures"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Analyzer Results"
+      },
+      "description": "Get analyzer results for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_analyzer_resultsArguments",
+        "type": "object"
+      },
+      "name": "get_analyzer_results",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_analyzer_resultsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Analyzer Results"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Clipboard Events"
+      },
+      "description": "Get clipboard events for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_clipboard_eventsArguments",
+        "type": "object"
+      },
+      "name": "get_clipboard_events",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_clipboard_eventsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Clipboard Events"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprints"
+      },
+      "description": "Get JavaScript fingerprints for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "include_functions": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Functions"
+          },
+          "include_http_headers": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Http Headers"
+          },
+          "include_vectors_info": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Vectors Info"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_js_fingerprintsArguments",
+        "type": "object"
+      },
+      "name": "get_js_fingerprints",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_fingerprintsDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Scan Reports"
+      },
+      "description": "Get available reports for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "report_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Report Type"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_scan_reportsArguments",
+        "type": "object"
+      },
+      "name": "get_scan_reports",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_scan_reportsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Scan Reports"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Domain Scans"
+      },
+      "description": "Get recent scans for a domain.",
+      "inputSchema": {
+        "properties": {
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "title": "get_domain_scansArguments",
+        "type": "object"
+      },
+      "name": "get_domain_scans",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_domain_scansOutput",
+        "type": "object"
+      },
+      "title": "Get Domain Scans"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Domain History"
+      },
+      "description": "Get historical scans for a domain (paginated).",
+      "inputSchema": {
+        "properties": {
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "title": "get_domain_historyArguments",
+        "type": "object"
+      },
+      "name": "get_domain_history",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_domain_historyDictOutput",
+        "type": "object"
+      },
+      "title": "Get Domain History"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Domain Stats"
+      },
+      "description": "Get summary statistics for a domain.",
+      "inputSchema": {
+        "properties": {
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "title": "get_domain_statsArguments",
+        "type": "object"
+      },
+      "name": "get_domain_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_domain_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Domain Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search By IP"
+      },
+      "description": "Search scans by IP address (paginated).",
+      "inputSchema": {
+        "properties": {
+          "ip_address": {
+            "title": "Ip Address",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ip_address"
+        ],
+        "title": "search_by_ipArguments",
+        "type": "object"
+      },
+      "name": "search_by_ip",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_by_ipDictOutput",
+        "type": "object"
+      },
+      "title": "Search By IP"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get IP Stats"
+      },
+      "description": "Get IP statistics (paginated).",
+      "inputSchema": {
+        "properties": {
+          "ip_address": {
+            "title": "Ip Address",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ip_address"
+        ],
+        "title": "get_ip_statsArguments",
+        "type": "object"
+      },
+      "name": "get_ip_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ip_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get IP Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search By ASN"
+      },
+      "description": "Search scans by ASN (paginated).",
+      "inputSchema": {
+        "properties": {
+          "asn_number": {
+            "title": "Asn Number",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "asn_number"
+        ],
+        "title": "search_by_asnArguments",
+        "type": "object"
+      },
+      "name": "search_by_asn",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_by_asnDictOutput",
+        "type": "object"
+      },
+      "title": "Search By ASN"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Similar Scans"
+      },
+      "description": "Search for scans similar to a scan_id (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "methods": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Methods"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "search_similar_scansArguments",
+        "type": "object"
+      },
+      "name": "search_similar_scans",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_similar_scansDictOutput",
+        "type": "object"
+      },
+      "title": "Search Similar Scans"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Semantic"
+      },
+      "description": "Semantic search over scans (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "threshold": {
+            "default": 0.7,
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_semanticArguments",
+        "type": "object"
+      },
+      "name": "search_semantic",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_semanticDictOutput",
+        "type": "object"
+      },
+      "title": "Search Semantic"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search By Favicon"
+      },
+      "description": "Search scans by favicon hash (paginated).",
+      "inputSchema": {
+        "properties": {
+          "hash_type": {
+            "default": "mmh3",
+            "title": "Hash Type",
+            "type": "string"
+          },
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_by_faviconArguments",
+        "type": "object"
+      },
+      "name": "search_by_favicon",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_by_faviconDictOutput",
+        "type": "object"
+      },
+      "title": "Search By Favicon"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search AI High Risk"
+      },
+      "description": "Search AI high-risk scans.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "min_confidence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Confidence"
+          },
+          "min_risk_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Risk Score"
+          }
+        },
+        "title": "search_ai_high_riskArguments",
+        "type": "object"
+      },
+      "name": "search_ai_high_risk",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_ai_high_riskDictOutput",
+        "type": "object"
+      },
+      "title": "Search AI High Risk"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search AI Scam Type"
+      },
+      "description": "Search AI scans by scam type.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "scam_type": {
+            "title": "Scam Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scam_type"
+        ],
+        "title": "search_ai_scam_typeArguments",
+        "type": "object"
+      },
+      "name": "search_ai_scam_type",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_ai_scam_typeDictOutput",
+        "type": "object"
+      },
+      "title": "Search AI Scam Type"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search AI Classification"
+      },
+      "description": "Search AI scans by classification.",
+      "inputSchema": {
+        "properties": {
+          "classification": {
+            "title": "Classification",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "classification"
+        ],
+        "title": "search_ai_classificationArguments",
+        "type": "object"
+      },
+      "name": "search_ai_classification",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_ai_classificationDictOutput",
+        "type": "object"
+      },
+      "title": "Search AI Classification"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Analyzer Stats"
+      },
+      "description": "Get analyzer statistics overview.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_analyzer_statsArguments",
+        "type": "object"
+      },
+      "name": "get_analyzer_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_analyzer_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Analyzer Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Analyzer High Risk"
+      },
+      "description": "Search analyzer high-risk scans (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "min_risk_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Risk Score"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "title": "search_analyzer_high_riskArguments",
+        "type": "object"
+      },
+      "name": "search_analyzer_high_risk",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_analyzer_high_riskDictOutput",
+        "type": "object"
+      },
+      "title": "Search Analyzer High Risk"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Favicon"
+      },
+      "description": "Get favicon metadata for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_faviconArguments",
+        "type": "object"
+      },
+      "name": "get_favicon",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_faviconDictOutput",
+        "type": "object"
+      },
+      "title": "Get Favicon"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Favicon Stats"
+      },
+      "description": "Get favicon statistics.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_favicon_statsArguments",
+        "type": "object"
+      },
+      "name": "get_favicon_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_favicon_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Favicon Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Screenshot Stats"
+      },
+      "description": "Get screenshot statistics.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_screenshot_statsArguments",
+        "type": "object"
+      },
+      "name": "get_screenshot_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_screenshot_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Screenshot Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Similar Screenshots"
+      },
+      "description": "Search for similar screenshots by hash.",
+      "inputSchema": {
+        "properties": {
+          "hash_type": {
+            "default": "phash",
+            "title": "Hash Type",
+            "type": "string"
+          },
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "max_distance": {
+            "default": 3,
+            "title": "Max Distance",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_similar_screenshotsArguments",
+        "type": "object"
+      },
+      "name": "search_similar_screenshots",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "search_similar_screenshotsOutput",
+        "type": "object"
+      },
+      "title": "Search Similar Screenshots"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search OCR"
+      },
+      "description": "Search OCR text (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "q": {
+            "title": "Q",
+            "type": "string"
+          }
+        },
+        "required": [
+          "q"
+        ],
+        "title": "search_ocrArguments",
+        "type": "object"
+      },
+      "name": "search_ocr",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_ocrDictOutput",
+        "type": "object"
+      },
+      "title": "Search OCR"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search OCR Pattern"
+      },
+      "description": "Search OCR by pattern (paginated).",
+      "inputSchema": {
+        "properties": {
+          "case_sensitive": {
+            "default": false,
+            "title": "Case Sensitive",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pattern": {
+            "title": "Pattern",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pattern"
+        ],
+        "title": "search_ocr_patternArguments",
+        "type": "object"
+      },
+      "name": "search_ocr_pattern",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_ocr_patternDictOutput",
+        "type": "object"
+      },
+      "title": "Search OCR Pattern"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search By JARM"
+      },
+      "description": "Search scans by JARM signature (paginated).",
+      "inputSchema": {
+        "properties": {
+          "jarm_signature": {
+            "title": "Jarm Signature",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "jarm_signature"
+        ],
+        "title": "search_by_jarmArguments",
+        "type": "object"
+      },
+      "name": "search_by_jarm",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_by_jarmDictOutput",
+        "type": "object"
+      },
+      "title": "Search By JARM"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search By Fuzzy Hash"
+      },
+      "description": "Search scans by fuzzy hash (paginated).",
+      "inputSchema": {
+        "properties": {
+          "hash_type": {
+            "title": "Hash Type",
+            "type": "string"
+          },
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hash_type",
+          "hash_value"
+        ],
+        "title": "search_by_fuzzy_hashArguments",
+        "type": "object"
+      },
+      "name": "search_by_fuzzy_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_by_fuzzy_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search By Fuzzy Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search By Screenshot Hash"
+      },
+      "description": "Search scans by screenshot hash (paginated).",
+      "inputSchema": {
+        "properties": {
+          "hash_type": {
+            "title": "Hash Type",
+            "type": "string"
+          },
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "similarity_threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Similarity Threshold"
+          }
+        },
+        "required": [
+          "hash_type",
+          "hash_value"
+        ],
+        "title": "search_by_screenshot_hashArguments",
+        "type": "object"
+      },
+      "name": "search_by_screenshot_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_by_screenshot_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search By Screenshot Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Suspicious Clipboard"
+      },
+      "description": "Search suspicious clipboard indicators (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pattern": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Pattern"
+          }
+        },
+        "title": "search_suspicious_clipboardArguments",
+        "type": "object"
+      },
+      "name": "search_suspicious_clipboard",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_suspicious_clipboardDictOutput",
+        "type": "object"
+      },
+      "title": "Search Suspicious Clipboard"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Recent Threats"
+      },
+      "description": "Get recent malware threats.",
+      "inputSchema": {
+        "properties": {
+          "hours": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Hours"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "get_recent_threatsArguments",
+        "type": "object"
+      },
+      "name": "get_recent_threats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_recent_threatsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Recent Threats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Recent YARA Threats"
+      },
+      "description": "Get recent YARA threats.",
+      "inputSchema": {
+        "properties": {
+          "hours": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Hours"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "get_recent_yara_threatsArguments",
+        "type": "object"
+      },
+      "name": "get_recent_yara_threats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_recent_yara_threatsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Recent YARA Threats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get CT Certificates"
+      },
+      "description": "Get certificate transparency data for a domain.",
+      "inputSchema": {
+        "properties": {
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "title": "get_ct_certificatesArguments",
+        "type": "object"
+      },
+      "name": "get_ct_certificates",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ct_certificatesDictOutput",
+        "type": "object"
+      },
+      "title": "Get CT Certificates"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get CT DNS Records"
+      },
+      "description": "Get CT DNS records for a domain.",
+      "inputSchema": {
+        "properties": {
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "title": "get_ct_dns_recordsArguments",
+        "type": "object"
+      },
+      "name": "get_ct_dns_records",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ct_dns_recordsDictOutput",
+        "type": "object"
+      },
+      "title": "Get CT DNS Records"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get CT Domains By IP"
+      },
+      "description": "Find CT domains on an IP address.",
+      "inputSchema": {
+        "properties": {
+          "ip_address": {
+            "title": "Ip Address",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ip_address"
+        ],
+        "title": "get_ct_domains_by_ipArguments",
+        "type": "object"
+      },
+      "name": "get_ct_domains_by_ip",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ct_domains_by_ipDictOutput",
+        "type": "object"
+      },
+      "title": "Get CT Domains By IP"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get CT Similar Domains"
+      },
+      "description": "Find similar CT domains for a domain.",
+      "inputSchema": {
+        "properties": {
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "title": "get_ct_similar_domainsArguments",
+        "type": "object"
+      },
+      "name": "get_ct_similar_domains",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ct_similar_domainsDictOutput",
+        "type": "object"
+      },
+      "title": "Get CT Similar Domains"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get CT Timeline"
+      },
+      "description": "Get CT certificate timeline for a domain.",
+      "inputSchema": {
+        "properties": {
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "title": "get_ct_timelineArguments",
+        "type": "object"
+      },
+      "name": "get_ct_timeline",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ct_timelineDictOutput",
+        "type": "object"
+      },
+      "title": "Get CT Timeline"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get API Root"
+      },
+      "description": "Get API root metadata.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_api_rootArguments",
+        "type": "object"
+      },
+      "name": "get_api_root",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_api_rootDictOutput",
+        "type": "object"
+      },
+      "title": "Get API Root"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Health"
+      },
+      "description": "Get API health status.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_healthArguments",
+        "type": "object"
+      },
+      "name": "get_health",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_healthDictOutput",
+        "type": "object"
+      },
+      "title": "Get Health"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Platform Stats"
+      },
+      "description": "Get platform statistics.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_platform_statsArguments",
+        "type": "object"
+      },
+      "name": "get_platform_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_platform_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Platform Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Latest Capabilities"
+      },
+      "description": "Get latest capability stats.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_latest_capabilitiesArguments",
+        "type": "object"
+      },
+      "name": "get_latest_capabilities",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_latest_capabilitiesDictOutput",
+        "type": "object"
+      },
+      "title": "Get Latest Capabilities"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Capabilities By Date"
+      },
+      "description": "Get capability stats by date.",
+      "inputSchema": {
+        "properties": {
+          "scan_date": {
+            "title": "Scan Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_date"
+        ],
+        "title": "get_capabilities_by_dateArguments",
+        "type": "object"
+      },
+      "name": "get_capabilities_by_date",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_capabilities_by_dateDictOutput",
+        "type": "object"
+      },
+      "title": "Get Capabilities By Date"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Clipboard Stats"
+      },
+      "description": "Get clipboard statistics.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_clipboard_statsArguments",
+        "type": "object"
+      },
+      "name": "get_clipboard_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_clipboard_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Clipboard Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get CPE Stats"
+      },
+      "description": "Get CPE statistics.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_cpe_statsArguments",
+        "type": "object"
+      },
+      "name": "get_cpe_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_cpe_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get CPE Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get CPE By Scan"
+      },
+      "description": "Get CPEs for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_cpe_by_scanArguments",
+        "type": "object"
+      },
+      "name": "get_cpe_by_scan",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_cpe_by_scanOutput",
+        "type": "object"
+      },
+      "title": "Get CPE By Scan"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search CPE"
+      },
+      "description": "Search CPEs by pattern (paginated).",
+      "inputSchema": {
+        "properties": {
+          "cpe_pattern": {
+            "title": "Cpe Pattern",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "cpe_pattern"
+        ],
+        "title": "search_cpeArguments",
+        "type": "object"
+      },
+      "name": "search_cpe",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_cpeDictOutput",
+        "type": "object"
+      },
+      "title": "Search CPE"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get IDS Alerts"
+      },
+      "description": "Get IDS alerts for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_ids_alertsArguments",
+        "type": "object"
+      },
+      "name": "get_ids_alerts",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ids_alertsDictOutput",
+        "type": "object"
+      },
+      "title": "Get IDS Alerts"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JARM Stats"
+      },
+      "description": "Get JARM statistics.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_jarm_statsArguments",
+        "type": "object"
+      },
+      "name": "get_jarm_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jarm_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get JARM Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Malware Stats"
+      },
+      "description": "Get malware stats.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_malware_statsArguments",
+        "type": "object"
+      },
+      "name": "get_malware_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_malware_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Malware Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Malware By Scan"
+      },
+      "description": "Get malware details for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_malware_by_scanArguments",
+        "type": "object"
+      },
+      "name": "get_malware_by_scan",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_malware_by_scanDictOutput",
+        "type": "object"
+      },
+      "title": "Get Malware By Scan"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get YARA Stats"
+      },
+      "description": "Get YARA stats.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_yara_statsArguments",
+        "type": "object"
+      },
+      "name": "get_yara_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_yara_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get YARA Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get YARA By Scan"
+      },
+      "description": "Get YARA results for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_yara_by_scanArguments",
+        "type": "object"
+      },
+      "name": "get_yara_by_scan",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_yara_by_scanDictOutput",
+        "type": "object"
+      },
+      "title": "Get YARA By Scan"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Safe Browsing Stats"
+      },
+      "description": "Get safe browsing stats.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_safe_browsing_statsArguments",
+        "type": "object"
+      },
+      "name": "get_safe_browsing_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_safe_browsing_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Safe Browsing Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Safe Browsing"
+      },
+      "description": "Get safe browsing threats for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_safe_browsingArguments",
+        "type": "object"
+      },
+      "name": "get_safe_browsing",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_safe_browsingDictOutput",
+        "type": "object"
+      },
+      "title": "Get Safe Browsing"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Top Tracking Keys"
+      },
+      "description": "Get top tracking keys.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "tracker_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Tracker Type"
+          }
+        },
+        "title": "get_top_tracking_keysArguments",
+        "type": "object"
+      },
+      "name": "get_top_tracking_keys",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_top_tracking_keysDictOutput",
+        "type": "object"
+      },
+      "title": "Get Top Tracking Keys"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Tracking Key"
+      },
+      "description": "Search by tracking key (paginated).",
+      "inputSchema": {
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "sort": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Sort"
+          },
+          "tracker_type": {
+            "title": "Tracker Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tracker_type",
+          "key"
+        ],
+        "title": "search_tracking_keyArguments",
+        "type": "object"
+      },
+      "name": "search_tracking_key",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_tracking_keyDictOutput",
+        "type": "object"
+      },
+      "title": "Search Tracking Key"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Technologies"
+      },
+      "description": "Search technologies (paginated).",
+      "inputSchema": {
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Category"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "q": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Q"
+          }
+        },
+        "title": "search_technologiesArguments",
+        "type": "object"
+      },
+      "name": "search_technologies",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_technologiesDictOutput",
+        "type": "object"
+      },
+      "title": "Search Technologies"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Technology Combinations"
+      },
+      "description": "Get technology combinations (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "min_occurrences": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Occurrences"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "tech_name": {
+            "title": "Tech Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tech_name"
+        ],
+        "title": "get_technology_combinationsArguments",
+        "type": "object"
+      },
+      "name": "get_technology_combinations",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_technology_combinationsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Technology Combinations"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Popular Technologies"
+      },
+      "description": "Get popular technologies (paginated).",
+      "inputSchema": {
+        "properties": {
+          "days": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Days"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "title": "get_popular_technologiesArguments",
+        "type": "object"
+      },
+      "name": "get_popular_technologies",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_popular_technologiesDictOutput",
+        "type": "object"
+      },
+      "title": "Get Popular Technologies"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Technology Stats"
+      },
+      "description": "Get technology stats.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_technology_statsArguments",
+        "type": "object"
+      },
+      "name": "get_technology_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_technology_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get Technology Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search By Nameserver"
+      },
+      "description": "Search scans by nameserver.",
+      "inputSchema": {
+        "properties": {
+          "nameserver": {
+            "title": "Nameserver",
+            "type": "string"
+          }
+        },
+        "required": [
+          "nameserver"
+        ],
+        "title": "search_by_nameserverArguments",
+        "type": "object"
+      },
+      "name": "search_by_nameserver",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_by_nameserverDictOutput",
+        "type": "object"
+      },
+      "title": "Search By Nameserver"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get RDAP"
+      },
+      "description": "Get RDAP details for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_rdapArguments",
+        "type": "object"
+      },
+      "name": "get_rdap",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_rdapDictOutput",
+        "type": "object"
+      },
+      "title": "Get RDAP"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search By Registrar"
+      },
+      "description": "Search scans by registrar (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "registrar_name": {
+            "title": "Registrar Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "registrar_name"
+        ],
+        "title": "search_by_registrarArguments",
+        "type": "object"
+      },
+      "name": "search_by_registrar",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_by_registrarDictOutput",
+        "type": "object"
+      },
+      "title": "Search By Registrar"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "title": "Submit Scan Report"
+      },
+      "description": "Submit a scan report.",
+      "inputSchema": {
+        "properties": {
+          "captcha_answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Captcha Answer"
+          },
+          "captcha_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Captcha Token"
+          },
+          "report_details": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Report Details"
+          },
+          "report_type": {
+            "title": "Report Type",
+            "type": "string"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          },
+          "skip_captcha": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Skip Captcha"
+          },
+          "user_agent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "User Agent"
+          },
+          "x_forwarded_for": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "X Forwarded For"
+          },
+          "x_real_ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "X Real Ip"
+          }
+        },
+        "required": [
+          "scan_id",
+          "report_type"
+        ],
+        "title": "submit_scan_reportArguments",
+        "type": "object"
+      },
+      "name": "submit_scan_report",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "submit_scan_reportDictOutput",
+        "type": "object"
+      },
+      "title": "Submit Scan Report"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get OCR Stats"
+      },
+      "description": "Get OCR stats.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_ocr_statsArguments",
+        "type": "object"
+      },
+      "name": "get_ocr_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ocr_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get OCR Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get OCR By Scan"
+      },
+      "description": "Get OCR data for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_ocr_by_scanArguments",
+        "type": "object"
+      },
+      "name": "get_ocr_by_scan",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_ocr_by_scanDictOutput",
+        "type": "object"
+      },
+      "title": "Get OCR By Scan"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Open Graph"
+      },
+      "description": "Get Open Graph data for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_open_graphArguments",
+        "type": "object"
+      },
+      "name": "get_open_graph",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_open_graphDictOutput",
+        "type": "object"
+      },
+      "title": "Get Open Graph"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Pastejacking"
+      },
+      "description": "Get pastejacking findings for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_pastejackingArguments",
+        "type": "object"
+      },
+      "name": "get_pastejacking",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_pastejackingDictOutput",
+        "type": "object"
+      },
+      "title": "Get Pastejacking"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get Netlog"
+      },
+      "description": "Get network log for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_netlogArguments",
+        "type": "object"
+      },
+      "name": "get_netlog",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_netlogDictOutput",
+        "type": "object"
+      },
+      "title": "Get Netlog"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get PCAP Metadata"
+      },
+      "description": "Get PCAP metadata for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_pcap_metadataArguments",
+        "type": "object"
+      },
+      "name": "get_pcap_metadata",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_pcap_metadataDictOutput",
+        "type": "object"
+      },
+      "title": "Get PCAP Metadata"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search Favicon MMH3"
+      },
+      "description": "Search favicon by mmh3 hash (paginated).",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "mmh3_hash": {
+            "title": "Mmh3 Hash",
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "mmh3_hash"
+        ],
+        "title": "search_favicon_mmh3Arguments",
+        "type": "object"
+      },
+      "name": "search_favicon_mmh3",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_favicon_mmh3DictOutput",
+        "type": "object"
+      },
+      "title": "Search Favicon MMH3"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprinter2"
+      },
+      "description": "Get JS Fingerprinter2 results for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "include_detailed_events": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Detailed Events"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_js_fingerprinter2Arguments",
+        "type": "object"
+      },
+      "name": "get_js_fingerprinter2",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_fingerprinter2DictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprinter2"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprinter2 Stats"
+      },
+      "description": "Get JS Fingerprinter2 stats.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_js_fingerprinter2_statsArguments",
+        "type": "object"
+      },
+      "name": "get_js_fingerprinter2_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_fingerprinter2_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprinter2 Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprinter2 Health"
+      },
+      "description": "Get JS Fingerprinter2 health check.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_js_fingerprinter2_healthArguments",
+        "type": "object"
+      },
+      "name": "get_js_fingerprinter2_health",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_fingerprinter2_healthDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprinter2 Health"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprinter2 Coverage"
+      },
+      "description": "Get JS Fingerprinter2 fingerprint coverage.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_js_fingerprinter2_coverageArguments",
+        "type": "object"
+      },
+      "name": "get_js_fingerprinter2_coverage",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_fingerprinter2_coverageDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprinter2 Coverage"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Obfuscation"
+      },
+      "description": "Search JS obfuscation signals.",
+      "inputSchema": {
+        "properties": {
+          "has_eval": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Has Eval"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "min_risk_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Risk Score"
+          },
+          "risk_level": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Risk Level"
+          }
+        },
+        "title": "search_js_obfuscationArguments",
+        "type": "object"
+      },
+      "name": "search_js_obfuscation",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_obfuscationDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Obfuscation"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Malware Families"
+      },
+      "description": "Search JS malware families.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "min_cluster_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Cluster Size"
+          },
+          "similarity_threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Similarity Threshold"
+          }
+        },
+        "title": "search_js_malware_familiesArguments",
+        "type": "object"
+      },
+      "name": "search_js_malware_families",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_malware_familiesDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Malware Families"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprinter2 Composite Hash"
+      },
+      "description": "Search JS Fingerprinter2 by composite hash.",
+      "inputSchema": {
+        "properties": {
+          "composite_hash": {
+            "title": "Composite Hash",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "composite_hash"
+        ],
+        "title": "search_js_fingerprinter2_composite_hashArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprinter2_composite_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprinter2_composite_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprinter2 Composite Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprinter2 Signature"
+      },
+      "description": "Search JS Fingerprinter2 by signature.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "signature": {
+            "title": "Signature",
+            "type": "string"
+          }
+        },
+        "required": [
+          "signature"
+        ],
+        "title": "search_js_fingerprinter2_signatureArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprinter2_signature",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprinter2_signatureDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprinter2 Signature"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprinter2 Similar"
+      },
+      "description": "Search JS Fingerprinter2 similar scans.",
+      "inputSchema": {
+        "properties": {
+          "include_self": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Self"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "min_similarity": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Similarity"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "search_js_fingerprinter2_similarArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprinter2_similar",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprinter2_similarDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprinter2 Similar"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Segments By Scan"
+      },
+      "description": "Get JS segments for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Limit"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          },
+          "script_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Script Url"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_js_segments_by_scanArguments",
+        "type": "object"
+      },
+      "name": "get_js_segments_by_scan",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_segments_by_scanDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Segments By Scan"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Segments By Hash"
+      },
+      "description": "Search JS segments by code hash.",
+      "inputSchema": {
+        "properties": {
+          "code_hash": {
+            "title": "Code Hash",
+            "type": "string"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Limit"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code_hash"
+        ],
+        "title": "search_js_segments_by_hashArguments",
+        "type": "object"
+      },
+      "name": "search_js_segments_by_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_segments_by_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Segments By Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Segments By Normalized Hash"
+      },
+      "description": "Search JS segments by normalized hash.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Limit"
+          },
+          "normalized_hash": {
+            "title": "Normalized Hash",
+            "type": "string"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "normalized_hash"
+        ],
+        "title": "search_js_segments_by_normalized_hashArguments",
+        "type": "object"
+      },
+      "name": "search_js_segments_by_normalized_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_segments_by_normalized_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Segments By Normalized Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Segments Suspicious"
+      },
+      "description": "Get suspicious JS segments for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Limit"
+          },
+          "min_risk_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Risk Score"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_js_segments_suspiciousArguments",
+        "type": "object"
+      },
+      "name": "get_js_segments_suspicious",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_segments_suspiciousDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Segments Suspicious"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Segments Unknown"
+      },
+      "description": "Get unknown JS segments for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Limit"
+          },
+          "min_code_length": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Code Length"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_js_segments_unknownArguments",
+        "type": "object"
+      },
+      "name": "get_js_segments_unknown",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_segments_unknownDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Segments Unknown"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Run JS Differential Analysis"
+      },
+      "description": "Run JS differential analysis for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "include_known_libraries": {
+            "default": false,
+            "title": "Include Known Libraries",
+            "type": "boolean"
+          },
+          "min_confidence": {
+            "default": 0.8,
+            "title": "Min Confidence",
+            "type": "number"
+          },
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "run_js_differential_analysisArguments",
+        "type": "object"
+      },
+      "name": "run_js_differential_analysis",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "run_js_differential_analysisDictOutput",
+        "type": "object"
+      },
+      "title": "Run JS Differential Analysis"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Library Inventory"
+      },
+      "description": "Get JS fingerprint library inventory.",
+      "inputSchema": {
+        "properties": {
+          "library": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Library"
+          },
+          "min_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Count"
+          }
+        },
+        "title": "get_js_library_inventoryArguments",
+        "type": "object"
+      },
+      "name": "get_js_library_inventory",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_js_library_inventoryDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Library Inventory"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint Patterns"
+      },
+      "description": "Search JS fingerprints by patterns.",
+      "inputSchema": {
+        "properties": {
+          "cdn_mismatch": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cdn Mismatch"
+          },
+          "has_crypto": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Has Crypto"
+          },
+          "has_eval": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Has Eval"
+          },
+          "has_websocket": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Has Websocket"
+          },
+          "high_entropy": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "High Entropy"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "no_library": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "No Library"
+          }
+        },
+        "title": "search_js_fingerprint_patternsArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_patterns",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_patternsDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint Patterns"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint Obfuscated"
+      },
+      "description": "Search obfuscated JS fingerprints.",
+      "inputSchema": {
+        "properties": {
+          "classification": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Classification"
+          },
+          "exclude_libraries": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Exclude Libraries"
+          },
+          "max_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Max Score"
+          },
+          "min_code_length": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Code Length"
+          },
+          "min_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Score"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "per_page": {
+            "default": 20,
+            "title": "Per Page",
+            "type": "integer"
+          }
+        },
+        "title": "search_js_fingerprint_obfuscatedArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_obfuscated",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_obfuscatedDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint Obfuscated"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By Server"
+      },
+      "description": "Search JS fingerprints by server type.",
+      "inputSchema": {
+        "properties": {
+          "include_headers": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Headers"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "server_type": {
+            "title": "Server Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "server_type"
+        ],
+        "title": "search_js_fingerprint_by_serverArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_server",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_serverDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By Server"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By Bundler"
+      },
+      "description": "Search JS fingerprints by bundler type.",
+      "inputSchema": {
+        "properties": {
+          "bundle_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Bundle Format"
+          },
+          "bundler_type": {
+            "title": "Bundler Type",
+            "type": "string"
+          },
+          "include_libraries": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Libraries"
+          },
+          "min_confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Confidence"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "per_page": {
+            "default": 20,
+            "title": "Per Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "bundler_type"
+        ],
+        "title": "search_js_fingerprint_by_bundlerArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_bundler",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_bundlerDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By Bundler"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By CDN"
+      },
+      "description": "Search JS fingerprints by CDN.",
+      "inputSchema": {
+        "properties": {
+          "cdn_cache_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cdn Cache Status"
+          },
+          "cdn_type": {
+            "title": "Cdn Type",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "unpinned_only": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Unpinned Only"
+          }
+        },
+        "required": [
+          "cdn_type"
+        ],
+        "title": "search_js_fingerprint_by_cdnArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_cdn",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_cdnDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By CDN"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By Library"
+      },
+      "description": "Search JS fingerprints by library name.",
+      "inputSchema": {
+        "properties": {
+          "include_cdn_only": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Cdn Only"
+          },
+          "library_name": {
+            "title": "Library Name",
+            "type": "string"
+          },
+          "min_confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Confidence"
+          },
+          "page": {
+            "default": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "per_page": {
+            "default": 20,
+            "title": "Per Page",
+            "type": "integer"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Version"
+          },
+          "version_pattern": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Version Pattern"
+          }
+        },
+        "required": [
+          "library_name"
+        ],
+        "title": "search_js_fingerprint_by_libraryArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_library",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_libraryDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By Library"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By Library Version"
+      },
+      "description": "Search JS fingerprints by library version.",
+      "inputSchema": {
+        "properties": {
+          "group_by_url": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Group By Url"
+          },
+          "include_deprecated": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Deprecated"
+          },
+          "library": {
+            "title": "Library",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "library",
+          "version"
+        ],
+        "title": "search_js_fingerprint_by_library_versionArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_library_version",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_library_versionDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By Library Version"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By Fuzzy Hash"
+      },
+      "description": "Search JS fingerprints by fuzzy hash.",
+      "inputSchema": {
+        "properties": {
+          "fuzzy_hash": {
+            "title": "Fuzzy Hash",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "min_similarity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Similarity"
+          }
+        },
+        "required": [
+          "fuzzy_hash"
+        ],
+        "title": "search_js_fingerprint_by_fuzzy_hashArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_fuzzy_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_fuzzy_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By Fuzzy Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By MD5"
+      },
+      "description": "Search JS fingerprints by MD5 hash.",
+      "inputSchema": {
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "From Date"
+          },
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "include_scans": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Scans"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "To Date"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_js_fingerprint_by_md5Arguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_md5",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_md5DictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By MD5"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By Normalized Hash"
+      },
+      "description": "Search JS fingerprints by normalized hash.",
+      "inputSchema": {
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "From Date"
+          },
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "include_scans": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Scans"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "To Date"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_js_fingerprint_by_normalized_hashArguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_normalized_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_normalized_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By Normalized Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By SHA1"
+      },
+      "description": "Search JS fingerprints by SHA1 hash.",
+      "inputSchema": {
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "From Date"
+          },
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "include_scans": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Scans"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "To Date"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_js_fingerprint_by_sha1Arguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_sha1",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_sha1DictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By SHA1"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprint By SHA256"
+      },
+      "description": "Search JS fingerprints by SHA256 hash.",
+      "inputSchema": {
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "From Date"
+          },
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "include_scans": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Scans"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "To Date"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_js_fingerprint_by_sha256Arguments",
+        "type": "object"
+      },
+      "name": "search_js_fingerprint_by_sha256",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_js_fingerprint_by_sha256DictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprint By SHA256"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Find JS Fingerprint Similar By Hash"
+      },
+      "description": "Find similar JS fingerprints by hash.",
+      "inputSchema": {
+        "properties": {
+          "content_sha256": {
+            "title": "Content Sha256",
+            "type": "string"
+          },
+          "exclude_exact_matches": {
+            "default": false,
+            "title": "Exclude Exact Matches",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 10,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "threshold": {
+            "default": 0.7,
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "required": [
+          "content_sha256"
+        ],
+        "title": "find_js_fingerprint_similar_by_hashArguments",
+        "type": "object"
+      },
+      "name": "find_js_fingerprint_similar_by_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "find_js_fingerprint_similar_by_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Find JS Fingerprint Similar By Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprints By Bundler"
+      },
+      "description": "Search JS fingerprints by bundler (paginated).",
+      "inputSchema": {
+        "properties": {
+          "bundler": {
+            "title": "Bundler",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "bundler"
+        ],
+        "title": "search_jsfingerprints_by_bundlerArguments",
+        "type": "object"
+      },
+      "name": "search_jsfingerprints_by_bundler",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_jsfingerprints_by_bundlerDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprints By Bundler"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprints By Library"
+      },
+      "description": "Search JS fingerprints by library (paginated).",
+      "inputSchema": {
+        "properties": {
+          "library": {
+            "title": "Library",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "library"
+        ],
+        "title": "search_jsfingerprints_by_libraryArguments",
+        "type": "object"
+      },
+      "name": "search_jsfingerprints_by_library",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_jsfingerprints_by_libraryDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprints By Library"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprints By Library Version"
+      },
+      "description": "Search JS fingerprints by library version (paginated).",
+      "inputSchema": {
+        "properties": {
+          "library": {
+            "title": "Library",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "library",
+          "version"
+        ],
+        "title": "search_jsfingerprints_by_library_versionArguments",
+        "type": "object"
+      },
+      "name": "search_jsfingerprints_by_library_version",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_jsfingerprints_by_library_versionDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprints By Library Version"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprints By Fuzzy Hash"
+      },
+      "description": "Search JS fingerprints by fuzzy hash (paginated).",
+      "inputSchema": {
+        "properties": {
+          "fuzzy_hash": {
+            "title": "Fuzzy Hash",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "fuzzy_hash"
+        ],
+        "title": "search_jsfingerprints_by_fuzzy_hashArguments",
+        "type": "object"
+      },
+      "name": "search_jsfingerprints_by_fuzzy_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_jsfingerprints_by_fuzzy_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprints By Fuzzy Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprints By MD5"
+      },
+      "description": "Search JS fingerprints by MD5 (paginated).",
+      "inputSchema": {
+        "properties": {
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_jsfingerprints_by_md5Arguments",
+        "type": "object"
+      },
+      "name": "search_jsfingerprints_by_md5",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_jsfingerprints_by_md5DictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprints By MD5"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprints By Normalized Hash"
+      },
+      "description": "Search JS fingerprints by normalized hash (paginated).",
+      "inputSchema": {
+        "properties": {
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_jsfingerprints_by_normalized_hashArguments",
+        "type": "object"
+      },
+      "name": "search_jsfingerprints_by_normalized_hash",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_jsfingerprints_by_normalized_hashDictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprints By Normalized Hash"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprints By SHA1"
+      },
+      "description": "Search JS fingerprints by SHA1 (paginated).",
+      "inputSchema": {
+        "properties": {
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_jsfingerprints_by_sha1Arguments",
+        "type": "object"
+      },
+      "name": "search_jsfingerprints_by_sha1",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_jsfingerprints_by_sha1DictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprints By SHA1"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search JS Fingerprints By SHA256"
+      },
+      "description": "Search JS fingerprints by SHA256 (paginated).",
+      "inputSchema": {
+        "properties": {
+          "hash_value": {
+            "title": "Hash Value",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hash_value"
+        ],
+        "title": "search_jsfingerprints_by_sha256Arguments",
+        "type": "object"
+      },
+      "name": "search_jsfingerprints_by_sha256",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "search_jsfingerprints_by_sha256DictOutput",
+        "type": "object"
+      },
+      "title": "Search JS Fingerprints By SHA256"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprint"
+      },
+      "description": "Get JS fingerprint by ID.",
+      "inputSchema": {
+        "properties": {
+          "fingerprint_id": {
+            "title": "Fingerprint Id",
+            "type": "integer"
+          },
+          "include_functions": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Functions"
+          },
+          "include_http_headers": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include Http Headers"
+          }
+        },
+        "required": [
+          "fingerprint_id"
+        ],
+        "title": "get_jsfingerprintArguments",
+        "type": "object"
+      },
+      "name": "get_jsfingerprint",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jsfingerprintDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprint"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprint Similar"
+      },
+      "description": "Find similar JS fingerprints.",
+      "inputSchema": {
+        "properties": {
+          "exclude_same_scan": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Exclude Same Scan"
+          },
+          "fingerprint_id": {
+            "title": "Fingerprint Id",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Threshold"
+          }
+        },
+        "required": [
+          "fingerprint_id"
+        ],
+        "title": "get_jsfingerprint_similarArguments",
+        "type": "object"
+      },
+      "name": "get_jsfingerprint_similar",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jsfingerprint_similarDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprint Similar"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprint Similarity Counts"
+      },
+      "description": "Get JS fingerprint similarity counts.",
+      "inputSchema": {
+        "properties": {
+          "fingerprint_id": {
+            "title": "Fingerprint Id",
+            "type": "integer"
+          },
+          "max_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Max Count"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Threshold"
+          }
+        },
+        "required": [
+          "fingerprint_id"
+        ],
+        "title": "get_jsfingerprint_similarity_countsArguments",
+        "type": "object"
+      },
+      "name": "get_jsfingerprint_similarity_counts",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jsfingerprint_similarity_countsDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprint Similarity Counts"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprint Source"
+      },
+      "description": "Get JS fingerprint source.",
+      "inputSchema": {
+        "properties": {
+          "fingerprint_id": {
+            "title": "Fingerprint Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "fingerprint_id"
+        ],
+        "title": "get_jsfingerprint_sourceArguments",
+        "type": "object"
+      },
+      "name": "get_jsfingerprint_source",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jsfingerprint_sourceDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprint Source"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprint Bundle Stats"
+      },
+      "description": "Get JS fingerprint bundle statistics.",
+      "inputSchema": {
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "From Date"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "To Date"
+          }
+        },
+        "title": "get_jsfingerprint_bundle_statsArguments",
+        "type": "object"
+      },
+      "name": "get_jsfingerprint_bundle_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jsfingerprint_bundle_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprint Bundle Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprint Library Stats"
+      },
+      "description": "Get JS fingerprint library statistics.",
+      "inputSchema": {
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "From Date"
+          },
+          "min_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Min Count"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "To Date"
+          }
+        },
+        "title": "get_jsfingerprint_library_statsArguments",
+        "type": "object"
+      },
+      "name": "get_jsfingerprint_library_stats",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jsfingerprint_library_statsDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprint Library Stats"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get JS Fingerprint Hash Prevalence"
+      },
+      "description": "Get JS fingerprint hash prevalence for a scan_id.",
+      "inputSchema": {
+        "properties": {
+          "scan_id": {
+            "title": "Scan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_id"
+        ],
+        "title": "get_jsfingerprint_hash_prevalenceArguments",
+        "type": "object"
+      },
+      "name": "get_jsfingerprint_hash_prevalence",
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_jsfingerprint_hash_prevalenceDictOutput",
+        "type": "object"
+      },
+      "title": "Get JS Fingerprint Hash Prevalence"
+    }
+  ]
+}
+---

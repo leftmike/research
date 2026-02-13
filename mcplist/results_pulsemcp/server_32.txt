@@ -1,0 +1,9 @@
+NAME: garden.stanislav.svelte-llm/svelte-llm-mcp
+URL: https://svelte-llm.stanislav.garden/mcp/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Bad Gateway
+---

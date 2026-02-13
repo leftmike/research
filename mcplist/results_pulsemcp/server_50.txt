@@ -1,0 +1,9 @@
+NAME: DeepWiki
+URL: https://mcp.deepwiki.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

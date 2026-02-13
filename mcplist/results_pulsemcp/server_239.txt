@@ -1,0 +1,9 @@
+NAME: Vapi
+URL: https://mcp.vapi.ai/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: missing endpoint: malformed line in SSE stream: "Missing or invalid access token"
+---

@@ -1,0 +1,9 @@
+NAME: Hub Tools
+URL: https://www.aimcp.info/api/open/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Internal Server Error
+---

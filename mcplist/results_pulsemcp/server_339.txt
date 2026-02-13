@@ -1,0 +1,9 @@
+NAME: com.redpanda/docs-mcp
+URL: https://docs.redpanda.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

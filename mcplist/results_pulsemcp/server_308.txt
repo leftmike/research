@@ -1,0 +1,9 @@
+NAME: org.aquaview/aquaview-mcp
+URL: https://mcp.aquaview.org/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

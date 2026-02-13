@@ -1,0 +1,2930 @@
+[
+  {
+    "name": "app.linear/linear",
+    "slug": "linear",
+    "url": "https://mcp.linear.app/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "app.linear/linear",
+    "slug": "linear",
+    "url": "https://mcp.linear.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.vercel/vercel-mcp",
+    "slug": "vercel",
+    "url": "https://mcp.vercel.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Figma MCP Server",
+    "slug": "figma-dev-mode",
+    "url": "https://mcp.figma.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "dbt Cloud",
+    "slug": "dbt",
+    "url": "https://{dbt_host}/api/ai/v1/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.webflow/mcp",
+    "slug": "webflow",
+    "url": "https://mcp.webflow.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "CoinAPI Real-time Exchange Rates",
+    "slug": "coinapi-realtime-exchange-rates",
+    "url": "https://mcp-realtime.exrates.coinapi.io/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Zapier",
+    "slug": "zapier",
+    "url": "https://mcp.zapier.com/api/v1/connect",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.notion/mcp",
+    "slug": "notion",
+    "url": "https://mcp.notion.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.notion/mcp",
+    "slug": "notion",
+    "url": "https://mcp.notion.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Shopify Customer Accounts",
+    "slug": "shopify-customer-accounts",
+    "url": "https://{customAccountDomain}/customer/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "OVHcloud",
+    "slug": "ovhcloud",
+    "url": "https://mcp.{region}.ovhcloud.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Supabase",
+    "slug": "supabase",
+    "url": "https://mcp.supabase.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Shopify Storefront",
+    "slug": "shopify-storefront",
+    "url": "https://{YOUR_DOMAIN}/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.stripe/mcp",
+    "slug": "stripe-agent-toolkit",
+    "url": "https://mcp.stripe.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.generect/generect-mcp",
+    "slug": "generect",
+    "url": "https://mcp.generect.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.prisma/mcp",
+    "slug": "prisma-postgres",
+    "url": "https://mcp.prisma.io/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "io.prisma/mcp",
+    "slug": "prisma-postgres",
+    "url": "https://mcp.prisma.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Ahrefs",
+    "slug": "ahrefs",
+    "url": "https://api.ahrefs.com/mcp/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Ahrefs",
+    "slug": "ahrefs",
+    "url": "https://api.ahrefs.com/mcp/mcpSse",
+    "transport": "sse"
+  },
+  {
+    "name": "Pinecone Assistant",
+    "slug": "pinecone-assistant",
+    "url": "https://<YOUR_PINECONE_ASSISTANT_HOST>/mcp/assistants/<YOUR_ASSISTANT_NAME>/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "GitHub",
+    "slug": "github",
+    "url": "https://api.githubcopilot.com/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.exa/exa",
+    "slug": "exa",
+    "url": "https://mcp.exa.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.timescale/pg-aiguide",
+    "slug": "timescale-pg-aiguide",
+    "url": "https://mcp.tigerdata.com/docs",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.atlassian/atlassian-mcp-server",
+    "slug": "atlassian",
+    "url": "https://mcp.atlassian.com/v1/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.atlassian/atlassian-mcp-server",
+    "slug": "atlassian",
+    "url": "https://mcp.atlassian.com/v1/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "HubSpot",
+    "slug": "hubspot",
+    "url": "https://mcp.hubspot.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.make/mcp-server",
+    "slug": "make",
+    "url": "https://mcp.make.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "A2ABench",
+    "slug": "khalidsaidi-a2abench",
+    "url": "https://a2abench-mcp.web.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Proofly (Deepfake Detection)",
+    "slug": "proofly-deepfake-detection",
+    "url": "https://mcp.proofly.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Proofly (Deepfake Detection)",
+    "slug": "proofly-deepfake-detection",
+    "url": "https://mcp.proofly.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "co.pipeboard/meta-ads-mcp",
+    "slug": "pipeboard-meta-ads",
+    "url": "https://mcp.pipeboard.co/meta-ads-mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "SchemaFlow",
+    "slug": "cryptoradi-schemaflow",
+    "url": "https://api.schemaflow.dev/mcp/?token=your-token-here",
+    "transport": "sse"
+  },
+  {
+    "name": "com.apify/apify-mcp-server",
+    "slug": "apify",
+    "url": "https://mcp.apify.com/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "BigQuery",
+    "slug": "google-bigquery",
+    "url": "https://bigquery.googleapis.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "bm.md",
+    "slug": "miantiao-me-bm-md",
+    "url": "https://bm.md/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "garden.stanislav.svelte-llm/svelte-llm-mcp",
+    "slug": "khromov-svelte-llm",
+    "url": "https://svelte-llm.stanislav.garden/mcp/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "garden.stanislav.svelte-llm/svelte-llm-mcp",
+    "slug": "khromov-svelte-llm",
+    "url": "https://svelte-llm.stanislav.garden/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.monday/monday.com",
+    "slug": "monday-com",
+    "url": "https://mcp.monday.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.monday/monday.com",
+    "slug": "monday-com",
+    "url": "https://mcp.monday.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.findyourfivepm/mcp-server",
+    "slug": "findyourfivepm",
+    "url": "https://mcp.findyourfivepm.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "AWS Knowledge",
+    "slug": "aws-knowledge",
+    "url": "https://knowledge-mcp.global.api.aws",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Asana",
+    "slug": "asana",
+    "url": "https://mcp.asana.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Supermemory",
+    "slug": "supermemory",
+    "url": "https://mcp.supermemory.ai/",
+    "transport": "sse"
+  },
+  {
+    "name": "net.nymbo/tools",
+    "slug": "nymbo-tools",
+    "url": "https://mcp.nymbo.net/gradio_api/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Plaid",
+    "slug": "plaid",
+    "url": "https://api.dashboard.plaid.com/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "MCP Registry Server",
+    "slug": "la-rebelion-labs-registry",
+    "url": "https://registry.run.mcp.com.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.alphavantage/alpha_vantage_mcp",
+    "slug": "alphavantage",
+    "url": "https://mcp.alphavantage.co/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "Candice AI",
+    "slug": "candiceai",
+    "url": "https://mcp.candiceai.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Hugging Face",
+    "slug": "huggingface",
+    "url": "https://huggingface.co/mcp?login",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Hugging Face",
+    "slug": "huggingface",
+    "url": "https://huggingface.co/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Hugging Face",
+    "slug": "huggingface",
+    "url": "https://huggingface.co/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Google Maps",
+    "slug": "google-maps",
+    "url": "https://mapstools.googleapis.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Svelte MCP",
+    "slug": "svelte",
+    "url": "https://mcp.svelte.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "DeepWiki",
+    "slug": "deepwiki",
+    "url": "https://mcp.deepwiki.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "DeepWiki",
+    "slug": "deepwiki",
+    "url": "https://mcp.deepwiki.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.postman/postman-mcp-server",
+    "slug": "postman",
+    "url": "https://mcp.postman.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.postman/postman-mcp-server",
+    "slug": "postman",
+    "url": "https://mcp.postman.com/minimal",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.postman/postman-mcp-server",
+    "slug": "postman",
+    "url": "https://mcp.eu.postman.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.postman/postman-mcp-server",
+    "slug": "postman",
+    "url": "https://mcp.eu.postman.com/minimal",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Web-To-MCP",
+    "slug": "web-to-mcp",
+    "url": "https://web-to-mcp.com/mcp/<your_unique_id>",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.gomarble/mcp-api",
+    "slug": "gomarble",
+    "url": "https://apps.gomarble.ai/mcp-api/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.getunblocked/unblocked-mcp",
+    "slug": "unblocked",
+    "url": "https://getunblocked.com/api/mcpsse",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Semrush",
+    "slug": "semrush",
+    "url": "https://mcp.semrush.com/v1/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.holomodular/servicebricks",
+    "slug": "servicebricks",
+    "url": "https://servicebricks.com/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Fulcra Context",
+    "slug": "fulcradynamics-fulcra-context",
+    "url": "https://mcp.fulcradynamics.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.Crawleo/Crawleo-MCP",
+    "slug": "crawleo",
+    "url": "https://api.crawleo.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Pulumi MCP Server",
+    "slug": "pulumi",
+    "url": "https://mcp.ai.pulumi.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "dev.continue/docs",
+    "slug": "continue-docs",
+    "url": "https://docs.continue.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.teamtrayd/trayd-mcp",
+    "slug": "trayders-trayd",
+    "url": "https://mcp.trayd.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.adspirer/ads",
+    "slug": "adspirer",
+    "url": "https://mcp.adspirer.com/",
+    "transport": "sse"
+  },
+  {
+    "name": "Canva",
+    "slug": "canva",
+    "url": "https://mcp.canva.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "LunarCrush",
+    "slug": "lunarcrush",
+    "url": "https://lunarcrush.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "LunarCrush",
+    "slug": "lunarcrush",
+    "url": "https://lunarcrush.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Sideways",
+    "slug": "sideways",
+    "url": "https://usesideways.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Sideways",
+    "slug": "sideways",
+    "url": "https://usesideways.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Stack Overflow MCP Server",
+    "slug": "stackoverflow",
+    "url": "https://mcp.stackoverflow.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "net.todoist/mcp",
+    "slug": "todoist",
+    "url": "https://ai.todoist.net/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.paypal.mcp/mcp",
+    "slug": "paypal-agent-toolkit",
+    "url": "https://mcp.paypal.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.paypal.mcp/mcp",
+    "slug": "paypal-agent-toolkit",
+    "url": "https://mcp.paypal.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "RunReveal",
+    "slug": "runreveal",
+    "url": "https://api.runreveal.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.tip4serv/mcp-server",
+    "slug": "tip4serv",
+    "url": "https://mcp.tip4serv.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "app.thoughtspot/mcp-server",
+    "slug": "thoughtspot",
+    "url": "https://agent.thoughtspot.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "app.thoughtspot/mcp-server",
+    "slug": "thoughtspot",
+    "url": "https://agent.thoughtspot.app/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "app.thoughtspot/mcp-server",
+    "slug": "thoughtspot",
+    "url": "https://agent.thoughtspot.app/bearer/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "app.thoughtspot/mcp-server",
+    "slug": "thoughtspot",
+    "url": "https://agent.thoughtspot.app/bearer/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare Workers (via Bindings)",
+    "slug": "cloudflare-workers-bindings",
+    "url": "https://bindings.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Replicate",
+    "slug": "replicate",
+    "url": "https://mcp.replicate.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare Documentation",
+    "slug": "cloudflare-docs",
+    "url": "https://docs.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Norman Finance",
+    "slug": "norman-finance",
+    "url": "https://mcp.norman.finance/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.apple-rag/mcp-server",
+    "slug": "bingowon-apple-rag",
+    "url": "https://mcp.apple-rag.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.gitlab/mcp",
+    "slug": "gitlab",
+    "url": "https://gitlab.com/api/v4/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "OSINT",
+    "slug": "brutus-gr-osint-template",
+    "url": "https://mcp.osintmcp.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "What2Watch",
+    "slug": "lio1204-what2watch",
+    "url": "https://what2watch.live/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "mcd-mcp-server",
+    "slug": "mcdonalds-china",
+    "url": "https://mcp.mcd.cn/mcp-servers/mcd-mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Fireflies",
+    "slug": "fireflies",
+    "url": "https://api.fireflies.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "pre.dev Architect",
+    "slug": "predev-architect",
+    "url": "https://api.pre.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Parallel Search MCP",
+    "slug": "parallel-search",
+    "url": "https://search-mcp.parallel.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "PGA Golf",
+    "slug": "pga",
+    "url": "https://mcp.pga.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Mixpanel",
+    "slug": "mixpanel",
+    "url": "https://mcp.mixpanel.com/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "Mixpanel",
+    "slug": "mixpanel",
+    "url": "https://mcp-eu.mixpanel.com/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "Mixpanel",
+    "slug": "mixpanel",
+    "url": "https://mcp-in.mixpanel.com/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "Miro",
+    "slug": "miro",
+    "url": "https://mcp.miro.com/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "New Relic MCP Server",
+    "slug": "newrelic",
+    "url": "https://mcp.newrelic.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.getclockwise/clockwise-mcp",
+    "slug": "clockwise",
+    "url": "https://mcp.getclockwise.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.bahfahh/noteit-mcp",
+    "slug": "noteit",
+    "url": "https://www.noteit-mcp.com/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "You.com Web Access & AI",
+    "slug": "youcom",
+    "url": "https://api.you.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Uno Platform",
+    "slug": "uno-platform",
+    "url": "https://mcp.platform.uno/v1",
+    "transport": "sse"
+  },
+  {
+    "name": "Brick Directory",
+    "slug": "brick-directory",
+    "url": "https://api.brick.directory/connect",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "MCPBundles Hub",
+    "slug": "mcpbundles-hub",
+    "url": "https://mcp.mcpbundles.com/hub/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Preloop",
+    "slug": "preloop",
+    "url": "https://preloop.ai/mcp/v1",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.sonatype/dependency-management-mcp-server",
+    "slug": "sonatype",
+    "url": "https://mcp.guide.sonatype.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Microsoft Sentinel Data Exploration",
+    "slug": "microsoft-sentinel",
+    "url": "https://sentinel.microsoft.com/mcp/data-exploration",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Square",
+    "slug": "square",
+    "url": "https://mcp.squareup.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Contextual AI",
+    "slug": "contextual-ai",
+    "url": "https://mcp.app.contextual.ai/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Reflag",
+    "slug": "reflag",
+    "url": "https://app.reflag.com/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Axion (Google Earth Engine)",
+    "slug": "dhenenjay-axion-earth-engine",
+    "url": "https://axion-mcp.onrender.com/api/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.peek/mcp",
+    "slug": "peek-travel",
+    "url": "https://mcp.peek.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "goog.workspace-developer/developer-tools",
+    "slug": "google-workspace-developer-tools",
+    "url": "https://workspace-developer.goog/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Amplitude",
+    "slug": "amplitude",
+    "url": "https://mcp.amplitude.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Amplitude",
+    "slug": "amplitude",
+    "url": "https://mcp.eu.amplitude.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Plus AI",
+    "slug": "plusai-presentations",
+    "url": "https://mcp.plusai.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/postgres",
+    "slug": "waystation-postgres",
+    "url": "https://waystation.ai/postgres/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/postgres",
+    "slug": "waystation-postgres",
+    "url": "https://waystation.ai/postgres/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Perigon",
+    "slug": "perigon",
+    "url": "https://mcp.perigon.io/v1/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "com.proxylink-mcp/mcp-server",
+    "slug": "proxylink",
+    "url": "https://proxylink-mcp.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Forums",
+    "slug": "basehub-forums",
+    "url": "https://forums.basehub.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Semgrep",
+    "slug": "semgrep",
+    "url": "https://mcp.semgrep.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare Workers Observability",
+    "slug": "cloudflare-workers-observability",
+    "url": "https://observability.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare AutoRAG",
+    "slug": "cloudflare-autorag",
+    "url": "https://autorag.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare DNS Analytics",
+    "slug": "cloudflare-dns-analytics",
+    "url": "https://dns-analytics.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Coresignal",
+    "slug": "coresignal",
+    "url": "https://mcp.coresignal.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare Browser Rendering",
+    "slug": "cloudflare-browser-rendering",
+    "url": "https://browser.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare Radar",
+    "slug": "cloudflare-radar",
+    "url": "https://radar.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "tools.ref/ref-tools-mcp",
+    "slug": "ref",
+    "url": "https://api.ref.tools/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Dice Rolling",
+    "slug": "jimmcq-dice-rolling",
+    "url": "https://dice-rolling-mcp.vercel.app/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "dev.rostro/rostro",
+    "slug": "rostro",
+    "url": "https://proto.rostro.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Engram Memory",
+    "slug": "lumetra-engram-memory",
+    "url": "https://engram.lumetra.io",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Box",
+    "slug": "box",
+    "url": "https://mcp.box.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Equinix",
+    "slug": "equinix",
+    "url": "https://mcp.equinix.com/fabric",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "MailerSend",
+    "slug": "mailersend",
+    "url": "https://mcp.mailersend.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "MailerLite",
+    "slug": "mailerlite",
+    "url": "https://mcp.mailerlite.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "FinFeedAPI Stock API",
+    "slug": "finfeed-historical-stock-data",
+    "url": "https://mcp-historical.stock.finfeedapi.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "vLEI.wiki",
+    "slug": "vlei-wiki",
+    "url": "https://mcp.vlei.wiki/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Parallel Task MCP",
+    "slug": "parallel-task",
+    "url": "https://task-mcp.parallel.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "FinFeedAPI SEC API",
+    "slug": "finfeed-sec-api",
+    "url": "https://mcp.sec.finfeedapi.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.Vonage/vonage-documentation-mcp",
+    "slug": "vonage-documentation",
+    "url": "https://documentation-mcp.vonage.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.remote-mcp/registry-mcp",
+    "slug": "remote-mcp-registry",
+    "url": "https://registry-mcp.remote-mcp.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.remote-mcp/registry-mcp",
+    "slug": "remote-mcp-registry",
+    "url": "https://registry-mcp.remote-mcp.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Agentic UI Generator for Angular",
+    "slug": "telerik-kendo-ui-angular-generator",
+    "url": "https://uiagent.mcp.telerik.com/mcp/angular",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Microsoft MCP Server for Enterprise",
+    "slug": "microsoft-enterprise",
+    "url": "https://mcp.svc.cloud.microsoft/enterprise",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Earnings Feed",
+    "slug": "earningsfeed",
+    "url": "https://earningsfeed.com/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "AI-ERD",
+    "slug": "ai-erd",
+    "url": "https://ai-erd.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.close/close-mcp",
+    "slug": "close",
+    "url": "https://mcp.close.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Jakarta Migration",
+    "slug": "adrianmikula-jakarta-migration",
+    "url": "https://mcp.apify.com/?tools=actors,docs,adrian_m/JakartaMigrationMCP",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "MCP AutoMem",
+    "slug": "automem",
+    "url": "https://{endpoint}/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "MCP AutoMem",
+    "slug": "automem",
+    "url": "https://{endpoint}/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Gossiper Shopify Admin MCP Server",
+    "slug": "gossiper-shopify-admin",
+    "url": "https://mcp.gossiper.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Gossiper Shopify Admin MCP Server",
+    "slug": "gossiper-shopify-admin",
+    "url": "https://mcp.gossiper.io/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "PostHog MCP Server",
+    "slug": "posthog",
+    "url": "https://mcp.posthog.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "PostHog MCP Server",
+    "slug": "posthog",
+    "url": "https://mcp.posthog.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare Audit Logs",
+    "slug": "cloudflare-auditlogs",
+    "url": "https://auditlogs.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Neon",
+    "slug": "neondatabase-mcp-server-neon",
+    "url": "https://mcp.neon.tech/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare Dex Analysis",
+    "slug": "cloudflare-dex-analysis",
+    "url": "https://dex.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare One CASB",
+    "slug": "cloudflare-one-casb",
+    "url": "https://casb.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare AI Gateway",
+    "slug": "cloudflare-ai-gateway",
+    "url": "https://ai-gateway.mcp.cloudflare.com/sse\"",
+    "transport": "sse"
+  },
+  {
+    "name": "Sandbox Container",
+    "slug": "cloudflare-container-sandbox",
+    "url": "https://containers.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Helm",
+    "slug": "zekker6-helm",
+    "url": "https://mcp-helm.zekker.dev/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Currency Conversion",
+    "slug": "wesbos-currency-conversion",
+    "url": "https://currency-mcp.wesbos.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Currency Conversion",
+    "slug": "wesbos-currency-conversion",
+    "url": "https://currency-mcp.wesbos.com/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Astro Docs",
+    "slug": "withastro-docs",
+    "url": "https://mcp.docs.astro.build/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "TimeCamp",
+    "slug": "timecamp-org-timecamp",
+    "url": "https://my-mcp-server.timecamp-s-a.workers.dev/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Excel to JSON",
+    "slug": "wtsolutions-excel-to-json",
+    "url": "https://mcp.wtsolutions.cn/excel-to-json-mcp-sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Excel to JSON",
+    "slug": "wtsolutions-excel-to-json",
+    "url": "https://mcp.wtsolutions.cn/excel-to-json-mcp-shttp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Stytch",
+    "slug": "stytch",
+    "url": "https://mcp.stytch.dev/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "GoWeb3",
+    "slug": "roadahead1-goweb3",
+    "url": "https://mcp.goweb3.fyi/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ilert",
+    "slug": "ilert",
+    "url": "https://mcp.ilert.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Fortuna",
+    "slug": "siliconsociety-fortuna",
+    "url": "https://fortuna-mcp.siliconsociety.org/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Appwrite Docs",
+    "slug": "appwrite-docs",
+    "url": "https://mcp-for-docs.appwrite.io",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.devcycle/mcp",
+    "slug": "devcycle",
+    "url": "https://mcp.devcycle.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.devcycle/mcp",
+    "slug": "devcycle",
+    "url": "https://mcp.devcycle.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Shutter Network",
+    "slug": "shutter-network-timelock",
+    "url": "https://shutter-mcp-b76e270d48c5.herokuapp.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Saleor Commerce",
+    "slug": "saleor-commerce",
+    "url": "https://mcp.saleor.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ChainAware Behavioural Prediction MCP Server",
+    "slug": "chainaware-behavioral-prediction",
+    "url": "https://prediction.mcp.chainaware.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "KnowSync",
+    "slug": "knowsync",
+    "url": "https://www.knowsync.ai/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "CoinAPI - Indexes",
+    "slug": "coinapi-indexes",
+    "url": "https://mcp.indexes.coinapi.io/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "FinFeedAPI FX Historical",
+    "slug": "finfeed-historical-data",
+    "url": "https://mcp-historical.fx.finfeedapi.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "CoinAPI Exchange Rates - Historical",
+    "slug": "coinapi-historical-exchange-rates",
+    "url": "https://mcp-historical.exrates.coinapi.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "FinFeedAPI FX Realtime",
+    "slug": "finfeed-realtime-financial-data",
+    "url": "https://mcp-realtime.fx.finfeedapi.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Vulnebify",
+    "slug": "vulnebify",
+    "url": "https://mcp.vulnebify.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Galileo",
+    "slug": "galileo",
+    "url": "https://api.galileo.ai/mcp/http/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Lemonado",
+    "slug": "lemonado",
+    "url": "https://mcp.lemonado.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/airtable",
+    "slug": "waystation-airtable",
+    "url": "https://waystation.ai/airtable/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/airtable",
+    "slug": "waystation-airtable",
+    "url": "https://waystation.ai/airtable/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Guru Remote MCP Server",
+    "slug": "guru",
+    "url": "https://mcp.api.getguru.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.opsera/opsera",
+    "slug": "opsera",
+    "url": "https://agent.opsera.io/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "technology.draup/api-server",
+    "slug": "draup",
+    "url": "https://mcp.draup.technology/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.vaadin/docs-mcp",
+    "slug": "vaadin",
+    "url": "https://mcp.vaadin.com/docs/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.mintmcp/outlook-calendar",
+    "slug": "mintmcp-outlook-calendar",
+    "url": "https://outlook-calendar.mintmcp.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.jepto/mcp",
+    "slug": "jepto",
+    "url": "https://mcp.jepto.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.statsig/statsig-mcp-server",
+    "slug": "statsig",
+    "url": "https://api.statsig.com/v1/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.medusajs/medusa-mcp",
+    "slug": "medusa",
+    "url": "https://docs.medusajs.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.mintmcp/gcal",
+    "slug": "mintmcp-gcal",
+    "url": "https://gcal.mintmcp.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Egnyte Remote MCP Server",
+    "slug": "egnyte",
+    "url": "https://mcp-server.egnyte.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Famulor",
+    "slug": "bekservice-famulor",
+    "url": "https://mcp.famulor.io/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Ortto",
+    "slug": "ortto",
+    "url": "https://mcp-api-us.ortto.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Ortto",
+    "slug": "ortto",
+    "url": "https://mcp-api-eu.ortto.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Ortto",
+    "slug": "ortto",
+    "url": "https://mcp-api-au.ortto.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.appsflyer/mcp",
+    "slug": "appsflyer",
+    "url": "https://mcp.appsflyer.com/auth/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "xportalx",
+    "slug": "gh-virgen101-xportalx",
+    "url": "https://fflpdljiuruqdnewvwkk.supabase.co/functions/v1/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.tkllabs.bh.mcp-servers/navigation-toolkit",
+    "slug": "teckel-navigation-toolkit",
+    "url": "https://mcp-servers.bh.tkllabs.io:9780/navigation-mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.tkllabs.bh.mcp-servers/navigation-toolkit",
+    "slug": "teckel-navigation-toolkit",
+    "url": "https://mcp-servers.bh.tkllabs.io:9780/navigation-sse",
+    "transport": "sse"
+  },
+  {
+    "name": "io.tkllabs.bh.mcp-servers/ethereum-toolkit",
+    "slug": "teckel-ethereum-toolkit",
+    "url": "https://mcp-servers.bh.tkllabs.io:9780/ethereum-mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.tkllabs.bh.mcp-servers/ethereum-toolkit",
+    "slug": "teckel-ethereum-toolkit",
+    "url": "https://mcp-servers.bh.tkllabs.io:9780/ethereum-sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Lenny's Podcast Transcripts",
+    "slug": "wire-lennys-podcast",
+    "url": "https://wire-public.mcp.usewire.io/container/ogYiGchr47Fcjb4i/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.ndkasndakn/refund-decide",
+    "slug": "ndkasndakn-refund-decide",
+    "url": "https://refund.decide.fyi/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.wywy-llc/gas-library-hub",
+    "slug": "gas-library-hub",
+    "url": "https://appscripthub.com/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.devopness.mcp/server",
+    "slug": "devopness",
+    "url": "https://mcp.devopness.com/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "fyi.ground/ground",
+    "slug": "ground",
+    "url": "https://mcp.ground.fyi/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.koreal6803/finlab-ai",
+    "slug": "koreal6803-finlab-ai",
+    "url": "https://finlab-ai.koreal6803.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Needle",
+    "slug": "janhms-needle",
+    "url": "https://mcp.needle-ai.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Needle",
+    "slug": "janhms-needle",
+    "url": "https://mcp.needle-ai.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "mcpx",
+    "slug": "mcpx",
+    "url": "https://mcp.run/api/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "YepCode Secure Execution",
+    "slug": "yepcode-secure-execution",
+    "url": "https://cloud.yepcode.io/mcp/{API_KEY}/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Financial Datasets",
+    "slug": "financial-datasets",
+    "url": "https://mcp.financialdatasets.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Financial Datasets",
+    "slug": "financial-datasets",
+    "url": "https://mcp.financialdatasets.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "LLMs.txt",
+    "slug": "llmtxt",
+    "url": "https://mcp.llmtxt.dev/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Gralio",
+    "slug": "gralio",
+    "url": "https://gralio.ai/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Kollektiv Document Management",
+    "slug": "kollektiv-document-management",
+    "url": "https://mcp.thekollektiv.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Kollektiv Document Management",
+    "slug": "kollektiv-document-management",
+    "url": "https://mcp.thekollektiv.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Himalayas Remote Jobs",
+    "slug": "himalayas",
+    "url": "https://mcp.himalayas.app/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "KeywordsPeopleUse",
+    "slug": "data-skunks-keywordspeopleuse",
+    "url": "https://mcp-keywordspeopleuse.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.wix/mcp",
+    "slug": "wix",
+    "url": "https://mcp.wix.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.wix/mcp",
+    "slug": "wix",
+    "url": "https://mcp.wix.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.pearl.mcp/pearl-api-mcp-server",
+    "slug": "pearl",
+    "url": "https://mcp.pearl.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.pearl.mcp/pearl-api-mcp-server",
+    "slug": "pearl",
+    "url": "https://mcp.pearl.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Hub Tools",
+    "slug": "hub-tools",
+    "url": "https://www.aimcp.info/api/open/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Supabase",
+    "slug": "bifrotek-supabase-http-stream-n8n",
+    "url": "https://sb-mcp.bifrotek.com/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "Listenetic",
+    "slug": "listenetic",
+    "url": "https://mcp.listenetic.com/v1/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "Freepik",
+    "slug": "freepik",
+    "url": "https://api.freepik.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Alby Bitcoin Payments",
+    "slug": "alby-bitcoin-payments",
+    "url": "https://mcp.getalby.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Alby Bitcoin Payments",
+    "slug": "alby-bitcoin-payments",
+    "url": "https://mcp.getalby.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "AWS Cost Explorer",
+    "slug": "hteek-aws-cost-explorer",
+    "url": "https://serverless-mcp.net/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "BioContext Knowledgebase",
+    "slug": "biocontext-ai-knowledgebase",
+    "url": "https://mcp.biocontext.ai/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress Trac",
+    "slug": "jameswlepage-wordpress-trac",
+    "url": "https://mcp-server-wporg-trac-staging.a8cai.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Vapi",
+    "slug": "vapi",
+    "url": "https://mcp.vapi.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Vapi",
+    "slug": "vapi",
+    "url": "https://mcp.vapi.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "CoinGecko",
+    "slug": "iacomunia-coingecko",
+    "url": "https://mcp.api.coingecko.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Raindrop",
+    "slug": "liquidmetal-raindrop",
+    "url": "https://mcp.raindrop.run/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Raindrop",
+    "slug": "liquidmetal-raindrop",
+    "url": "https://mcp.raindrop.run/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Dungeon Explorer",
+    "slug": "compose-and-dragons-dungeon-explorer",
+    "url": "http://dungeon-mcp-server:9090/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Build Vault",
+    "slug": "build-vault",
+    "url": "https://mcp.buildaipod.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "SEO LinkMap",
+    "slug": "seolinkmap",
+    "url": "https://seolinkmap.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Customer.io",
+    "slug": "customerio",
+    "url": "https://mcp.customer.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Tally",
+    "slug": "tally",
+    "url": "https://api.tally.so/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "LangChain Hub",
+    "slug": "mcpcentral-io-langchain-hub",
+    "url": "https://mcp.prompts.mcpcentral.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Opalstack",
+    "slug": "opalstack",
+    "url": "https://my.opalstack.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Shopify Catalog",
+    "slug": "shopify-catalog",
+    "url": "https://catalog.shopify.com/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Company Ethics Information (Boikot)",
+    "slug": "boikot",
+    "url": "https://mcp.boikot.xyz/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Google Ads",
+    "slug": "otto-google-ads",
+    "url": "https://googleads.hireotto.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Kleros Court",
+    "slug": "kleros-court",
+    "url": "https://kleros-mcp-server-new.fly.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Agentic Commerce",
+    "slug": "aharvard-agentic-commerce",
+    "url": "https://mcp-agentic-commerce.netlify.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Paperclip",
+    "slug": "matsjfunke-paperclip",
+    "url": "https://paperclip.matsjfunke.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Exotel",
+    "slug": "exotel",
+    "url": "http://ec2-13-127-242-200.ap-south-1.compute.amazonaws.com:8080/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "HeyOnCall",
+    "slug": "heyoncall",
+    "url": "https://api.heyoncall.com/triggers/$YOUR_TRIGGER_ID/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Poku Labs (Human-in-the-loop)",
+    "slug": "poku-labs",
+    "url": "https://mcp.pokulabs.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Poku Labs (Human-in-the-loop)",
+    "slug": "poku-labs",
+    "url": "https://mcp.pokulabs.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Famxplor",
+    "slug": "alt250-famxplor-family-travel",
+    "url": "https://mcp.famxplor.com/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.topofgames/la-ei-romania",
+    "slug": "laei-ro",
+    "url": "https://laei.ro/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "echo3D",
+    "slug": "echo3d",
+    "url": "https://api.echo3d.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Flight Search",
+    "slug": "fctolabs-flight-search",
+    "url": "https://flights.fctolabs.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Biel",
+    "slug": "biel",
+    "url": "https://mcp.biel.ai/sse?project_slug=YOUR_PROJECT_SLUG&domain=https://your-docs-domain.com",
+    "transport": "sse"
+  },
+  {
+    "name": "DAM Butler (Breville Brandfolder)",
+    "slug": "dam-butler-breville",
+    "url": "https://dam-butler-mcp.vercel.app/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Scalekit",
+    "slug": "scalekit",
+    "url": "https://mcp.scalekit.com/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Gemini",
+    "slug": "philschmid-gemini",
+    "url": "https://gemini-mcp-server-231532712093.europe-west1.run.app/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "NameSilo",
+    "slug": "namesilo",
+    "url": "https://mcp.namesilo.com/rpc",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "travel.kismet/mcp-server",
+    "slug": "kismet-travel",
+    "url": "https://mcp.kismet.travel/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "travel.kismet/mcp-server",
+    "slug": "kismet-travel",
+    "url": "https://mcp.kismet.travel/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "LangGraph Nutrition Analyzer",
+    "slug": "langgraph-nutrition-analyzer",
+    "url": "https://my-nutrition-server.onrender.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.twelvelabs/twelvelabs-mcp-server",
+    "slug": "twelvelabs",
+    "url": "https://mcp.twelvelabs.io",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.twelvelabs/twelvelabs-mcp-server",
+    "slug": "twelvelabs",
+    "url": "https://mcp.twelvelabs.io/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "H-1B Job Search",
+    "slug": "aryaminus-h1b-job-search",
+    "url": "https://h1b-job-search-mcp.onrender.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Blooio iMessages",
+    "slug": "blooio-imessages",
+    "url": "https://mcp.blooio.com/v3",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.bullpenstrategygroup.rotunda/mcp",
+    "slug": "rotunda",
+    "url": "https://rotunda.bullpenstrategygroup.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "JustCall MCP Server",
+    "slug": "justcall",
+    "url": "https://mcp.justcall.host/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "JustCall MCP Server",
+    "slug": "justcall",
+    "url": "https://mcp.justcall.host/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "UIDriver",
+    "slug": "uidriver",
+    "url": "https://mcp.uidriver.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ScamShield",
+    "slug": "brokerchooser-broker-safety",
+    "url": "https://mcp.brokerchooser.com/servers/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "CurrentTimeUTC",
+    "slug": "currenttimeutc",
+    "url": "https://a.currenttimeutc.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Bitrix24",
+    "slug": "bitrix24",
+    "url": "https://mcp.bitrix24.com/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Mobile Text Alerts",
+    "slug": "mobile-text-alerts",
+    "url": "https://mcp.mobile-text-alerts.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "CoinAPI and FinFeedAPI",
+    "slug": "coinapi-finfeedapi",
+    "url": "https://mcp.api.apibricks.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Semilattice - audience prediction",
+    "slug": "semilattice",
+    "url": "https://mcp.semilattice.ai",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Medical Agents AOP",
+    "slug": "swarm-corporation-medical-agents-aop",
+    "url": "https://medical-agents-aop-server-production.up.railway.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "HowRisky",
+    "slug": "howrisky",
+    "url": "https://mcp.howrisky.ai",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Kogna",
+    "slug": "subbu3012-kogna",
+    "url": "https://kogna.up.railway.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.mcpanalytics/analytics",
+    "slug": "mcp-analytics",
+    "url": "https://api.mcpanalytics.ai/auth0",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "AWS (Managed)",
+    "slug": "aws-managed",
+    "url": "https://aws-mcp.us-east-1.api.aws/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ProSearch (Tencent)",
+    "slug": "tencent-prosearch",
+    "url": "https://agent.html5.qq.com/prosearch/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "ProSearch (Tencent)",
+    "slug": "tencent-prosearch",
+    "url": "https://agent.html5.qq.com/prosearch_vip/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "ai.packmind/mcp-server",
+    "slug": "packmind",
+    "url": "https://app.packmind.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Sophtron Financial Data Connection",
+    "slug": "sophtron",
+    "url": "https://mcp.sophtron.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.shawndurrani/mcp-registry",
+    "slug": "shawndurrani-registry",
+    "url": "https://mcp-registry.shawndurrani.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Vintage Chocolate Recipes",
+    "slug": "wire-chocolate-recipes",
+    "url": "https://wire-public.mcp.usewire.io/container/iLleTz6882Fru1XK/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.exoquery/mcp-server",
+    "slug": "exoquery",
+    "url": "https://backend.exoquery.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Arca",
+    "slug": "arca",
+    "url": "https://mcp.arca.build",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Arca",
+    "slug": "arca",
+    "url": "https://mcp.arca.build",
+    "transport": "sse"
+  },
+  {
+    "name": "Trade It",
+    "slug": "tradeit",
+    "url": "https://mcp.tradeit.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Trade It",
+    "slug": "tradeit",
+    "url": "https://mcp.tradeit.app/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Math MCP Learning",
+    "slug": "clouatre-labs-math-learning",
+    "url": "https://math-mcp.fastmcp.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "DevPlan MCP Server",
+    "slug": "mmorris35-devplan",
+    "url": "https://devplan-mcp-server.mike-c63.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "TweekIT MCP Server",
+    "slug": "tweekit",
+    "url": "https://mcp.tweekit.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.trunk/mcp-server",
+    "slug": "trunk",
+    "url": "https://mcp.trunk.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "OECD MCP Server",
+    "slug": "isakskogstad-oecd",
+    "url": "https://oecd-mcp-server.onrender.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "OECD MCP Server",
+    "slug": "isakskogstad-oecd",
+    "url": "https://oecd-mcp-server.onrender.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "org.aquaview/aquaview-mcp",
+    "slug": "aquaview",
+    "url": "https://mcp.aquaview.org/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "org.aquaview/aquaview-mcp",
+    "slug": "aquaview",
+    "url": "https://mcp.aquaview.org/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Kolada MCP Server",
+    "slug": "isakskogstad-kolada",
+    "url": "https://kolada-mcp-pafn.onrender.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Kolada MCP Server",
+    "slug": "isakskogstad-kolada",
+    "url": "https://kolada-mcp-pafn.onrender.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Testiny Test Management",
+    "slug": "testiny",
+    "url": "https://app.testiny.io/api/v1/mcp-server",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.scorecard/mcp",
+    "slug": "scorecard",
+    "url": "https://mcp.scorecard.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.mia-platform/console-mcp-server",
+    "slug": "mia-platform-console",
+    "url": "https://console.cloud.mia-platform.eu/console-mcp-server/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.mcpcentral-io/mcp-time",
+    "slug": "mcpcentral-time",
+    "url": "https://mcp.time.mcpcentral.io",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.isakskogstad/scb-mcp",
+    "slug": "isakskogstad-scb",
+    "url": "https://scb-mcp.onrender.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.textarttools/textarttools-mcp",
+    "slug": "humanjesse-textarttools",
+    "url": "https://mcp.textarttools.com/",
+    "transport": "sse"
+  },
+  {
+    "name": "io.github.ax-platform/ax-platform",
+    "slug": "ax-platform",
+    "url": "https://mcp.paxai.app/mcp/agents/user",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.ONLYOFFICE/docspace",
+    "slug": "onlyoffice-docspace",
+    "url": "https://mcp.onlyoffice.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "io.github.ONLYOFFICE/docspace",
+    "slug": "onlyoffice-docspace",
+    "url": "https://mcp.onlyoffice.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.catchmetrics.mcp/rum-analytics",
+    "slug": "catchmetrics",
+    "url": "https://mcp.catchmetrics.io",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.zomato/mcp",
+    "slug": "zomato",
+    "url": "https://mcp-server.zomato.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "webforJ MCP Server",
+    "slug": "webforj",
+    "url": "https://mcp.webforj.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "webforJ MCP Server",
+    "slug": "webforj",
+    "url": "https://mcp.webforj.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Agent Interviews MCP Server from MCPBundles",
+    "slug": "thinkchainai-agent-interviews",
+    "url": "https://mcp.mcpbundles.com/bundle/agent-interviews/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.mintmcp/outlook-email",
+    "slug": "mintmcp-outlook-email",
+    "url": "https://outlook-email.mintmcp.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "PredictLeads",
+    "slug": "predictleads",
+    "url": "https://mcp.predictleads.com/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.enigma/enigma-mcp-server",
+    "slug": "enigma",
+    "url": "https://mcp.enigma.com/http",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.enigma/enigma-mcp-server",
+    "slug": "enigma",
+    "url": "https://mcp.enigma.com/http-key",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.enigma/enigma-mcp-server",
+    "slug": "enigma",
+    "url": "https://mcp.enigma.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "BlogCaster MCP",
+    "slug": "blogcaster",
+    "url": "https://blogcaster-mcp.rrpb2580.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.driflyte/driflyte-mcp-server",
+    "slug": "serkan-ozal-driflyte",
+    "url": "https://mcp.driflyte.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.driflyte/driflyte-mcp-server",
+    "slug": "serkan-ozal-driflyte",
+    "url": "https://mcp.driflyte.com/openai",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.teamwork/mcp",
+    "slug": "teamwork-go",
+    "url": "https://mcp.ai.teamwork.com",
+    "transport": "sse"
+  },
+  {
+    "name": "com.teamwork/mcp",
+    "slug": "teamwork-go",
+    "url": "https://mcp.ai.teamwork.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.mintmcp/gmail",
+    "slug": "mintmcp-gmail",
+    "url": "https://gmail.mintmcp.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Sideways",
+    "slug": "sideways-1",
+    "url": "https://sideways.aribadernatal.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Sideways",
+    "slug": "sideways-1",
+    "url": "https://sideways.aribadernatal.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.redpanda/docs-mcp",
+    "slug": "redpanda-docs",
+    "url": "https://docs.redpanda.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.mermaidchart/mermaid-mcp",
+    "slug": "mermaid-chart",
+    "url": "https://mcp.mermaidchart.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.mermaidchart/mermaid-mcp",
+    "slug": "mermaid-chart",
+    "url": "https://mcp.mermaidchart.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Forex-GPT MCP Server",
+    "slug": "forex-gpt",
+    "url": "https://mcp.forex-gpt.ai/mcp",
+    "transport": "sse"
+  },
+  {
+    "name": "ToolBartender",
+    "slug": "sungminwoo0612-toolbartender",
+    "url": "http://mcp.toolbartender.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Xtended",
+    "slug": "xtended",
+    "url": "https://mcp.xtended.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Xtended",
+    "slug": "xtended",
+    "url": "https://api.xtended.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "KakaoTalk Emoticons",
+    "slug": "llaa33219-kakaotalk-emoticons",
+    "url": "https://playmcp-kakaotalk-emoticon.bloupla.net/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Dock AI",
+    "slug": "dock-ai",
+    "url": "https://mcp.dockai.co/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "eSagu",
+    "slug": "esagu",
+    "url": "https://api.esagu.de/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Dice MCP",
+    "slug": "dice",
+    "url": "https://mcp.dice.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.profitelligence/mcp-server",
+    "slug": "profitelligence",
+    "url": "https://mcp.profitelligence.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.lilo-property/mcp-server",
+    "slug": "lilo-property",
+    "url": "https://mcp.lilo.property/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Bright Security",
+    "slug": "bright-security",
+    "url": "https://{instance}.brightsec.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "HTML/CSS to Image",
+    "slug": "html-css-to-image",
+    "url": "https://mcp.hcti.io",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "co.okahu.mcp-registry/okahu",
+    "slug": "okahu",
+    "url": "https://mcp.okahu.co/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "AIStatusDashboard",
+    "slug": "aistatusdashboard",
+    "url": "https://aistatusdashboard.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Twelve Data",
+    "slug": "twelve-data",
+    "url": "https://mcp.twelvedata.com/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ScanMalware.com URL Scanner",
+    "slug": "scanmalware",
+    "url": "https://mcp.scanmalware.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ClickUp",
+    "slug": "clickup",
+    "url": "https://mcp.clickup.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Apiiro Guardian Agent",
+    "slug": "apiiro-guardian",
+    "url": "https://mcp.apiiro.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "La Palma 24 - Vacation Rentals",
+    "slug": "lapalma24",
+    "url": "https://mcp.la-palma24.net",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "DomainKits",
+    "slug": "domainkits",
+    "url": "https://mcp.domainkits.com/mcp/ns-reverse",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "DomainKits",
+    "slug": "domainkits",
+    "url": "https://mcp.domainkits.com/mcp/nrds",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.matiasbattocchia/google-mcp",
+    "slug": "google-mcp",
+    "url": "https://g.mcp.openbsp.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.stayce/partd-mcp",
+    "slug": "stayce-partd",
+    "url": "https://partd-mcp-server.staycek.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.achildrenmile/oeradio-mcp",
+    "slug": "oeradio",
+    "url": "https://oeradio-mcp.oeradio.at/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.SocioLogicAI/signal-relay",
+    "slug": "signal-relay",
+    "url": "https://mcp.sociologicai.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Bitte AI",
+    "slug": "bitte-protocol",
+    "url": "https://mcp.bitte.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "OneContext",
+    "slug": "onecontext",
+    "url": "https://worker-name.account-name.workers.dev/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Cloudflare Logpush",
+    "slug": "cloudflare-logpush",
+    "url": "https://logs.mcp.cloudflare.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Intercom",
+    "slug": "intercom",
+    "url": "https://mcp.intercom.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Intercom",
+    "slug": "intercom",
+    "url": "https://mcp.intercom.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "io.globalping/mcp",
+    "slug": "jsdelivr-globalping",
+    "url": "https://mcp.globalping.io/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "io.globalping/mcp",
+    "slug": "jsdelivr-globalping",
+    "url": "https://mcp.globalping.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "McPoogle (MCP Search)",
+    "slug": "graphlit-mcpoogle",
+    "url": "https://mcp.mcpoogle.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Simplescraper",
+    "slug": "simplescraper",
+    "url": "https://mcp.simplescraper.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Flux (AO & Arweave)",
+    "slug": "asrvd-flux-ao-arweave",
+    "url": "https://flux-2esw.onrender.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Beat and Raise (SEC Filings)",
+    "slug": "beatandraise-sec-filings",
+    "url": "https://mcp.beatandraise.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Windsor",
+    "slug": "windsor",
+    "url": "https://mcp.windsor.ai",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Windsor",
+    "slug": "windsor",
+    "url": "https://mcp.windsor.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "ai.tickettailor/mcp",
+    "slug": "ticket-tailor",
+    "url": "https://mcp.tickettailor.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.tickettailor/mcp",
+    "slug": "ticket-tailor",
+    "url": "https://mcp.tickettailor.ai/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Mercado Pago",
+    "slug": "mercado-pago",
+    "url": "https://mcp.mercadopago.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Kiwi Flight Search",
+    "slug": "kiwi-flights",
+    "url": "https://mcp.kiwi.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "IO Aerospace MCP Server",
+    "slug": "io-aerospace",
+    "url": "https://mcp.io-aerospace.org",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "mxHERO Mail2Cloud Advanced",
+    "slug": "mxhero-mail2cloud-advanced",
+    "url": "https://lab4-api.mxhero.com/mcp/connect",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "mxHERO Mail2Cloud Advanced",
+    "slug": "mxhero-mail2cloud-advanced",
+    "url": "https://lab4-api.mxhero.com/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "YouTube2Text",
+    "slug": "youtube2text",
+    "url": "https://api.youtube2text.org/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "TheMissingLinkHub",
+    "slug": "themissinglinkhub",
+    "url": "https://mcp.news.themissinglinkhub.com/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Companies in the UK",
+    "slug": "companies-in-the-uk",
+    "url": "https://mcp.companiesintheuk.co.uk",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "1MCPServer",
+    "slug": "particlefuture-1mcpserver",
+    "url": "https://mcp.1mcpserver.com/mcp/",
+    "transport": "sse"
+  },
+  {
+    "name": "io.github.promplate/hmr",
+    "slug": "hmr-docs",
+    "url": "https://promplate.github.io/pyth-on-line/hmr/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "QChing",
+    "slug": "qching",
+    "url": "https://qching.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "AI-Archive",
+    "slug": "ai-archive",
+    "url": "https://ai-archive.io/docs/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Twig RAG Agents",
+    "slug": "twig-rag-agents",
+    "url": "https://mcp.twig.so/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ch.martinelli/jooq-mcp",
+    "slug": "martinelli-jooq",
+    "url": "https://jooq-mcp.martinelli.ch/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "ai.meminal/meminal",
+    "slug": "meminal",
+    "url": "https://meminal.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/miro",
+    "slug": "waystation-miro",
+    "url": "https://waystation.ai/miro/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/miro",
+    "slug": "waystation-miro",
+    "url": "https://waystation.ai/miro/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "A Christmas Carol",
+    "slug": "wire-christmas-carol",
+    "url": "https://wire-public.mcp.usewire.io/container/gUeioF26GkeQPHxj/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Katalon TestOps MCP",
+    "slug": "katalon-testops",
+    "url": "https://product-katalon.katalon.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Oh My Posh Validator",
+    "slug": "ohmyposh",
+    "url": "https://ohmyposh.dev/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "net.gepuro.mcp-company-lens-v1/company-lens-mcp-registry",
+    "slug": "gepuro-company-lens",
+    "url": "https://mcp-company-lens-v1.gepuro.net/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Docusign Navigator",
+    "slug": "thisdot-docusign-navigator",
+    "url": "https://docusign-navigator.thisdot.co/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Nomad Stays",
+    "slug": "nomadstays",
+    "url": "https://mcp.nomadstays.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Well",
+    "slug": "well",
+    "url": "https://api.wellapp.ai/v1/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.cycloid.mcp/server",
+    "slug": "cycloid",
+    "url": "https://mcp.cycloid.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.BalajSaleem/criterion",
+    "slug": "balajsaleem-criterion",
+    "url": "https://criterion.life/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "JxBrowser MCP Server",
+    "slug": "jxbrowser",
+    "url": "https://jxbrowser.mcp.teamdev.com/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress.org Trac",
+    "slug": "courtneyr-dev-wordpress-trac",
+    "url": "https://mcp-server-wporg-core-trac.meta-trac-wordpress.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress.org Trac",
+    "slug": "courtneyr-dev-wordpress-trac",
+    "url": "https://mcp-server-wporg-meta-trac.meta-trac-wordpress.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress.org Trac",
+    "slug": "courtneyr-dev-wordpress-trac",
+    "url": "https://mcp-server-wporg-plugins-trac.meta-trac-wordpress.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress.org Trac",
+    "slug": "courtneyr-dev-wordpress-trac",
+    "url": "https://mcp-server-wporg-themes-trac.meta-trac-wordpress.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress.org Trac",
+    "slug": "courtneyr-dev-wordpress-trac",
+    "url": "https://mcp-server-wporg-bbpress-trac.meta-trac-wordpress.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress.org Trac",
+    "slug": "courtneyr-dev-wordpress-trac",
+    "url": "https://mcp-server-wporg-buddypress-trac.meta-trac-wordpress.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress.org Trac",
+    "slug": "courtneyr-dev-wordpress-trac",
+    "url": "https://mcp-server-wporg-glotpress-trac.meta-trac-wordpress.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Counsel",
+    "slug": "mercurialsolo-counsel",
+    "url": "https://counsel-mcp.getmason.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Klaviyo",
+    "slug": "klaviyo",
+    "url": "https://mcp.klaviyo.com/mcp?read-only={READ_ONLY}&disable-tools-with-user-generated-content={DISABLE_UGC}",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.eansearch/eansearch-mcp-server",
+    "slug": "eansearch",
+    "url": "https://www.ean-search.org/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.outris-dev-user/outris-identity-mcp",
+    "slug": "outris-identity",
+    "url": "https://mcp-server.outris.com/http",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "DeepRecall - Product Safety Intelligence",
+    "slug": "deeprecall",
+    "url": "https://mcp.deeprecall.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.searchapi/mcp",
+    "slug": "searchapi",
+    "url": "https://www.searchapi.io/mcp?token={api_token}",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Lenny's Podcast",
+    "slug": "akshayvkt-lenny-podcast",
+    "url": "https://lenny-mcp.onrender.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Mercury",
+    "slug": "mercury",
+    "url": "https://mcp.mercury.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Unified Offer Protocol MCP Server",
+    "slug": "unified-offer-protocol",
+    "url": "https://api.unifiedoffer.com/functions/v1/mcp-http-wrapper",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Leni",
+    "slug": "leni",
+    "url": "https://www.heyleni.ai/api/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Leni",
+    "slug": "leni",
+    "url": "https://www.heyleni.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.civic/nexus",
+    "slug": "civic-nexus",
+    "url": "https://nexus.civic.com/hub/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/jira",
+    "slug": "waystation-jira",
+    "url": "https://waystation.ai/jira/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/jira",
+    "slug": "waystation-jira",
+    "url": "https://waystation.ai/jira/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "ai.waystation/supabase",
+    "slug": "waystation-supabase",
+    "url": "https://waystation.ai/supabase/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/supabase",
+    "slug": "waystation-supabase",
+    "url": "https://waystation.ai/supabase/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "ai.waystation/office",
+    "slug": "waystation-office",
+    "url": "https://waystation.ai/office/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/office",
+    "slug": "waystation-office",
+    "url": "https://waystation.ai/office/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "Payram Helper MCP Server",
+    "slug": "payram-helper",
+    "url": "https://mcp.payram.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Payram Helper MCP Server",
+    "slug": "payram-helper",
+    "url": "https://mcp.payram.com/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "ai.waystation/wrike",
+    "slug": "waystation-wrike",
+    "url": "https://waystation.ai/wrike/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.waystation/wrike",
+    "slug": "waystation-wrike",
+    "url": "https://waystation.ai/wrike/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "so.jinko/jinko-mcp",
+    "slug": "jinko-mcp",
+    "url": "https://mcp-remote.jinko.so/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Jinko MCP",
+    "slug": "jinko-gojinko",
+    "url": "https://mcp.gojinko.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Jinko MCP",
+    "slug": "jinko-gojinko",
+    "url": "https://mcp.gojinko.com",
+    "transport": "sse"
+  },
+  {
+    "name": "app.getdialer/dialer",
+    "slug": "dialer",
+    "url": "https://getdialer.app/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "app.getdialer/dialer",
+    "slug": "dialer",
+    "url": "https://getdialer.app/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "md.install/try",
+    "slug": "installmd-try",
+    "url": "https://install.md/mcp/try",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.snapcall/mcp",
+    "slug": "snapcall",
+    "url": "https://mcp.snapcall.io",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.ignission/mcp",
+    "slug": "ignission",
+    "url": "https://mcp.ignission.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.windowsforum/mcp-server",
+    "slug": "windowsforum",
+    "url": "https://mcp.windowsforum.com",
+    "transport": "sse"
+  },
+  {
+    "name": "com.tableall/mcp",
+    "slug": "tableall",
+    "url": "https://mcp.tableall.com/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "io.foqal/Foqal",
+    "slug": "foqal",
+    "url": "https://support.foqal.io/api/mcp/[YOUR_GENERATED_TOKEN]",
+    "transport": "sse"
+  },
+  {
+    "name": "com.cryptorefills/mcp-server",
+    "slug": "cryptorefills",
+    "url": "https://api.cryptorefills.com/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "com.1stdibs/1stDibs",
+    "slug": "1stdibs",
+    "url": "https://www.1stdibs.com/soa/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Outrun",
+    "slug": "outrun",
+    "url": "https://0ut.run/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Vivideo",
+    "slug": "vivideo",
+    "url": "https://api.vivideo.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.lexsocket/mcp-ted",
+    "slug": "lexsocket-ted",
+    "url": "https://mcp.lexsocket.ai/ted/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Ludo AI Game Assets",
+    "slug": "game-assets",
+    "url": "https://mcp.ludo.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Riksdag & Regering MCP",
+    "slug": "riksdag-regering",
+    "url": "https://riksdag-regering-ai.onrender.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Granola",
+    "slug": "granola",
+    "url": "https://mcp.granola.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Alkemi",
+    "slug": "alkemi-data",
+    "url": "https://api.alkemi.cloud/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "trade.neglect/mcp-server",
+    "slug": "neglect-solana",
+    "url": "https://api.neglect.trade/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "GoPluto AI",
+    "slug": "gopluto-ai",
+    "url": "https://api.gopluto.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Kash.click",
+    "slug": "paracetamol951-kash-click",
+    "url": "https://mcp.kash.click/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Subconscious AI",
+    "slug": "subconscious-ai",
+    "url": "https://ghostshell-runi.vercel.app/api/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "io.github.lvpiggyqq/xcatcher",
+    "slug": "xcatcher",
+    "url": "https://xcatcher.top/mcp/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.balldontlie/mcp",
+    "slug": "balldontlie",
+    "url": "https://mcp.balldontlie.io/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "WordPress REST API",
+    "slug": "kaewz-manga-wordpress-nodeflow",
+    "url": "https://wordpress-mcp.nodeflow.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Penfield Memory",
+    "slug": "penfield-mcp",
+    "url": "https://mcp.penfield.app/",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Skybridge Capitals Example",
+    "slug": "skybridge-capitals",
+    "url": "https://capitals.skybridge.tech",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Skybridge Capitals Example",
+    "slug": "skybridge-capitals",
+    "url": "https://capitals.skybridge.tech",
+    "transport": "sse"
+  },
+  {
+    "name": "CData Connect AI",
+    "slug": "cdata-connect-ai",
+    "url": "https://mcp.cloud.cdata.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Audioscrape Audio Intelligence",
+    "slug": "audio-intelligence",
+    "url": "https://mcp.audioscrape.com",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Stumpy",
+    "slug": "agents",
+    "url": "https://stumpy.ai/mcp/message",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "Stumpy",
+    "slug": "agents",
+    "url": "https://stumpy.ai/mcp/sse",
+    "transport": "sse"
+  },
+  {
+    "name": "ThousandEyes MCP",
+    "slug": "thousandeyes",
+    "url": "https://api.thousandeyes.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ThousandEyes MCP",
+    "slug": "thousandeyes",
+    "url": "https://api.thousandeyes.com/mcp-public",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "e-Stat MCP",
+    "slug": "n-3inc-e-stat",
+    "url": "https://mcp.n-3.ai/mcp?tools=e-stat-get-stats-list,e-stat-get-meta-info,e-stat-get-data-catalog",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "TinyFish AI Web Agent",
+    "slug": "web-agent",
+    "url": "https://mino.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "ai.llmse/mcp",
+    "slug": "llmse",
+    "url": "https://llmse.ai/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.Servicedsi/123elec-mcp",
+    "slug": "123elec",
+    "url": "https://mcp.123elec.com/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.stayce/shortcut-mcp",
+    "slug": "stayce-shortcut",
+    "url": "https://streamshortcut.staycek.workers.dev/mcp",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "com.zeroheight/zeroheight",
+    "slug": "zeroheight",
+    "url": "https://mcp.zeroheight.com/mcp/{token}",
+    "transport": "streamable-http"
+  },
+  {
+    "name": "io.github.Startvest-LLC/idealift",
+    "slug": "idealift",
+    "url": "https://idealift.startvest.ai/api/mcp",
+    "transport": "streamable-http"
+  }
+]

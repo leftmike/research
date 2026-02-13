@@ -1,0 +1,342 @@
+NAME: You.com Web Access & AI
+URL: https://api.you.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Web and news search via You.com",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "count": {
+            "description": "Max results per section",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "country": {
+            "description": "Country code",
+            "enum": [
+              "AR",
+              "AU",
+              "AT",
+              "BE",
+              "BR",
+              "CA",
+              "CL",
+              "DK",
+              "FI",
+              "FR",
+              "DE",
+              "HK",
+              "IN",
+              "ID",
+              "IT",
+              "JP",
+              "KR",
+              "MY",
+              "MX",
+              "NL",
+              "NZ",
+              "NO",
+              "CN",
+              "PL",
+              "PT",
+              "PT-BR",
+              "PH",
+              "RU",
+              "SA",
+              "ZA",
+              "ES",
+              "SE",
+              "CH",
+              "TW",
+              "TR",
+              "GB",
+              "US"
+            ],
+            "type": "string"
+          },
+          "freshness": {
+            "description": "day/week/month/year or YYYY-MM-DDtoYYYY-MM-DD",
+            "type": "string"
+          },
+          "livecrawl": {
+            "description": "Live-crawl sections for full content",
+            "enum": [
+              "web",
+              "news",
+              "all"
+            ],
+            "type": "string"
+          },
+          "livecrawl_formats": {
+            "description": "Format for crawled content",
+            "enum": [
+              "html",
+              "markdown"
+            ],
+            "type": "string"
+          },
+          "offset": {
+            "description": "Pagination offset",
+            "maximum": 9,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "query": {
+            "description": "Search query. Supports operators: site:domain.com (domain filter), filetype:pdf (file type), +term (include), -term (exclude), AND/OR/NOT (boolean logic), lang:en (language). Example: \"machine learning (Python OR PyTorch) -TensorFlow filetype:pdf\"",
+            "minLength": 1,
+            "type": "string"
+          },
+          "safesearch": {
+            "description": "Filter level",
+            "enum": [
+              "off",
+              "moderate",
+              "strict"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "you-search",
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "resultCounts": {
+            "additionalProperties": false,
+            "properties": {
+              "news": {
+                "description": "News results",
+                "type": "number"
+              },
+              "total": {
+                "description": "Total results",
+                "type": "number"
+              },
+              "web": {
+                "description": "Web results",
+                "type": "number"
+              }
+            },
+            "required": [
+              "web",
+              "news",
+              "total"
+            ],
+            "type": "object"
+          },
+          "results": {
+            "additionalProperties": false,
+            "description": "Search results",
+            "properties": {
+              "news": {
+                "description": "News results",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "page_age": {
+                      "description": "Publication timestamp",
+                      "type": "string"
+                    },
+                    "title": {
+                      "description": "Title",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "URL",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "title",
+                    "page_age"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "web": {
+                "description": "Web results",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "page_age": {
+                      "description": "Publication timestamp",
+                      "type": "string"
+                    },
+                    "title": {
+                      "description": "Title",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "URL",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "title"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "resultCounts"
+        ],
+        "type": "object"
+      },
+      "title": "Web Search"
+    },
+    {
+      "description": "Extract page content in markdown or HTML",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "crawl_timeout": {
+            "description": "Optional timeout in seconds (1-60) for page crawling",
+            "maximum": 60,
+            "minimum": 1,
+            "type": "number"
+          },
+          "format": {
+            "description": "(Deprecated) Output format - use formats array instead",
+            "enum": [
+              "markdown",
+              "html"
+            ],
+            "type": "string"
+          },
+          "formats": {
+            "description": "Output formats: array of \"markdown\" (text), \"html\" (layout), or \"metadata\" (structured data)",
+            "items": {
+              "enum": [
+                "markdown",
+                "html",
+                "metadata"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "urls": {
+            "description": "Array of webpage URLs to extract content from (e.g., [\"https://example.com\"])",
+            "items": {
+              "format": "uri",
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "urls"
+        ],
+        "type": "object"
+      },
+      "name": "you-contents",
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "description": "URLs processed",
+            "type": "number"
+          },
+          "formats": {
+            "description": "Content formats requested",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "items": {
+            "description": "Extracted items",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "html": {
+                  "description": "HTML content",
+                  "type": "string"
+                },
+                "markdown": {
+                  "description": "Markdown content",
+                  "type": "string"
+                },
+                "metadata": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "favicon_url": {
+                          "description": "Favicon URL",
+                          "type": "string"
+                        },
+                        "site_name": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "Site name"
+                        }
+                      },
+                      "required": [
+                        "favicon_url"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Page metadata"
+                },
+                "title": {
+                  "description": "Title",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "count",
+          "formats",
+          "items"
+        ],
+        "type": "object"
+      },
+      "title": "Extract Web Page Contents"
+    }
+  ]
+}
+---

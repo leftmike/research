@@ -1,0 +1,9 @@
+NAME: Dock AI
+URL: https://mcp.dockai.co/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: connection_blocked
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://mcp.dockai.co/mcp": Forbidden
+---

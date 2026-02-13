@@ -1,0 +1,29 @@
+NAME: Company Ethics Information (Boikot)
+URL: https://mcp.boikot.xyz/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Lookup information about a company's ethics.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "company_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "company_name"
+        ],
+        "title": "CopanyLookupParams",
+        "type": "object"
+      },
+      "name": "lookup_company_information"
+    }
+  ]
+}
+---

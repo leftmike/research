@@ -1,0 +1,9 @@
+NAME: ThousandEyes MCP
+URL: https://api.thousandeyes.com/mcp-public
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

@@ -1,0 +1,82 @@
+NAME: Skybridge Capitals Example
+URL: https://capitals.skybridge.tech
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "resources": [
+    {
+      "_meta": {
+        "ui": {
+          "csp": {
+            "connectDomains": [
+              "https://*.mapbox.com"
+            ],
+            "resourceDomains": [
+              "https://upload.wikimedia.org",
+              "https://flagcdn.com",
+              "blob:"
+            ]
+          }
+        }
+      },
+      "description": "Interactive world capitals explorer with map visualization",
+      "name": "explore-capitals",
+      "uri": "ui://widgets/apps-sdk/explore-capitals.html"
+    },
+    {
+      "_meta": {
+        "ui": {
+          "csp": {
+            "connectDomains": [
+              "https://*.mapbox.com"
+            ],
+            "resourceDomains": [
+              "https://upload.wikimedia.org",
+              "https://flagcdn.com",
+              "blob:"
+            ]
+          }
+        }
+      },
+      "description": "Interactive world capitals explorer with map visualization",
+      "name": "explore-capitals",
+      "uri": "ui://widgets/ext-apps/explore-capitals.html"
+    }
+  ],
+  "tools": [
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://widgets/apps-sdk/explore-capitals.html",
+        "openai/widgetAccessible": true,
+        "ui": {
+          "resourceUri": "ui://widgets/ext-apps/explore-capitals.html"
+        },
+        "ui/resourceUri": "ui://widgets/ext-apps/explore-capitals.html"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Use this tool to explore world capitals. Displays an interactive map with detailed information about capital cities including population, currencies, and beautiful photos. Always use it when users ask about capitals, countries, or want to explore geography.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "name": {
+            "description": "Capital city name in English (e.g., 'Paris', 'Tokyo', 'Washington, D.C.', 'London', 'New Delhi')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "explore-capitals"
+    }
+  ]
+}
+---

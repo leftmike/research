@@ -1,0 +1,117 @@
+NAME: io.github.ndkasndakn/refund-decide
+URL: https://refund.decide.fyi/api/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Check if a US consumer subscription purchase is eligible for a refund. Returns ALLOWED, DENIED, or UNKNOWN based on the vendor's refund policy window.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "days_since_purchase": {
+            "description": "Number of days since the subscription was purchased.",
+            "minimum": 0,
+            "type": "number"
+          },
+          "plan": {
+            "description": "Plan type. Currently only 'individual' plans are supported.",
+            "enum": [
+              "individual"
+            ],
+            "type": "string"
+          },
+          "region": {
+            "description": "Region code. Currently only 'US' is supported.",
+            "enum": [
+              "US"
+            ],
+            "type": "string"
+          },
+          "vendor": {
+            "description": "Vendor identifier (lowercase, underscore-separated).",
+            "enum": [
+              "1password",
+              "adobe",
+              "amazon_prime",
+              "apple_app_store",
+              "apple_music",
+              "apple_tv_plus",
+              "audible",
+              "bitwarden",
+              "bumble",
+              "calm",
+              "canva",
+              "chatgpt_plus",
+              "claude_pro",
+              "coursera_plus",
+              "crunchyroll",
+              "deezer",
+              "disney_plus",
+              "doordash_dashpass",
+              "dropbox_us",
+              "duolingo",
+              "evernote",
+              "expressvpn",
+              "figma",
+              "fubo_tv",
+              "github_pro",
+              "google_play",
+              "grammarly",
+              "headspace",
+              "hellofresh",
+              "hinge",
+              "hulu",
+              "icloud_plus",
+              "instacart_plus",
+              "linkedin_premium",
+              "masterclass",
+              "max",
+              "microsoft_365",
+              "midjourney",
+              "netflix",
+              "nintendo_switch_online",
+              "noom",
+              "nordvpn",
+              "notion",
+              "paramount_plus",
+              "peacock",
+              "peloton",
+              "playstation_plus",
+              "scribd",
+              "shutterstock",
+              "slack",
+              "sling_tv",
+              "spotify",
+              "squarespace",
+              "strava",
+              "surfshark",
+              "tidal",
+              "tinder",
+              "todoist",
+              "twitch",
+              "walmart_plus",
+              "wix",
+              "xbox_game_pass",
+              "youtube_premium",
+              "zoom"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "vendor",
+          "days_since_purchase",
+          "region",
+          "plan"
+        ],
+        "type": "object"
+      },
+      "name": "refund_eligibility"
+    }
+  ]
+}
+---

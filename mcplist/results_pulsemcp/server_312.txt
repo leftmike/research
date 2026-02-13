@@ -1,0 +1,9 @@
+NAME: Testiny Test Management
+URL: https://app.testiny.io/api/v1/mcp-server
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

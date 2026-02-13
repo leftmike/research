@@ -1,0 +1,339 @@
+NAME: io.github.topofgames/la-ei-romania
+URL: https://laei.ro/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "arguments": [
+        {
+          "name": "username",
+          "description": "The name of the user to welcome",
+          "required": true
+        },
+        {
+          "name": "role",
+          "description": "The role of the user (optional)"
+        }
+      ],
+      "description": "A customizable welcome message for users",
+      "name": "welcome-user"
+    }
+  ],
+  "resources": [
+    {
+      "mimeType": "text/plain",
+      "name": "Example Log File",
+      "uri": "file:///logs/example.log"
+    },
+    {
+      "description": "List of all users in the database",
+      "mimeType": "application/json",
+      "name": "Users List",
+      "uri": "database://users"
+    },
+    {
+      "description": "Profile data for user Alice (ID: 1)",
+      "mimeType": "application/json",
+      "name": "User: Alice",
+      "uri": "database://users/1"
+    },
+    {
+      "description": "Profile data for user Bob (ID: 2)",
+      "mimeType": "application/json",
+      "name": "User: Bob",
+      "uri": "database://users/2"
+    },
+    {
+      "description": "Profile data for user Charlie (ID: 3)",
+      "mimeType": "application/json",
+      "name": "User: Charlie",
+      "uri": "database://users/3"
+    }
+  ],
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Căutare Anunțuri Clasificate"
+      },
+      "description": "Căută anunțuri clasificate cu filtre avansate. Returnează o listă de anunțuri care corespund criteriilor de căutare, incluzând titlul, prețul, locația, categoria și detaliile fiecărui anunț.",
+      "inputSchema": {
+        "properties": {
+          "category_id": {
+            "description": "ID-ul categoriei pentru filtrarea anunțurilor",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "city_id": {
+            "description": "ID-ul orașului pentru filtrarea anunțurilor după locație",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Numărul maxim de anunțuri de returnat (implicit: 10)",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "price_max": {
+            "description": "Prețul maxim pentru filtrarea anunțurilor",
+            "minimum": 0,
+            "type": "number"
+          },
+          "price_min": {
+            "description": "Prețul minim pentru filtrarea anunțurilor",
+            "minimum": 0,
+            "type": "number"
+          },
+          "query": {
+            "description": "Cuvinte cheie pentru căutare în titlul și descrierea anunțurilor",
+            "type": "string"
+          },
+          "sort": {
+            "default": "recent",
+            "description": "Criteriul de sortare",
+            "enum": [
+              "recent",
+              "price_asc",
+              "price_desc",
+              "title"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "cauta-anunturi"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Detalii Anunț"
+      },
+      "description": "Obține detaliile complete ale unui anunț specificat prin ID, incluzând descrierea completă, informații contact, imagini și metadata.",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "description": "ID-ul anunțului pentru care se solicită detaliile",
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "detalii-anunt"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Obține Categorii"
+      },
+      "description": "Obține structura ierarhică a categoriilor de anunțuri disponibile, incluzând subcategorii și numărul de anunțuri pentru fiecare categorie.",
+      "inputSchema": {
+        "properties": {
+          "include_count": {
+            "default": true,
+            "description": "Include numărul de anunțuri pentru fiecare categorie",
+            "type": "boolean"
+          },
+          "level": {
+            "description": "Nivelul de adâncime pentru categorii (implicit: toate)",
+            "maximum": 5,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "parent_id": {
+            "description": "ID-ul categoriei părinte pentru obținerea subcategoriilor (opțional)",
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "obtine-categorii"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Obține Locații"
+      },
+      "description": "Obține informații despre țări, județe și orașe pentru filtrarea geografică a anunțurilor. Suportă căutare ierarhică de la țări la județe și orașe.",
+      "inputSchema": {
+        "properties": {
+          "country_code": {
+            "description": "Codul țării (pentru states/cities)",
+            "pattern": "^[A-Z]{2}$",
+            "type": "string"
+          },
+          "include_count": {
+            "default": true,
+            "description": "Include numărul de anunțuri pentru fiecare locație",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Numărul maxim de rezultate (implicit: 50)",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "state_code": {
+            "description": "Codul județului (pentru cities)",
+            "type": "string"
+          },
+          "type": {
+            "default": "cities",
+            "description": "Tipul locației solicitate",
+            "enum": [
+              "countries",
+              "states",
+              "cities"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "name": "obtine-locatii"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Statistici Anunțuri"
+      },
+      "description": "Obține statistici și tendințe pentru anunțuri, incluzând numărul de anunțuri per perioadă, categorii populare, prețuri medii și distribuția geografică.",
+      "inputSchema": {
+        "properties": {
+          "category_id": {
+            "description": "ID categoria pentru filtrare (opțional)",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "city_id": {
+            "description": "ID oraș pentru filtrare (opțional)",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "include_price_stats": {
+            "default": true,
+            "description": "Include statisticile de preț",
+            "type": "boolean"
+          },
+          "include_trends": {
+            "default": true,
+            "description": "Include tendințele și comparațiile cu perioada anterioară",
+            "type": "boolean"
+          },
+          "period": {
+            "default": "month",
+            "description": "Perioada pentru statistici",
+            "enum": [
+              "today",
+              "week",
+              "month",
+              "year",
+              "all"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "statistici-anunturi"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Explorare Orașe România"
+      },
+      "description": "Explorează și înțelege structura orașelor din România, incluzând județe, orașe, populație, coordonate geografice și relațiile dintre acestea.",
+      "inputSchema": {
+        "properties": {
+          "action": {
+            "default": "overview",
+            "description": "Tipul de explorare dorit",
+            "enum": [
+              "overview",
+              "counties",
+              "top_cities",
+              "county_cities",
+              "city_details",
+              "search",
+              "geographic"
+            ],
+            "type": "string"
+          },
+          "city_id": {
+            "description": "ID-ul orașului pentru detalii specifice",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "county_code": {
+            "description": "Codul județului (ex: RO.10, RO.23) pentru acțiuni specifice",
+            "type": "string"
+          },
+          "include_coordinates": {
+            "default": false,
+            "description": "Include coordonatele geografice în rezultate",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Numărul maxim de rezultate (implicit: 20)",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "population_min": {
+            "description": "Populația minimă pentru filtrare",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "search_term": {
+            "description": "Termen de căutare pentru orașe sau județe",
+            "minLength": 2,
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object"
+      },
+      "name": "explorare-orase"
+    }
+  ]
+}
+---

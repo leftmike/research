@@ -1,0 +1,9 @@
+NAME: Pinecone Assistant
+URL: https://<YOUR_PINECONE_ASSISTANT_HOST>/mcp/assistants/<YOUR_ASSISTANT_NAME>/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: Get "https://<YOUR_PINECONE_ASSISTANT_HOST>/mcp/assistants/%3CYOUR_ASSISTANT_NAME%3E/sse": Bad Request
+---

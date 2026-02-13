@@ -1,0 +1,9 @@
+NAME: BioContext Knowledgebase
+URL: https://mcp.biocontext.ai/mcp/
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Method Not Allowed
+---

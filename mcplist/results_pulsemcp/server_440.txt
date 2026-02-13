@@ -1,0 +1,432 @@
+NAME: md.install/try
+URL: https://install.md/mcp/try
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "description": "Comprehensive guide for creating an anonymous install.md project with tools and documentation",
+      "name": "create_project_guide"
+    }
+  ],
+  "tools": [
+    {
+      "description": "Create a new anonymous session for managing projects",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "create_session"
+    },
+    {
+      "description": "List all projects in the anonymous session",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id"
+        ],
+        "type": "object"
+      },
+      "name": "list_projects"
+    },
+    {
+      "description": "Get detailed information about a specific project in the session",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "project_slug": {
+            "description": "The slug of the project to get details for",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "project_slug"
+        ],
+        "type": "object"
+      },
+      "name": "get_project_details"
+    },
+    {
+      "description": "Create a new project in the anonymous session",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "is_public": {
+            "default": false,
+            "description": "Whether the project is public or private",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The display name of the project",
+            "type": "string"
+          },
+          "overview_content": {
+            "default": "",
+            "description": "Markdown content for the project overview",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          },
+          "slug": {
+            "description": "The URL slug for the project (used in URLs)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "name",
+          "slug"
+        ],
+        "type": "object"
+      },
+      "name": "create_project"
+    },
+    {
+      "description": "Update an existing project in the anonymous session",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "is_public": {
+            "description": "Whether the project is public or private",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The display name of the project",
+            "type": "string"
+          },
+          "overview_content": {
+            "description": "Markdown content for the project overview",
+            "type": "string"
+          },
+          "project_slug": {
+            "description": "The slug of the project to update",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          },
+          "slug": {
+            "description": "The URL slug for the project (used in URLs)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "project_slug"
+        ],
+        "type": "object"
+      },
+      "name": "update_project"
+    },
+    {
+      "description": "Delete a project from the anonymous session",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "project_slug": {
+            "description": "The slug of the project to delete",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "project_slug"
+        ],
+        "type": "object"
+      },
+      "name": "delete_project"
+    },
+    {
+      "description": "Add a new tool/step to a project",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "description": "Description of what the tool does",
+            "type": "string"
+          },
+          "display_name": {
+            "description": "The human-readable display name of the tool",
+            "type": "string"
+          },
+          "is_enabled": {
+            "default": true,
+            "description": "Whether the tool is enabled",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The unique name of the tool (used as identifier)",
+            "type": "string"
+          },
+          "project_slug": {
+            "description": "The slug of the project to add the tool to",
+            "type": "string"
+          },
+          "response_template": {
+            "description": "Markdown template for tool response",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          },
+          "step_order": {
+            "description": "The order of this step in the project workflow",
+            "type": "number"
+          },
+          "tool_schema": {
+            "description": "JSON schema for tool parameters",
+            "type": "string"
+          },
+          "tool_type": {
+            "default": "step",
+            "description": "The type of tool (step, builtin, tip)",
+            "enum": [
+              "step",
+              "builtin",
+              "tip"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "project_slug",
+          "name",
+          "display_name"
+        ],
+        "type": "object"
+      },
+      "name": "add_tool"
+    },
+    {
+      "description": "Update an existing tool",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "description": "Description of what the tool does",
+            "type": "string"
+          },
+          "display_name": {
+            "description": "The human-readable display name of the tool",
+            "type": "string"
+          },
+          "is_enabled": {
+            "description": "Whether the tool is enabled",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The unique name of the tool (used as identifier)",
+            "type": "string"
+          },
+          "response_template": {
+            "description": "Markdown template for tool response",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          },
+          "step_order": {
+            "description": "The order of this step in the project workflow",
+            "type": "number"
+          },
+          "tool_id": {
+            "description": "The ID of the tool to update",
+            "type": "string"
+          },
+          "tool_schema": {
+            "description": "JSON schema for tool parameters",
+            "type": "string"
+          },
+          "tool_type": {
+            "description": "The type of tool (step, builtin, tip)",
+            "enum": [
+              "step",
+              "builtin",
+              "tip"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "tool_id"
+        ],
+        "type": "object"
+      },
+      "name": "update_tool"
+    },
+    {
+      "description": "Toggle a tool's enabled/disabled state",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          },
+          "tool_id": {
+            "description": "The ID of the tool to toggle",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "tool_id"
+        ],
+        "type": "object"
+      },
+      "name": "toggle_tool"
+    },
+    {
+      "description": "Delete a tool from a project",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          },
+          "tool_id": {
+            "description": "The ID of the tool to delete",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "tool_id"
+        ],
+        "type": "object"
+      },
+      "name": "delete_tool"
+    },
+    {
+      "description": "Reorder tools/steps in a project",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "project_slug": {
+            "description": "The slug of the project to reorder tools in",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          },
+          "tool_orders": {
+            "description": "Array of tool IDs and their new step orders",
+            "items": {
+              "properties": {
+                "step_order": {
+                  "description": "The new step order for the tool",
+                  "type": "number"
+                },
+                "tool_id": {
+                  "description": "The ID of the tool to reorder",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "tool_id",
+                "step_order"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "session_id",
+          "project_slug",
+          "tool_orders"
+        ],
+        "type": "object"
+      },
+      "name": "reorder_steps"
+    },
+    {
+      "description": "Add a new data source to a project",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "project_slug": {
+            "description": "The slug of the project to add the data source to",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of data source",
+            "enum": [
+              "web_crawl",
+              "git_clone",
+              "resource_load"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "description": "The URL of the data source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "project_slug",
+          "url",
+          "type"
+        ],
+        "type": "object"
+      },
+      "name": "add_data_source"
+    },
+    {
+      "description": "Delete a data source from a project",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "data_source_id": {
+            "description": "The ID of the data source to delete",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "The anonymous session ID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "data_source_id"
+        ],
+        "type": "object"
+      },
+      "name": "delete_data_source"
+    }
+  ]
+}
+---

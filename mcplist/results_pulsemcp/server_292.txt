@@ -1,0 +1,52 @@
+NAME: ProSearch (Tencent)
+URL: https://agent.html5.qq.com/prosearch_vip/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "针对用户主动搜索的问题（query），基于问答搜索的海量数据 \u0026 权威内容 \u0026 智能化答案抽取 生成具体的答案内容",
+      "inputSchema": {
+        "properties": {
+          "cnt": {
+            "description": "返回的条数，cnt=10/20/30/40/50，5种值，最多可支持返回50条搜索结果，例如：20",
+            "type": "integer"
+          },
+          "from_time": {
+            "description": "起始时间, 当query具有强时效性可使用该参数, 搭配to_time参数进行使用，获取指定的时间段的搜索结果。例如：2025-01-21 15:57:01, 需要和to_time参数搭配使用，单用会报错",
+            "type": "string"
+          },
+          "industry": {
+            "description": "指定垂域, 有gov、news、acad三种值。industry=gov：党政机关，中华人民共和国中央及地方各级党政机关官方网站，industry=news：权威媒体，中央互联网新闻信息服务单位认证的新闻站点，industry=acad：英文学术，顶级学术期刊、预印本、综合学术数据库以及科研机构等",
+            "type": "string"
+          },
+          "mode": {
+            "description": "返回结果类型，0-自然检索结果(默认)，1-多模态VR结果，2-混合结果（多模态VR结果+自然检索结果）",
+            "type": "integer"
+          },
+          "query": {
+            "description": "查询语",
+            "type": "string"
+          },
+          "site": {
+            "description": "指定域名站内搜索（用于过滤自然检索结果），注意： mode=1模式下，参数无效；mode=0模式下，对所有结果生效；mode=2模式下，对输出的自然结果生效，示例值：zhihu.com",
+            "type": "string"
+          },
+          "to_time": {
+            "description": "结束时间, 取值范围：最大为当前时间； 例如：2025-01-21 16:57:03，需要和from_time参数搭配使用，单用会报错",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "prosearch_vip"
+    }
+  ]
+}
+---

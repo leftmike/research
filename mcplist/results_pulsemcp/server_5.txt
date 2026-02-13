@@ -1,0 +1,9 @@
+NAME: CoinAPI Real-time Exchange Rates
+URL: https://mcp-realtime.exrates.coinapi.io/
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": failed to connect (session ID: ): session not found
+---

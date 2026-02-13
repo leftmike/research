@@ -1,0 +1,751 @@
+NAME: FinFeedAPI FX Realtime
+URL: https://mcp-realtime.fx.finfeedapi.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Metadata"
+          ]
+        }
+      },
+      "description": "Retrieves all assets.\n            \n:::info\nOur asset identifiers are aligned with the ISO 4217 currency codes standard only for fiat money (government or law regulated currency).\n:::\n            \n:::info\nProperties of the output are providing aggregated information from across all symbols related to the specific asset. If you need to calculate your aggregation (e.g., limiting only the particular type of symbols), you should use /v1/symbols endpoint as a data source.\n:::",
+      "inputSchema": {
+        "properties": {
+          "filter_asset_id": {
+            "description": "Comma or semicolon delimited asset identifiers used to filter response. (optional, eg. `BTC;ETH`).",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "List_all_assets",
+      "outputSchema": {
+        "$defs": {
+          "v1.Asset": {
+            "additionalProperties": false,
+            "description": "Represents an asset.",
+            "properties": {
+              "asset_id": {
+                "description": "Gets or sets the asset ID.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "chain_addresses": {
+                "description": "",
+                "items": {
+                  "$ref": "#/$defs/v1.ChainNetworkAddress"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "data_end": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_orderbook_end": {
+                "description": "Gets or sets the end date of order book data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_orderbook_start": {
+                "description": "Gets or sets the start date of order book data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_quote_end": {
+                "description": "Gets or sets the end date of quote data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_quote_start": {
+                "description": "Gets or sets the start date of quote data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_start": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_symbols_count": {
+                "description": "Gets or sets the number of symbols.",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "data_trade_end": {
+                "description": "Gets or sets the end date of trade data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_trade_start": {
+                "description": "Gets or sets the start date of trade data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "id_icon": {
+                "description": "Gets or sets the ID of the icon for the asset.",
+                "format": "uuid",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "description": "Gets or sets the name of the asset.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "price_usd": {
+                "description": "Gets or sets the USD price of the asset.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "supply_current": {
+                "description": "Gets or sets the current supply of the asset.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "supply_max": {
+                "description": "Gets or sets the maximum supply of the asset.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "supply_total": {
+                "description": "Gets or sets the total supply of the asset.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "type_is_crypto": {
+                "description": "Gets or sets a value indicating whether the asset is a cryptocurrency.",
+                "format": "int32",
+                "type": "integer"
+              },
+              "volume_1day_usd": {
+                "description": "Gets or sets the USD volume in the last 1 day.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "volume_1hrs_usd": {
+                "description": "Gets or sets the USD volume in the last 1 hour.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "volume_1mth_usd": {
+                "description": "Gets or sets the USD volume in the last 1 month.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "v1.ChainNetworkAddress": {
+            "additionalProperties": false,
+            "description": "Contains information about assets' chain network addresses",
+            "properties": {
+              "address": {
+                "description": "Gets or sets chain address",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "chain_id": {
+                "description": "Gets or sets chain id",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "network_id": {
+                "description": "Gets or sets network id",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/v1.Asset"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Metadata"
+          ]
+        }
+      },
+      "description": "List all assets by asset ID\n\n\n**Path Parameters:**\n\n- **asset_id**: The asset ID.",
+      "inputSchema": {
+        "properties": {
+          "asset_id": {
+            "description": "The asset ID.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id"
+        ],
+        "type": "object"
+      },
+      "name": "List_all_assets_by_asset_ID",
+      "outputSchema": {
+        "$defs": {
+          "v1.Asset": {
+            "additionalProperties": false,
+            "description": "Represents an asset.",
+            "properties": {
+              "asset_id": {
+                "description": "Gets or sets the asset ID.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "chain_addresses": {
+                "description": "",
+                "items": {
+                  "$ref": "#/$defs/v1.ChainNetworkAddress"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "data_end": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_orderbook_end": {
+                "description": "Gets or sets the end date of order book data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_orderbook_start": {
+                "description": "Gets or sets the start date of order book data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_quote_end": {
+                "description": "Gets or sets the end date of quote data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_quote_start": {
+                "description": "Gets or sets the start date of quote data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_start": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_symbols_count": {
+                "description": "Gets or sets the number of symbols.",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "data_trade_end": {
+                "description": "Gets or sets the end date of trade data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "data_trade_start": {
+                "description": "Gets or sets the start date of trade data.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "id_icon": {
+                "description": "Gets or sets the ID of the icon for the asset.",
+                "format": "uuid",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "description": "Gets or sets the name of the asset.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "price_usd": {
+                "description": "Gets or sets the USD price of the asset.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "supply_current": {
+                "description": "Gets or sets the current supply of the asset.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "supply_max": {
+                "description": "Gets or sets the maximum supply of the asset.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "supply_total": {
+                "description": "Gets or sets the total supply of the asset.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "type_is_crypto": {
+                "description": "Gets or sets a value indicating whether the asset is a cryptocurrency.",
+                "format": "int32",
+                "type": "integer"
+              },
+              "volume_1day_usd": {
+                "description": "Gets or sets the USD volume in the last 1 day.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "volume_1hrs_usd": {
+                "description": "Gets or sets the USD volume in the last 1 hour.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "volume_1mth_usd": {
+                "description": "Gets or sets the USD volume in the last 1 month.",
+                "format": "double",
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "v1.ChainNetworkAddress": {
+            "additionalProperties": false,
+            "description": "Contains information about assets' chain network addresses",
+            "properties": {
+              "address": {
+                "description": "Gets or sets chain address",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "chain_id": {
+                "description": "Gets or sets chain id",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "network_id": {
+                "description": "Gets or sets network id",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/v1.Asset"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Metadata"
+          ]
+        }
+      },
+      "description": "Gets the list of icons (of the given size) for all the assets.\n\n\n**Path Parameters:**\n\n- **size**: The size of the icons.",
+      "inputSchema": {
+        "properties": {
+          "size": {
+            "description": "The size of the icons.",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "size"
+        ],
+        "type": "object"
+      },
+      "name": "List_all_asset_icons",
+      "outputSchema": {
+        "$defs": {
+          "v1.Icon": {
+            "additionalProperties": false,
+            "description": "Represents an icon.",
+            "properties": {
+              "asset_id": {
+                "description": "Gets or sets the asset ID associated with the icon.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "exchange_id": {
+                "description": "Gets or sets the exchange ID associated with the icon.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "description": "Gets or sets the URL of the icon.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "$ref": "#/$defs/v1.Icon"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Exchange Rates"
+          ]
+        }
+      },
+      "description": "Retrieves the exchange rate for a specific base and quote asset at a given time or the current rate.\n            \n:::info\nIf you are using an exchange rate for mission-critical operations, then for best reliability, you should measure the difference between current time and the time returned from the response to ensure that value of the difference between those meets your internal requirements.\n:::\n\n\n**Path Parameters:**\n\n- **asset_id_base**: Requested exchange rate base asset identifier (from the Metadata -\u003e Assets)\n\n- **asset_id_quote**: Requested exchange rate quote asset identifier (from the Metadata -\u003e Assets)",
+      "inputSchema": {
+        "properties": {
+          "asset_id_base": {
+            "description": "Requested exchange rate base asset identifier (from the Metadata -\u003e Assets)",
+            "type": "string"
+          },
+          "asset_id_quote": {
+            "description": "Requested exchange rate quote asset identifier (from the Metadata -\u003e Assets)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id_base",
+          "asset_id_quote"
+        ],
+        "type": "object"
+      },
+      "name": "Get_specific_rate",
+      "outputSchema": {
+        "$defs": {
+          "v1.ExchangeRate": {
+            "additionalProperties": false,
+            "description": "Represents an exchange rate.",
+            "properties": {
+              "asset_id_base": {
+                "description": "Gets or sets the base asset ID of the exchange rate.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "asset_id_quote": {
+                "description": "Gets or sets the quote asset ID of the exchange rate.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "rate": {
+                "description": "Gets or sets the exchange rate value.",
+                "format": "double",
+                "type": "number"
+              },
+              "time": {
+                "description": "Gets or sets the time of the exchange rate.",
+                "format": "date-time",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents an exchange rate.",
+        "properties": {
+          "asset_id_base": {
+            "description": "Gets or sets the base asset ID of the exchange rate.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "asset_id_quote": {
+            "description": "Gets or sets the quote asset ID of the exchange rate.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rate": {
+            "description": "Gets or sets the exchange rate value.",
+            "format": "double",
+            "type": "number"
+          },
+          "time": {
+            "description": "Gets or sets the time of the exchange rate.",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "x-fastmcp-top-level-schema": "v1.ExchangeRate"
+      }
+    },
+    {
+      "_meta": {
+        "_fastmcp": {
+          "tags": [
+            "Exchange Rates"
+          ]
+        }
+      },
+      "description": "Get the current exchange rate between requested asset and all other assets.\n            \n:::info\nIf you are using an exchange rate for mission-critical operations, then for best reliability, you should measure the difference between current time and the time returned from the response to ensure that value of the difference between those meets your internal requirements.\n:::\n            \n:::info\nYou can invert the rates by using Y = 1 / X equation, for example BTC/USD = 1 / (USD/BTC);\n:::\n\n\n**Path Parameters:**\n\n- **asset_id_base**: Requested exchange rates base asset identifier (from the Metadata -\u003e Assets)",
+      "inputSchema": {
+        "properties": {
+          "asset_id_base": {
+            "description": "Requested exchange rates base asset identifier (from the Metadata -\u003e Assets)",
+            "type": "string"
+          },
+          "filter_asset_id": {
+            "description": "Comma or semicolon delimited asset identifiers used to filter response (optional)",
+            "type": "string"
+          },
+          "invert": {
+            "default": false,
+            "description": "True will invert all the rates (optional, if true then rates will be calculated as `rate = 1 / actual_rate` eg. `USD/BTC` as `BTC/USD`)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "asset_id_base"
+        ],
+        "type": "object"
+      },
+      "name": "Get_all_current_rates",
+      "outputSchema": {
+        "$defs": {
+          "v1.ExchangeRates": {
+            "additionalProperties": false,
+            "description": "Represents exchange rates for a specific base asset.",
+            "properties": {
+              "asset_id_base": {
+                "description": "Gets or sets the base asset ID.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "rates": {
+                "description": "Gets or sets the list of exchange rates.",
+                "items": {
+                  "$ref": "#/$defs/v1.ExchangeRatesRate"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "v1.ExchangeRatesRate": {
+            "additionalProperties": false,
+            "description": "Represents an exchange rate within a collection of exchange rates.",
+            "properties": {
+              "asset_id_quote": {
+                "description": "Gets or sets the quote asset ID of the exchange rate.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "rate": {
+                "description": "Gets or sets the exchange rate value.",
+                "format": "double",
+                "type": "number"
+              },
+              "time": {
+                "description": "Gets or sets the time of the exchange rate.",
+                "format": "date-time",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents exchange rates for a specific base asset.",
+        "properties": {
+          "asset_id_base": {
+            "description": "Gets or sets the base asset ID.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rates": {
+            "description": "Gets or sets the list of exchange rates.",
+            "items": {
+              "$ref": "#/$defs/v1.ExchangeRatesRate"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          }
+        },
+        "type": "object",
+        "x-fastmcp-top-level-schema": "v1.ExchangeRates"
+      }
+    }
+  ]
+}
+---

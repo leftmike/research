@@ -1,0 +1,114 @@
+NAME: DeepRecall - Product Safety Intelligence
+URL: https://mcp.deeprecall.io/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "resources": [
+    {
+      "description": "Get information about the DeepRecall MCP server",
+      "mimeType": "text/plain",
+      "name": "get_info",
+      "uri": "deeprecall://info"
+    }
+  ],
+  "tools": [
+    {
+      "description": "\n    Search for recalled products similar to your query.\n    \n    This tool searches DeepRecall's global product safety database using AI-powered\n    multimodal matching. Provide a text description and/or product images to find\n    similar recalled products.\n    \n    Use Cases:\n    - Pre-purchase safety checks: Before buying, verify if similar products were recalled\n    - Supplier vetting: Check if a supplier's products have safety issues\n    - Marketplace compliance: Verify products against recall databases\n    - Consumer protection: Identify potentially hazardous products\n    \n    Data Sources:\n    - us_cpsc: US Consumer Product Safety Commission\n    - us_fda: US Food and Drug Administration\n    - safety_gate: EU Safety Gate (Europe)\n    - uk_opss: UK Office for Product Safety \u0026 Standards\n    - canada_recalls: Health Canada Recalls\n    - oecd: OECD GlobalRecalls portal\n    - rappel_conso: French Consumer Recalls\n    - accc_recalls: Australian Competition and Consumer Commission\n    \n    Cost: 1 API credit per search\n    \n    Args:\n        content_description: Text description of the product (e.g., \"children's toy with small parts\")\n        image_urls: List of product image URLs for visual matching (1-10 images)\n        filter_by_data_sources: Limit search to specific agencies (optional)\n        top_k: Number of results (1-100, default: 10)\n        model_name: Fusion model - fuse_max (recommended), fuse_flex, or fuse\n        input_weights: Weights for [text, images], must sum to 1.0\n        api_key: Your DeepRecall API key (optional if provided via X-API-Key header)\n    \n    Returns:\n        Search results with matched recalls, scores, and product details\n    \n    Example:\n        search_recalls(\n            content_description=\"baby crib with drop-side rails\",\n            top_k=5\n        )\n    ",
+      "inputSchema": {
+        "properties": {
+          "api_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Api Key"
+          },
+          "content_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Content Description"
+          },
+          "filter_by_data_sources": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Filter By Data Sources"
+          },
+          "image_urls": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Image Urls"
+          },
+          "input_weights": {
+            "default": [
+              0.5,
+              0.5
+            ],
+            "items": {
+              "type": "number"
+            },
+            "title": "Input Weights",
+            "type": "array"
+          },
+          "model_name": {
+            "default": "fuse_max",
+            "title": "Model Name",
+            "type": "string"
+          },
+          "top_k": {
+            "default": 10,
+            "title": "Top K",
+            "type": "integer"
+          }
+        },
+        "title": "search_recallsArguments",
+        "type": "object"
+      },
+      "name": "search_recalls"
+    },
+    {
+      "description": "\n    Get information about available recall data sources.\n    \n    Returns a list of all supported regulatory agencies and their coverage.\n    This is a free call that does not consume API credits.\n    \n    Returns:\n        Dictionary with data sources and their descriptions\n    ",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_data_sourcesArguments",
+        "type": "object"
+      },
+      "name": "get_data_sources"
+    }
+  ]
+}
+---

@@ -1,0 +1,9 @@
+NAME: Saleor Commerce
+URL: https://mcp.saleor.app/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

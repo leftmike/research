@@ -1,0 +1,9 @@
+NAME: Unified Offer Protocol MCP Server
+URL: https://api.unifiedoffer.com/functions/v1/mcp-http-wrapper
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: connection_blocked
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://api.unifiedoffer.com/functions/v1/mcp-http-wrapper": Forbidden
+---

@@ -1,0 +1,2221 @@
+NAME: Leni
+URL: https://www.heyleni.ai/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "resources": [
+    {
+      "description": "Interactive task list application",
+      "mimeType": "text/html;profile=mcp-app",
+      "name": "task-list",
+      "uri": "ui://app/tasks.html"
+    }
+  ],
+  "tools": [
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "title": "Search tasks"
+      },
+      "description": "ChatGPT Deep Research ONLY. DO NOT USE for normal conversations.\n\n⚠️ CRITICAL: ONLY for ChatGPT Deep Research feature (user says \"research\"/\"deep dive\")\n- Normal operations → use leni_find_tasks, leni_create_task, etc.\n- Returns IDs only (use fetch for details)\n- Excludes DONE/archived\n\nUSE: ChatGPT Deep Research background process ONLY\nNOT FOR: All normal conversations (use leni_* tools)",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "_def": {
+              "description": "Maximum number of results to return (default: 10, max: 25)",
+              "innerType": {
+                "_def": {
+                  "innerType": {
+                    "_def": {
+                      "checks": [
+                        {
+                          "kind": "int"
+                        },
+                        {
+                          "inclusive": true,
+                          "kind": "min",
+                          "value": 1
+                        },
+                        {
+                          "inclusive": true,
+                          "kind": "max",
+                          "value": 25
+                        }
+                      ],
+                      "coerce": false,
+                      "typeName": "ZodNumber"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodOptional"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodDefault"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "query": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "min",
+                  "value": 1
+                }
+              ],
+              "coerce": false,
+              "description": "Free-text search query",
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "search",
+      "outputSchema": {
+        "properties": {
+          "ids": {
+            "_def": {
+              "description": "Array of task IDs matching the search query",
+              "exactLength": null,
+              "maxLength": null,
+              "minLength": null,
+              "type": {
+                "_def": {
+                  "checks": [
+                    {
+                      "kind": "uuid"
+                    }
+                  ],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "ids"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "title": "Fetch task details"
+      },
+      "description": "ChatGPT Deep Research ONLY. DO NOT USE for normal conversations.\n\n⚠️ CRITICAL: ONLY for ChatGPT Deep Research after 'search' tool\n- Normal → use leni_find_tasks for task details\n- Fetches single task by ID from search results\n\nUSE: ChatGPT Deep Research follow-up ONLY\nNOT FOR: All normal conversations (use leni_find_tasks)",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "uuid"
+                }
+              ],
+              "coerce": false,
+              "description": "Unique identifier of the task returned from the search tool",
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "fetch",
+      "outputSchema": {
+        "properties": {
+          "id": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "uuid"
+                }
+              ],
+              "coerce": false,
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "metadata": {
+            "_cached": null,
+            "_def": {
+              "catchall": {
+                "_def": {
+                  "typeName": "ZodNever"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodObject",
+              "unknownKeys": "strip"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "text": {
+            "_def": {
+              "checks": [],
+              "coerce": false,
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "title": {
+            "_def": {
+              "checks": [],
+              "coerce": false,
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "url": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "url"
+                }
+              ],
+              "coerce": false,
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "text",
+          "url",
+          "metadata"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "openai/resultCanProduceWidget": true,
+        "openai/toolInvocation/invoked": "✓ Created",
+        "openai/toolInvocation/invoking": "Creating task(s)...",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Create task(s)"
+      },
+      "description": "Create one or multiple tasks. Returns undo_id for 72-hour reversal.\n\nUSE FOR:\n- New tasks, TODOs, reminders, action items\n- Bulk creation from lists\n\nNOT FOR:\n- Update existing → leni_update_task\n- Find tasks → leni_find_tasks\n\nNATURAL LANGUAGE EXAMPLES:\n\"Add buy groceries\" → {tasks: [{title: \"Buy groceries\"}]}\n\"Create high priority PR review due tomorrow in Work project\" → {tasks: [{title: \"Review PR\", priority: \"high\", dueDate: \"tomorrow\", projectName: \"Work\"}]}\n\"Add 3 tasks: design mockup, write tests, deploy\" → {tasks: [{title: \"Design mockup\"}, {title: \"Write tests\"}, {title: \"Deploy\"}]}\n\nPARAMS: title (required, max 500 chars), notes, priority (none/low/medium/high/urgent), status (LATER/TODO/IN_PROGRESS/DONE), dueDate, projectName\nDATES: ISO (\"2025-01-15\") or natural (\"tomorrow\", \"next week\", \"3 days from now\")\nDEFAULTS: status=LATER, priority=none, projectName=Inbox\nLimit: 50 tasks/call\n\nRESPONSE: Brief confirmation. Use inline markdown links [Task Title](url). No follow-up suggestions.",
+      "inputSchema": {
+        "properties": {
+          "tasks": {
+            "_def": {
+              "description": "Array of tasks to create (1-50). Each task can have different properties.",
+              "exactLength": null,
+              "maxLength": {
+                "value": 50
+              },
+              "minLength": {
+                "value": 1
+              },
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "type": "object"
+      },
+      "name": "leni_create_task",
+      "outputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "openai/resultCanProduceWidget": true,
+        "openai/toolInvocation/invoked": "✓ Found",
+        "openai/toolInvocation/invoking": "Searching...",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Find tasks"
+      },
+      "description": "PRIMARY tool for understanding your work and finding tasks. Search/filter with OR/AND logic.\n\nUSE FOR:\n- Understanding workload: \"what should I work on?\", \"my tasks\", \"what's on my plate?\"\n- Finding tasks: \"show overdue\", \"find meeting notes\"\n\nWHEN USER ASKS ABOUT \"THEIR WORK\" - Use FOCUS (assignedToMe: true):\n\"my tasks\" → {assignedToMe: true}\n\"what should I work on\" → {assignedToMe: true, matchAny: true, dueBefore: \"today\", priority: [\"high\", \"urgent\"]}\n\nWHEN USER SEARCHES - Use VISIBILITY (default):\n\"find X\" → {searchQuery: \"X\"}\n\"all tasks in project Y\" → {projectName: \"Y\"}\n\nNATURAL LANGUAGE EXAMPLES:\n\"Show my urgent tasks\" → {priority: \"urgent\", assignedToMe: true}\n\"Find overdue or high priority tasks\" → {matchAny: true, dueBefore: \"yesterday\", priority: \"high\"}\n\"What meetings do I have this week?\" → {searchQuery: \"meeting\", dueBefore: \"7 days from now\"}\n\"Show TJ's todo items in Work project\" → {assignedToUser: \"TJ\", status: \"TODO\", projectName: \"Work\"}\n\nOWNERSHIP:\nDefault: created OR assigned (VISIBILITY) | assignedToMe=true: assigned only (FOCUS) | createdByMe=true: created only\n\nLOGIC \u0026 OUTPUT:\nmatchAny=false (AND): {status: \"TODO\", priority: \"high\"} → Returns 5 tasks (BOTH TODO AND high)\nmatchAny=true (OR): {matchAny: true, status: \"TODO\", priority: \"high\"} → Returns 23 tasks (TODO OR high)\nArrays (OR within): {priority: [\"high\", \"urgent\"]} → Returns tasks with high OR urgent\nprojectName: ALWAYS AND (never part of OR, scopes all other filters)\n\nPARAMS: searchQuery, status, priority, projectName, assignedToUser, archived, dueAfter, dueBefore, assignedToMe, createdByMe, matchAny, limit (max 100)\nDATES: ISO (\"2025-01-15\"), natural (\"tomorrow\", \"next week\", \"14 days from now\")\n\nRESPONSE: Markdown table | [Title](url) | Priority | Due | Project |. Be brief. No follow-up suggestions. If 0: \"No tasks found\".",
+      "inputSchema": {
+        "properties": {
+          "archived": {
+            "_def": {
+              "description": "If true, search ONLY archived tasks. If false (default), search ONLY active tasks.",
+              "innerType": {
+                "_def": {
+                  "innerType": {
+                    "_def": {
+                      "coerce": false,
+                      "typeName": "ZodBoolean"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodOptional"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodDefault"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "assignedToMe": {
+            "_def": {
+              "description": "If true, only show tasks assigned to me. Default: show both created and assigned",
+              "innerType": {
+                "_def": {
+                  "coerce": false,
+                  "typeName": "ZodBoolean"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "assignedToUser": {
+            "_def": {
+              "description": "Filter by assignee (name/email/UUID). Array = OR logic. Examples: \"TJ\", [\"TJ\", \"Sarah\"]",
+              "innerType": {
+                "_def": {
+                  "options": [
+                    {
+                      "_def": {
+                        "checks": [],
+                        "coerce": false,
+                        "typeName": "ZodString"
+                      },
+                      "~standard": {
+                        "vendor": "zod",
+                        "version": 1
+                      }
+                    },
+                    {
+                      "_def": {
+                        "exactLength": null,
+                        "maxLength": null,
+                        "minLength": null,
+                        "type": {
+                          "_def": {
+                            "checks": [],
+                            "coerce": false,
+                            "typeName": "ZodString"
+                          },
+                          "~standard": {
+                            "vendor": "zod",
+                            "version": 1
+                          }
+                        },
+                        "typeName": "ZodArray"
+                      },
+                      "~standard": {
+                        "vendor": "zod",
+                        "version": 1
+                      }
+                    }
+                  ],
+                  "typeName": "ZodUnion"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "createdByMe": {
+            "_def": {
+              "description": "If true, only show tasks I created. Default: show both created and assigned",
+              "innerType": {
+                "_def": {
+                  "coerce": false,
+                  "typeName": "ZodBoolean"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "dueAfter": {
+            "_def": {
+              "description": "Due after date (ISO or \"tomorrow\", \"next week\")",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "dueBefore": {
+            "_def": {
+              "description": "Due before date (ISO or \"14 days from now\")",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "limit": {
+            "_def": {
+              "innerType": {
+                "_def": {
+                  "innerType": {
+                    "_def": {
+                      "checks": [
+                        {
+                          "kind": "int"
+                        },
+                        {
+                          "inclusive": true,
+                          "kind": "min",
+                          "value": 1
+                        },
+                        {
+                          "inclusive": true,
+                          "kind": "max",
+                          "value": 100
+                        }
+                      ],
+                      "coerce": false,
+                      "typeName": "ZodNumber"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodOptional"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodDefault"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "matchAny": {
+            "_def": {
+              "description": "CRITICAL: If true, match ANY condition (OR across different properties). Default: false (AND). Example: {matchAny: true, dueBefore: \"14 days\", priority: \"high\"} = due soon OR high priority",
+              "innerType": {
+                "_def": {
+                  "innerType": {
+                    "_def": {
+                      "coerce": false,
+                      "typeName": "ZodBoolean"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodOptional"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodDefault"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "priority": {
+            "_def": {
+              "description": "Filter by priority. Array = OR logic",
+              "innerType": {
+                "_def": {
+                  "options": [
+                    {
+                      "_def": {
+                        "typeName": "ZodEnum",
+                        "values": [
+                          "none",
+                          "low",
+                          "medium",
+                          "high"
+                        ]
+                      },
+                      "~standard": {
+                        "vendor": "zod",
+                        "version": 1
+                      }
+                    },
+                    {
+                      "_def": {
+                        "exactLength": null,
+                        "maxLength": null,
+                        "minLength": null,
+                        "type": {
+                          "_def": {
+                            "typeName": "ZodEnum",
+                            "values": [
+                              "none",
+                              "low",
+                              "medium",
+                              "high"
+                            ]
+                          },
+                          "~standard": {
+                            "vendor": "zod",
+                            "version": 1
+                          }
+                        },
+                        "typeName": "ZodArray"
+                      },
+                      "~standard": {
+                        "vendor": "zod",
+                        "version": 1
+                      }
+                    }
+                  ],
+                  "typeName": "ZodUnion"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "projectName": {
+            "_def": {
+              "description": "Filter by project. Array = OR logic",
+              "innerType": {
+                "_def": {
+                  "options": [
+                    {
+                      "_def": {
+                        "checks": [],
+                        "coerce": false,
+                        "typeName": "ZodString"
+                      },
+                      "~standard": {
+                        "vendor": "zod",
+                        "version": 1
+                      }
+                    },
+                    {
+                      "_def": {
+                        "exactLength": null,
+                        "maxLength": null,
+                        "minLength": null,
+                        "type": {
+                          "_def": {
+                            "checks": [],
+                            "coerce": false,
+                            "typeName": "ZodString"
+                          },
+                          "~standard": {
+                            "vendor": "zod",
+                            "version": 1
+                          }
+                        },
+                        "typeName": "ZodArray"
+                      },
+                      "~standard": {
+                        "vendor": "zod",
+                        "version": 1
+                      }
+                    }
+                  ],
+                  "typeName": "ZodUnion"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "searchQuery": {
+            "_def": {
+              "description": "Natural language search (e.g., \"buy groceries\", \"meeting\")",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "status": {
+            "_def": {
+              "description": "Filter by status. Array = OR logic",
+              "innerType": {
+                "_def": {
+                  "options": [
+                    {
+                      "_def": {
+                        "typeName": "ZodEnum",
+                        "values": [
+                          "LATER",
+                          "TODO",
+                          "IN_PROGRESS",
+                          "DONE"
+                        ]
+                      },
+                      "~standard": {
+                        "vendor": "zod",
+                        "version": 1
+                      }
+                    },
+                    {
+                      "_def": {
+                        "exactLength": null,
+                        "maxLength": null,
+                        "minLength": null,
+                        "type": {
+                          "_def": {
+                            "typeName": "ZodEnum",
+                            "values": [
+                              "LATER",
+                              "TODO",
+                              "IN_PROGRESS",
+                              "DONE"
+                            ]
+                          },
+                          "~standard": {
+                            "vendor": "zod",
+                            "version": 1
+                          }
+                        },
+                        "typeName": "ZodArray"
+                      },
+                      "~standard": {
+                        "vendor": "zod",
+                        "version": 1
+                      }
+                    }
+                  ],
+                  "typeName": "ZodUnion"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "leni_find_tasks",
+      "outputSchema": {
+        "properties": {
+          "filters": {
+            "_def": {
+              "description": "Applied filters",
+              "innerType": {
+                "_def": {
+                  "keyType": {
+                    "_def": {
+                      "checks": [],
+                      "coerce": false,
+                      "typeName": "ZodString"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodRecord",
+                  "valueType": {
+                    "_any": true,
+                    "_def": {
+                      "typeName": "ZodAny"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  }
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "message": {
+            "_def": {
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "pagination": {
+            "_cached": null,
+            "_def": {
+              "catchall": {
+                "_def": {
+                  "typeName": "ZodNever"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodObject",
+              "unknownKeys": "strip"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "summary": {
+            "_cached": null,
+            "_def": {
+              "catchall": {
+                "_def": {
+                  "typeName": "ZodNever"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodObject",
+              "unknownKeys": "strip"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "tasks": {
+            "_def": {
+              "exactLength": null,
+              "maxLength": null,
+              "minLength": null,
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "title": {
+            "_def": {
+              "description": "View title",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "summary",
+          "tasks",
+          "pagination"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "openai/resultCanProduceWidget": true,
+        "openai/toolInvocation/invoked": "✓ Completed",
+        "openai/toolInvocation/invoking": "Completing task(s)...",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Complete task(s)"
+      },
+      "description": "Mark tasks as DONE (sets status=DONE, completed_at=now). Returns undo_id for 72-hour reversal.\n\nUSE FOR:\n- Task done/finished/completed\n- Marking checkboxes, crossing off items\n- Bulk completion\n\nNOT FOR:\n- Update other fields → leni_update_task\n- Archive → leni_archive_task\n\nNATURAL LANGUAGE EXAMPLES:\n\"Complete buy groceries\" → {tasks: [{filters: {searchQuery: \"buy groceries\"}}]}\n\"Mark all sprint-1 in-progress tasks done\" → {tasks: [{filters: {projectName: \"sprint-1\", status: \"IN_PROGRESS\"}}]}\n\"Complete the design task I made yesterday\" → {tasks: [{filters: {searchQuery: \"design\", createdByMe: true, dueAfter: \"yesterday\"}}]}\n\nHETEROGENEOUS (multiple different filters):\nWHEN TO USE: Complete different sets of tasks in one operation\n{tasks: [{filters: {searchQuery: \"meeting\"}}, {filters: {projectName: \"website\", priority: \"high\"}}]}\nResult: Completes meeting tasks + high priority website tasks in single operation\n\nIDEMPOTENT BEHAVIOR:\nFirst call: {searchQuery: \"groceries\"} → Marks \"Buy groceries\" as DONE → Returns success\nRetry/Second call: {searchQuery: \"groceries\"} → Already DONE → Returns success (no error)\nWhy: Prevents errors during ChatGPT retry attempts or duplicate commands\n\nFILTERS: taskId, searchQuery, status, priority, projectName, assignedToUser, dueAfter, dueBefore, assignedToMe, createdByMe, matchAny, archived\nLimit: 100 tasks/call\n\nRESPONSE: Brief confirmation. Use inline markdown links [Task Title](url). No follow-up suggestions.",
+      "inputSchema": {
+        "properties": {
+          "tasks": {
+            "_def": {
+              "description": "Tasks to complete. Each element can have different filters (heterogeneous operations supported).",
+              "exactLength": null,
+              "maxLength": {
+                "value": 100
+              },
+              "minLength": {
+                "value": 1
+              },
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "type": "object"
+      },
+      "name": "leni_complete_task",
+      "outputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "openai/resultCanProduceWidget": true,
+        "openai/toolInvocation/invoked": "✓ Updated",
+        "openai/toolInvocation/invoking": "Updating task(s)...",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Update task(s)"
+      },
+      "description": "Update task properties (title, notes, status, priority, dueDate, projectName, assignedTo). Returns undo_id for 72-hour reversal.\n\nUSE FOR:\n- Change properties: priority, due date, status, title, notes, project, assignee\n- Bulk updates via filters\n\nNOT FOR:\n- Marking done → leni_complete_task\n- Remove/hide → leni_archive_task or leni_delete_task\n\nNATURAL LANGUAGE EXAMPLES:\n\"Set meeting task to high priority\" → {tasks: [{filters: {searchQuery: \"meeting\"}, data: {priority: \"high\"}}]}\n\"Move all website todos to in progress\" → {tasks: [{filters: {projectName: \"website\", status: \"TODO\"}, data: {status: \"IN_PROGRESS\"}}]}\n\"Assign design tasks to TJ\" → {tasks: [{filters: {searchQuery: \"design\"}, data: {assignedTo: \"TJ\"}}]}\n\"Change homepage due date to tomorrow\" → {tasks: [{filters: {searchQuery: \"homepage\"}, data: {dueDate: \"tomorrow\"}}]}\n\nHETEROGENEOUS (multiple different updates):\nWHEN TO USE: Update different tasks with different changes in one operation. Better than multiple separate calls.\n{tasks: [{filters: {searchQuery: \"homepage\"}, data: {priority: \"high\"}}, {filters: {projectName: \"old\"}, data: {projectName: \"new\"}}]}\nResult: Sets homepage to high priority + moves old project tasks to new project in single operation\n\nFILTERS: taskId, searchQuery, status, priority, projectName, assignedToUser, dueAfter, dueBefore, assignedToMe, createdByMe, matchAny, archived\nUPDATABLE: title, notes, status, priority, dueDate (ISO/\"tomorrow\"/null to clear), projectName, assignedTo\nSTATUS: LATER, TODO, IN_PROGRESS, DONE | PRIORITY: none, low, medium, high, urgent\nLimit: 100 tasks/call\n\nDISAMBIGUATION:\nIf filters match multiple tasks (e.g., \"meeting\" finds 5 tasks): Tool asks which one. Show list with context (due date, project). User picks by name or number.\n\nERRORS \u0026 FALLBACK:\n- Task not found → Use leni_find_tasks first to verify task exists\n- Invalid project → Use leni_find_projects to see available projects\n- Invalid assignee → User must exist (verify with team list)\n- Version conflict → Another process modified task between read and update. Retry with latest version.\n\nRESPONSE: Brief confirmation. Use inline markdown links [Task Title](url). No follow-up suggestions.",
+      "inputSchema": {
+        "properties": {
+          "tasks": {
+            "_def": {
+              "description": "Tasks to update. Each element can have different filters and different updates (heterogeneous operations supported).",
+              "exactLength": null,
+              "maxLength": {
+                "value": 100
+              },
+              "minLength": {
+                "value": 1
+              },
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "type": "object"
+      },
+      "name": "leni_update_task",
+      "outputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "openai/resultCanProduceWidget": true,
+        "openai/toolInvocation/invoked": "✓ Deleted",
+        "openai/toolInvocation/invoking": "Deleting task(s)...",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Delete task(s)"
+      },
+      "description": "PERMANENTLY delete tasks (EXPLICIT INTENT ONLY). Returns undo_id for 72-hour recovery.\n\n⚠️ CRITICAL: Use leni_archive_task for ambiguous removal. This is PERMANENT after 72 hours.\n\nDECISION TREE:\nUser says \"delete\" → Ask: \"Archive (reversible) or permanently delete?\" → Most choose archive\nUser says \"permanently delete\" → Use this tool\nUser says \"remove/clean up\" → Use leni_archive_task\n\nNATURAL LANGUAGE EXAMPLES:\n\"Permanently delete cancelled meeting\" → {tasks: [{filters: {searchQuery: \"cancelled meeting\"}}]}\n\"Delete forever all deprecated project tasks\" → {tasks: [{filters: {projectName: \"deprecated\", status: \"DONE\"}}]}\n\nCASCADE DELETION:\nWhat gets deleted: Task + all comments + subtasks + tags\nWhat survives: undo_id (72-hour recovery window via leni_undo)\nExample: Delete \"Project Alpha\" task → Also deletes 5 comments, 3 subtasks, 2 tags\n\nNOT IDEMPOTENT:\nFirst call: {searchQuery: \"meeting\"} → Deletes task → Success\nSecond call: {searchQuery: \"meeting\"} → Task not found → ERROR (unlike archive/complete which return success)\n\nFILTERS: taskId, searchQuery, status, priority, projectName, assignedToUser, dueAfter, dueBefore, assignedToMe, createdByMe, matchAny, archived\nLimit: 100 tasks/call | Recovery: 72 hours via leni_undo\n\nRESPONSE: Brief confirmation with warning. Use inline markdown links [Task Title](url). Mention 72-hour undo window. No follow-up suggestions.",
+      "inputSchema": {
+        "properties": {
+          "tasks": {
+            "_def": {
+              "description": "Tasks to delete. Each element can have different filters (heterogeneous operations supported).",
+              "exactLength": null,
+              "maxLength": {
+                "value": 100
+              },
+              "minLength": {
+                "value": 1
+              },
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "type": "object"
+      },
+      "name": "leni_delete_task",
+      "outputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "openai/resultCanProduceWidget": true,
+        "openai/toolInvocation/invoked": "✓ Archived",
+        "openai/toolInvocation/invoking": "Archiving task(s)...",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Archive task(s)"
+      },
+      "description": "Archive tasks (sets archived=true, preserves status). PREFERRED for removal. Returns undo_id for 72-hour reversal.\n\n✅ DEFAULT: Use for ALL ambiguous removal (NOT leni_delete_task).\n\nUSE FOR:\n- \"remove\", \"delete\", \"get rid of\", \"clean up\", \"archive\", \"hide\"\n- ANY removal WITHOUT \"permanent\"\n\nNATURAL LANGUAGE EXAMPLES:\n\"Remove old project tasks\" → {tasks: [{filters: {searchQuery: \"old project\"}}]}\n\"Clean up completed tasks from last month\" → {tasks: [{filters: {status: \"DONE\", dueBefore: \"30 days ago\"}}]}\n\"Archive all cancelled meetings\" → {tasks: [{filters: {searchQuery: \"cancelled meeting\"}}]}\n\nIDEMPOTENT BEHAVIOR:\nFirst call: {searchQuery: \"meeting\"} → Archives \"Team meeting\" → Success\nSecond call: {searchQuery: \"meeting\"} → Already archived → Success (no error, safe to retry)\nWhy: Prevents errors during retries, unlike delete which fails on second attempt\n\nFILTERS: taskId, searchQuery, status, priority, projectName, assignedToUser, dueAfter, dueBefore, assignedToMe, createdByMe, matchAny, archived\nLimit: 100 tasks/call | Restore: leni_restore_task\n\nRESPONSE: Brief confirmation. Use inline markdown links [Task Title](url). No follow-up suggestions.",
+      "inputSchema": {
+        "properties": {
+          "tasks": {
+            "_def": {
+              "description": "Tasks to archive. Each element can have different filters (heterogeneous operations supported).",
+              "exactLength": null,
+              "maxLength": {
+                "value": 100
+              },
+              "minLength": {
+                "value": 1
+              },
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "type": "object"
+      },
+      "name": "leni_archive_task",
+      "outputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "openai/resultCanProduceWidget": true,
+        "openai/toolInvocation/invoked": "✓ Restored",
+        "openai/toolInvocation/invoking": "Restoring task(s)...",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Restore task(s)"
+      },
+      "description": "Restore archived tasks (sets archived=false). Returns undo_id for 72-hour reversal.\n\nUSE FOR:\n- Unarchive tasks: \"restore\", \"unarchive\", \"bring back\"\n\nNOT FOR:\n- Undo deletion → leni_undo (restores deleted tasks from permanent deletion)\n- Find archived → leni_find_tasks {archived: true}\n\nNATURAL LANGUAGE EXAMPLES:\n\"Restore old project tasks\" → {tasks: [{filters: {searchQuery: \"old project\"}}]}\n\"Bring back archived sprint-1 items\" → {tasks: [{filters: {projectName: \"sprint-1\"}}]}\n\nWORKFLOW:\n1. Find archived tasks: leni_find_tasks {archived: true, searchQuery: \"project\"}\n2. User reviews list\n3. Restore: leni_restore_task {tasks: [{filters: {taskId: \"...\"}}]}\n\nFILTERS: taskId, searchQuery, status, priority, projectName, assignedToUser, dueAfter, dueBefore, assignedToMe, createdByMe, matchAny\nNOTE: archived defaults to TRUE (automatically searches archived tasks only)\nLimit: 100 tasks/call\n\nIDEMPOTENT BEHAVIOR:\nFirst call: Restores task → Success\nSecond call: Already active → Success (no error)\n\nRESPONSE: Brief confirmation. Use inline markdown links [Task Title](url). No follow-up suggestions.",
+      "inputSchema": {
+        "properties": {
+          "tasks": {
+            "_def": {
+              "description": "Tasks to restore. Each element can have different filters (heterogeneous operations supported).",
+              "exactLength": null,
+              "maxLength": {
+                "value": 100
+              },
+              "minLength": {
+                "value": 1
+              },
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "type": "object"
+      },
+      "name": "leni_restore_task",
+      "outputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Create project"
+      },
+      "description": "Create new project container for organizing related tasks.\n\nUSE FOR:\n- User explicitly requests new project\n\nNATURAL LANGUAGE EXAMPLES:\n\"Create Website Redesign project\" → {name: \"Website Redesign\"}\n\"Make a project for Q1 goals\" → {name: \"Q1 Sprint\", notes: \"Jan-Mar goals focused on performance\"}\n\nPARAMS: name (required, max 255 chars), notes (optional)\nDUPLICATES: Allowed (multiple projects can share name)\n\nWORKFLOW: Create project → leni_create_task {projectName: \"Website Redesign\"}\n\nRESPONSE: Brief confirmation. Use inline markdown links [Project Name](url). No follow-up suggestions.",
+      "inputSchema": {
+        "properties": {
+          "name": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "min",
+                  "value": 1
+                },
+                {
+                  "kind": "max",
+                  "value": 255
+                }
+              ],
+              "coerce": false,
+              "description": "Project name",
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "notes": {
+            "_def": {
+              "description": "Project notes (additional details, context, or documentation)",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "leni_create_project"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Find projects"
+      },
+      "description": "PRIMARY tool for finding and listing projects. Search with fuzzy typo-tolerance or list all.\n\nUSE FOR: \"Show my projects\", \"find website project\", \"list active projects\"\n\nWHEN USER ASKS ABOUT PROJECTS:\n\"my projects\" → {} (lists all active)\n\"show website project\" → {name: \"website\"} (fuzzy search)\n\"list archived projects\" → {status: \"archived\"}\n\nNATURAL LANGUAGE EXAMPLES:\n\"Show my projects\" → {}\n\"Find website project\" → {name: \"website\"}\n\"List archived projects\" → {status: \"archived\"}\n\"Show Q1 projects\" → {name: \"Q1\"}\n\nPARAMS: name (optional, fuzzy search), status (active/archived, default: active)\nFUZZY SEARCH: Typo-tolerant matching via search_projects_fuzzy RPC, falls back to ILIKE\nORDER: created_at DESC\nTASK COUNTS: Returns counts by status (later, todo, in_progress, completed, total) excluding archived tasks\n\nRESPONSE: Markdown table | [Project](url) | Tasks (later/todo/in_progress/completed) | Status |. Be brief. No follow-up suggestions. If 0: \"No projects found\".",
+      "inputSchema": {
+        "properties": {
+          "name": {
+            "_def": {
+              "description": "Search projects by name (fuzzy typo-tolerant search). Omit to list all.",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "status": {
+            "_def": {
+              "description": "Filter by status (default: active only)",
+              "innerType": {
+                "_def": {
+                  "typeName": "ZodEnum",
+                  "values": [
+                    "active",
+                    "archived"
+                  ]
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "leni_find_projects",
+      "outputSchema": {
+        "properties": {
+          "message": {
+            "_def": {
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "projects": {
+            "_def": {
+              "exactLength": null,
+              "maxLength": null,
+              "minLength": null,
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "total": {
+            "_def": {
+              "checks": [],
+              "coerce": false,
+              "typeName": "ZodNumber"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "projects",
+          "total"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Update project"
+      },
+      "description": "Update project properties (name, notes, status).\n\nPERMISSIONS:\n- Owner: All fields (name, notes, status)\n- Admin: Name, notes only (NO status/archive)\n- Members: Cannot update\n\nUSE FOR:\n- Rename, update notes\n- Archive/unarchive (owner only)\n\nNATURAL LANGUAGE EXAMPLES:\n\"Rename website project to Website Redesign\" → {projectName: \"website\", newName: \"Website Redesign\"}\n\"Archive Q4-2024 project\" → {projectName: \"Q4-2024\", status: \"archived\"}\n\"Update notes for sprint project\" → {projectName: \"sprint\", notes: \"New goals for this quarter\"}\n\nPARAMS: projectName (fuzzy match), newName, notes (empty string clears), status (active/archived)\nMATCH: Fuzzy search (typo-tolerant), then ILIKE fallback\n\nDISAMBIGUATION:\nIf multiple matches: Show list → User picks → Retry with exact name\n\nRESPONSE: Brief confirmation. Use inline markdown links [Project Name](url). No follow-up suggestions.",
+      "inputSchema": {
+        "properties": {
+          "newName": {
+            "_def": {
+              "description": "New project name",
+              "innerType": {
+                "_def": {
+                  "checks": [
+                    {
+                      "kind": "min",
+                      "value": 1
+                    },
+                    {
+                      "kind": "max",
+                      "value": 255
+                    }
+                  ],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "notes": {
+            "_def": {
+              "description": "New project notes (use empty string to clear)",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "projectName": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "min",
+                  "value": 1
+                }
+              ],
+              "coerce": false,
+              "description": "Current project name to update (typo-tolerant fuzzy match).",
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "status": {
+            "_def": {
+              "description": "Project status",
+              "innerType": {
+                "_def": {
+                  "typeName": "ZodEnum",
+                  "values": [
+                    "active",
+                    "archived"
+                  ]
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "projectName"
+        ],
+        "type": "object"
+      },
+      "name": "leni_update_project"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Get task history"
+      },
+      "description": "Get complete change history for a task (who changed what, when).\n\nUSE FOR:\n- Debug: \"Why changed?\", \"What happened?\"\n- Audit: \"Who changed?\", \"When updated?\"\n\nNATURAL LANGUAGE EXAMPLES:\n\"Show history for meeting notes task\" → {searchQuery: \"meeting notes\"}\n\"What changed on the groceries task?\" → {searchQuery: \"groceries\"}\n\"Show status changes for this task\" → {taskId: \"...\", fieldName: \"status\"}\n\nPARAMS: searchQuery (preferred) OR taskId, fieldName (optional filter), includeArchived, limit (max 100)\nWORKFLOW: leni_find_tasks → leni_get_task_history → leni_undo_task_change (if needed)\n\nRESPONSE: Timeline format (newest first). \"Jan 15 3:45pm: status TODO → DONE by Alice\". Suggest leni_undo_task_change if user wants to revert a change.",
+      "inputSchema": {
+        "properties": {
+          "fieldName": {
+            "_def": {
+              "description": "Filter by specific field (status, archived, priority, etc.)",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "includeArchived": {
+            "_def": {
+              "description": "If true, search ONLY archived tasks. If false (default), search ONLY active tasks.",
+              "innerType": {
+                "_def": {
+                  "innerType": {
+                    "_def": {
+                      "coerce": false,
+                      "typeName": "ZodBoolean"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodOptional"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodDefault"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "limit": {
+            "_def": {
+              "description": "Maximum number of history entries to return",
+              "innerType": {
+                "_def": {
+                  "innerType": {
+                    "_def": {
+                      "checks": [
+                        {
+                          "kind": "int"
+                        },
+                        {
+                          "inclusive": false,
+                          "kind": "min",
+                          "value": 0
+                        },
+                        {
+                          "inclusive": true,
+                          "kind": "max",
+                          "value": 100
+                        }
+                      ],
+                      "coerce": false,
+                      "typeName": "ZodNumber"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodOptional"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodDefault"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "searchQuery": {
+            "_def": {
+              "description": "Natural language search to find the task (e.g., \"buy groceries\"). PREFERRED.",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "taskId": {
+            "_def": {
+              "description": "Task ID - only use when user selected from a list of matches. Prefer searchQuery.",
+              "innerType": {
+                "_def": {
+                  "checks": [
+                    {
+                      "kind": "uuid"
+                    }
+                  ],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "leni_get_task_history"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Undo task change"
+      },
+      "description": "Undo most recent field change on a task (granular single-field undo).\n\nUSE FOR:\n- Revert specific property (status, priority, title, etc.)\n- More granular than leni_undo (one field only)\n\nWHEN TO CHOOSE:\nUser says \"undo status change\" → Use this (single field)\nUser says \"undo my changes\" → Use leni_undo (entire operation)\nUser says \"undo the update I just made\" → Use leni_undo (entire operation with multiple fields)\n\nNATURAL LANGUAGE EXAMPLES:\n\"Undo status change on meeting notes\" → {searchQuery: \"meeting notes\", fieldName: \"status\"}\n\"Revert priority on this task\" → {taskId: \"...\", fieldName: \"priority\"}\n\"Undo most recent change to groceries task\" → {searchQuery: \"groceries\"} (reverts most recent field)\n\nVALID FIELDS: status, priority, title, notes, due_date, assigned_to, project_id, archived, completed_at\nSTATUS: LATER/TODO/IN_PROGRESS/DONE | PRIORITY: none/low/medium/high/urgent\nDATES: ISO (YYYY-MM-DD) or null | UUIDs: assigned_to, project_id (or null)\n\nBEHAVIOR:\n- Reverts MOST RECENT change to specified field (or most recent overall if no fieldName)\n- Only creator/assignee can undo\n- Searches active tasks by default (use includeArchived: true to search archived tasks only)\n\nWORKFLOW:\n1. leni_get_task_history {searchQuery: \"task\"} → See all changes\n2. User picks which field to revert\n3. leni_undo_task_change {searchQuery: \"task\", fieldName: \"status\"} → Reverts that field only\n\nFALLBACK:\n- Bulk undo → leni_undo (reverts entire operation, not just one field)\n- Deleted task → leni_undo (restores whole task, can't undo individual field)\n- No history → leni_get_task_history to verify changes exist\n\nRESPONSE: \"Reverted [field]: [new value] → [old value] for [Task Title]\". Confirm which field was reverted and to what value.",
+      "inputSchema": {
+        "properties": {
+          "fieldName": {
+            "_def": {
+              "description": "Specific field to undo (defaults to most recent change)",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "includeArchived": {
+            "_def": {
+              "description": "If true, search ONLY archived tasks. If false (default), search ONLY active tasks.",
+              "innerType": {
+                "_def": {
+                  "innerType": {
+                    "_def": {
+                      "coerce": false,
+                      "typeName": "ZodBoolean"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodOptional"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodDefault"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "searchQuery": {
+            "_def": {
+              "description": "Natural language search to find the task (e.g., \"buy groceries\"). PREFERRED.",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "taskId": {
+            "_def": {
+              "description": "Task ID - only use when user selected from a list of matches. Prefer searchQuery.",
+              "innerType": {
+                "_def": {
+                  "checks": [
+                    {
+                      "kind": "uuid"
+                    }
+                  ],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "leni_undo_task_change"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "title": "Undo operation"
+      },
+      "description": "Undo recent operation by undo_id. Works for all mutations (create, update, complete, delete, archive, restore).\n\nGETTING undo_id:\n- undo_id in context (from previous operation response) → Use directly, don't call leni_list_recent_operations\n- NO undo_id in context (new chat, lost context) → Call leni_list_recent_operations first to get undo_id\n\nUSE FOR:\n- Undo/revert recent operation\n- Within 72 hours\n\nNOT FOR:\n- Single field undo → leni_undo_task_change (more granular, reverts one property)\n\nNATURAL LANGUAGE EXAMPLES:\n\"Undo that\" (undo_id in context from previous call) → {undo_id: \"abc-123\"}\n\"Undo my last change\" (new chat, no undo_id) → First: leni_list_recent_operations → Then: leni_undo {undo_id: \"...\"}\n\"Undo completing those tasks\" (undo_id from complete response) → {undo_id: \"def-456\"}\n\nBEHAVIOR BY OPERATION TYPE:\nCREATE: Deletes created tasks (fails if tasks modified after creation - prevents data loss)\n  Example: Created 5 tasks → Undo → Deletes all 5\nUPDATE: Restores old values from history\n  Example: Changed 10 tasks from TODO to IN_PROGRESS → Undo → All back to TODO\nCOMPLETE: Un-completes (restores previous status)\n  Example: Completed \"Buy groceries\" (was TODO) → Undo → Back to TODO\nDELETE: Restores from snapshot (tasks + subtasks + comments + tags)\n  Example: Deleted task with 3 comments → Undo → Task and comments restored\nARCHIVE: Unarchives\n  Example: Archived 20 old tasks → Undo → All 20 back to active\nRESTORE: Re-archives\n  Example: Restored archived task → Undo → Archived again\n\nConstraints: 72-hour window, one-time use per undo_id\n\nRESPONSE: \"Undid [operation]: [X] tasks affected. [Details]\". Confirm what was reversed and current state.",
+      "inputSchema": {
+        "properties": {
+          "undo_id": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "uuid"
+                }
+              ],
+              "coerce": false,
+              "description": "Undo ID returned from a previous operation (create, update, complete, delete, archive, restore)",
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "undo_id"
+        ],
+        "type": "object"
+      },
+      "name": "leni_undo",
+      "outputSchema": {
+        "properties": {
+          "affected_count": {
+            "_def": {
+              "checks": [],
+              "coerce": false,
+              "description": "Number of tasks affected by the undo",
+              "typeName": "ZodNumber"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "details": {
+            "_def": {
+              "description": "Additional details about what was undone",
+              "innerType": {
+                "_def": {
+                  "checks": [],
+                  "coerce": false,
+                  "typeName": "ZodString"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "message": {
+            "_def": {
+              "checks": [],
+              "coerce": false,
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "operation_type": {
+            "_def": {
+              "checks": [],
+              "coerce": false,
+              "description": "Type of operation that was undone",
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "success": {
+            "_def": {
+              "coerce": false,
+              "typeName": "ZodBoolean"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "success",
+          "operation_type",
+          "affected_count",
+          "message"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "List recent operations"
+      },
+      "description": "List recent undoable operations (last 72 hours) with undo_id, summary, expiration.\n\nUSE FOR:\n- Undo without undo_id: New chat, no context → find undo_id here\n- Activity review: \"What did I do today?\"\n- Error recovery: \"What happened?\"\n- Verification: \"Did bulk update work?\"\n\nNATURAL LANGUAGE EXAMPLES:\n\"What did I just do?\" → {}\n\"Show my recent changes\" → {limit: 20}\n\"What updates did I make?\" → {operation_type: \"update\"}\n\nPARAMS: limit (default 10, max 50), operation_type (create/update/complete/delete/archive/restore), include_unusable (default false)\nORDER: Newest first | FILTER: Usable by default (unexpired, unused)\n\nWORKFLOW:\n1. User: \"Undo my last change\" (new chat session, no undo_id)\n2. Call: leni_list_recent_operations {}\n3. Response: Shows \"Updated 5 tasks - 2 hours ago (undo_id: abc-123)\"\n4. User picks operation\n5. Call: leni_undo {undo_id: \"abc-123\"}\n\nRESPONSE: List with operation type, task count, timestamp, hours until expiration. If user wants to undo, provide undo_id and ask which operation to reverse.",
+      "inputSchema": {
+        "properties": {
+          "include_unusable": {
+            "_def": {
+              "description": "Include expired or already-used operations that cannot be undone (default: false)",
+              "innerType": {
+                "_def": {
+                  "coerce": false,
+                  "typeName": "ZodBoolean"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "limit": {
+            "_def": {
+              "description": "Maximum number of operations to return (default: 10, max: 50)",
+              "innerType": {
+                "_def": {
+                  "checks": [
+                    {
+                      "kind": "int"
+                    },
+                    {
+                      "inclusive": true,
+                      "kind": "min",
+                      "value": 1
+                    },
+                    {
+                      "inclusive": true,
+                      "kind": "max",
+                      "value": 50
+                    }
+                  ],
+                  "coerce": false,
+                  "typeName": "ZodNumber"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "operation_type": {
+            "_def": {
+              "description": "Filter by specific operation type",
+              "innerType": {
+                "_def": {
+                  "typeName": "ZodEnum",
+                  "values": [
+                    "create",
+                    "update",
+                    "complete",
+                    "delete",
+                    "archive",
+                    "restore"
+                  ]
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "leni_list_recent_operations",
+      "outputSchema": {
+        "properties": {
+          "operations": {
+            "_def": {
+              "description": "List of recent operations, newest first",
+              "exactLength": null,
+              "maxLength": null,
+              "minLength": null,
+              "type": {
+                "_cached": null,
+                "_def": {
+                  "catchall": {
+                    "_def": {
+                      "typeName": "ZodNever"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodObject",
+                  "unknownKeys": "strip"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodArray"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "showing": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "int"
+                }
+              ],
+              "coerce": false,
+              "description": "Number of operations returned (limited by limit parameter)",
+              "typeName": "ZodNumber"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "total_count": {
+            "_def": {
+              "checks": [
+                {
+                  "kind": "int"
+                }
+              ],
+              "coerce": false,
+              "description": "Total number of operations available (before limit applied)",
+              "typeName": "ZodNumber"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "operations",
+          "total_count",
+          "showing"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://app/tasks.html",
+        "openai/widgetAccessible": true,
+        "ui": {
+          "prefersBorder": true,
+          "resourceUri": "ui://app/tasks.html",
+          "visibility": [
+            "model",
+            "app"
+          ]
+        }
+      },
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Show Tasks"
+      },
+      "description": "Display interactive task list. Users can filter, sort, search, and manage tasks directly in the embedded view. Filters are fully interactive - users can adjust them without going back to the chat.",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "leni_show_tasks",
+      "outputSchema": {
+        "properties": {
+          "message": {
+            "_def": {
+              "checks": [],
+              "coerce": false,
+              "typeName": "ZodString"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "projects": {
+            "_def": {
+              "innerType": {
+                "_def": {
+                  "exactLength": null,
+                  "maxLength": null,
+                  "minLength": null,
+                  "type": {
+                    "_any": true,
+                    "_def": {
+                      "typeName": "ZodAny"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodArray"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          },
+          "tasks": {
+            "_def": {
+              "innerType": {
+                "_def": {
+                  "exactLength": null,
+                  "maxLength": null,
+                  "minLength": null,
+                  "type": {
+                    "_any": true,
+                    "_def": {
+                      "typeName": "ZodAny"
+                    },
+                    "~standard": {
+                      "vendor": "zod",
+                      "version": 1
+                    }
+                  },
+                  "typeName": "ZodArray"
+                },
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                }
+              },
+              "typeName": "ZodOptional"
+            },
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            }
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      }
+    }
+  ]
+}
+---

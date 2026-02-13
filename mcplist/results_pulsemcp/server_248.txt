@@ -1,0 +1,498 @@
+NAME: LangChain Hub
+URL: https://mcp.prompts.mcpcentral.io/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "arguments": [
+        {
+          "name": "prompt_content",
+          "description": "The prompt content to analyze",
+          "required": true
+        },
+        {
+          "name": "analysis_depth",
+          "description": "Depth of analysis: 'basic', 'detailed', or 'comprehensive'"
+        },
+        {
+          "name": "target_audience",
+          "description": "Intended audience for the prompt"
+        }
+      ],
+      "description": "Analyze prompt effectiveness, structure, and areas for improvement",
+      "name": "analyze-prompt"
+    },
+    {
+      "arguments": [
+        {
+          "name": "prompt_a",
+          "description": "First prompt to compare",
+          "required": true
+        },
+        {
+          "name": "prompt_b",
+          "description": "Second prompt to compare",
+          "required": true
+        },
+        {
+          "name": "comparison_criteria",
+          "description": "Specific aspects to compare: 'clarity', 'effectiveness', 'structure', 'tone'"
+        }
+      ],
+      "description": "Compare multiple prompts for effectiveness and differences",
+      "name": "compare-prompts"
+    },
+    {
+      "arguments": [
+        {
+          "name": "original_prompt",
+          "description": "The prompt to improve",
+          "required": true
+        },
+        {
+          "name": "improvement_goals",
+          "description": "What to improve: 'clarity', 'specificity', 'engagement', 'structure'"
+        },
+        {
+          "name": "target_model",
+          "description": "Target AI model for optimization"
+        }
+      ],
+      "description": "Generate improved versions of a prompt with specific enhancements",
+      "name": "improve-prompt"
+    },
+    {
+      "arguments": [
+        {
+          "name": "source_prompt",
+          "description": "The original prompt to adapt",
+          "required": true
+        },
+        {
+          "name": "target_context",
+          "description": "New context or domain for the prompt",
+          "required": true
+        },
+        {
+          "name": "adaptation_type",
+          "description": "Type of adaptation: 'audience', 'domain', 'format', 'length'"
+        }
+      ],
+      "description": "Adapt a prompt for different contexts, audiences, or use cases",
+      "name": "adapt-prompt"
+    },
+    {
+      "arguments": [
+        {
+          "name": "task_description",
+          "description": "Description of the task the prompt should accomplish",
+          "required": true
+        },
+        {
+          "name": "prompt_style",
+          "description": "Desired style: 'instructional', 'conversational', 'technical', 'creative'"
+        },
+        {
+          "name": "example_outputs",
+          "description": "Examples of desired outputs"
+        }
+      ],
+      "description": "Generate new prompts based on requirements and examples",
+      "name": "generate-prompt"
+    },
+    {
+      "arguments": [
+        {
+          "name": "prompt_to_test",
+          "description": "The prompt to test",
+          "required": true
+        },
+        {
+          "name": "test_scenarios",
+          "description": "Specific scenarios to test against"
+        },
+        {
+          "name": "evaluation_criteria",
+          "description": "Criteria for evaluating prompt performance"
+        }
+      ],
+      "description": "Test prompt effectiveness with simulated scenarios and validation",
+      "name": "test-prompt"
+    }
+  ],
+  "resources": [
+    {
+      "description": "Collection of trending and popular prompts",
+      "mimeType": "application/json",
+      "name": "Popular Prompts Collection",
+      "uri": "langsmith://collections/popular"
+    },
+    {
+      "description": "Recently updated prompts",
+      "mimeType": "application/json",
+      "name": "Recent Prompts Collection",
+      "uri": "langsmith://collections/recent"
+    },
+    {
+      "description": "Prompts trending by engagement",
+      "mimeType": "application/json",
+      "name": "Trending Prompts Collection",
+      "uri": "langsmith://collections/trending"
+    }
+  ],
+  "tools": [
+    {
+      "description": "List public prompts from LangSmith with optional filtering",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of prompts to return",
+            "type": "number"
+          },
+          "owner": {
+            "description": "Filter by prompt owner",
+            "type": "string"
+          },
+          "search": {
+            "description": "Search prompts by name or description",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "list_prompts"
+    },
+    {
+      "description": "Get detailed information about a specific prompt",
+      "inputSchema": {
+        "properties": {
+          "prompt_name": {
+            "description": "Full name of the prompt (e.g., 'owner/prompt-name')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt_name"
+        ],
+        "type": "object"
+      },
+      "name": "get_prompt"
+    },
+    {
+      "description": "Get statistics about the prompt library",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_prompt_statistics"
+    },
+    {
+      "description": "Advanced search for prompts with comprehensive filtering options",
+      "inputSchema": {
+        "properties": {
+          "is_public": {
+            "default": true,
+            "description": "Filter by public/private status",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of results",
+            "type": "number"
+          },
+          "min_downloads": {
+            "description": "Minimum number of downloads",
+            "type": "number"
+          },
+          "min_likes": {
+            "description": "Minimum number of likes",
+            "type": "number"
+          },
+          "owner": {
+            "description": "Filter by prompt owner",
+            "type": "string"
+          },
+          "query": {
+            "description": "Search query for prompt names and descriptions",
+            "type": "string"
+          },
+          "sort_by": {
+            "default": "updated_at",
+            "description": "Sort criteria",
+            "enum": [
+              "created_at",
+              "updated_at",
+              "num_likes",
+              "num_downloads",
+              "num_views"
+            ],
+            "type": "string"
+          },
+          "sort_order": {
+            "default": "desc",
+            "description": "Sort order",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          },
+          "tags": {
+            "description": "Filter by specific tags",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "name": "search_prompts"
+    },
+    {
+      "description": "Like a specific prompt",
+      "inputSchema": {
+        "properties": {
+          "prompt_name": {
+            "description": "Full name of the prompt (e.g., 'owner/prompt-name')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt_name"
+        ],
+        "type": "object"
+      },
+      "name": "like_prompt"
+    },
+    {
+      "description": "Remove like from a specific prompt",
+      "inputSchema": {
+        "properties": {
+          "prompt_name": {
+            "description": "Full name of the prompt (e.g., 'owner/prompt-name')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt_name"
+        ],
+        "type": "object"
+      },
+      "name": "unlike_prompt"
+    },
+    {
+      "description": "Get version history and commits for a specific prompt",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 10,
+            "description": "Maximum number of versions to return",
+            "type": "number"
+          },
+          "prompt_name": {
+            "description": "Full name of the prompt (e.g., 'owner/prompt-name')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt_name"
+        ],
+        "type": "object"
+      },
+      "name": "get_prompt_versions"
+    },
+    {
+      "description": "Get prompts created by a specific user (including private if authenticated)",
+      "inputSchema": {
+        "properties": {
+          "include_private": {
+            "default": false,
+            "description": "Include private prompts (requires authentication)",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of prompts to return",
+            "type": "number"
+          },
+          "username": {
+            "description": "Username to get prompts for",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "type": "object"
+      },
+      "name": "get_user_prompts"
+    },
+    {
+      "description": "Get trending and popular prompts",
+      "inputSchema": {
+        "properties": {
+          "category": {
+            "description": "Filter by category/tag",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of prompts to return",
+            "type": "number"
+          },
+          "time_period": {
+            "default": "week",
+            "description": "Time period for popularity ranking",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "all"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_popular_prompts"
+    },
+    {
+      "description": "Get the actual prompt template content and configuration",
+      "inputSchema": {
+        "properties": {
+          "include_model_config": {
+            "default": false,
+            "description": "Include model configuration if available",
+            "type": "boolean"
+          },
+          "prompt_name": {
+            "description": "Full name of the prompt (e.g., 'owner/prompt-name')",
+            "type": "string"
+          },
+          "version": {
+            "description": "Specific version/commit hash (optional, defaults to latest)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt_name"
+        ],
+        "type": "object"
+      },
+      "name": "get_prompt_content"
+    },
+    {
+      "description": "Compare multiple prompts side by side",
+      "inputSchema": {
+        "properties": {
+          "comparison_criteria": {
+            "default": [
+              "structure",
+              "popularity"
+            ],
+            "description": "Criteria for comparison",
+            "items": {
+              "enum": [
+                "structure",
+                "length",
+                "complexity",
+                "tags",
+                "popularity",
+                "performance"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "prompt_names": {
+            "description": "List of prompt names to compare",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 5,
+            "minItems": 2,
+            "type": "array"
+          }
+        },
+        "required": [
+          "prompt_names"
+        ],
+        "type": "object"
+      },
+      "name": "compare_prompts"
+    },
+    {
+      "description": "Validate prompt structure and quality",
+      "inputSchema": {
+        "properties": {
+          "check_best_practices": {
+            "default": true,
+            "description": "Check against prompt engineering best practices",
+            "type": "boolean"
+          },
+          "check_completeness": {
+            "default": true,
+            "description": "Check if prompt has all required elements",
+            "type": "boolean"
+          },
+          "prompt_name": {
+            "description": "Full name of the prompt to validate",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt_name"
+        ],
+        "type": "object"
+      },
+      "name": "validate_prompt"
+    },
+    {
+      "description": "Get intelligent auto-completions for prompt templates with context awareness",
+      "inputSchema": {
+        "properties": {
+          "context": {
+            "properties": {
+              "domain": {
+                "description": "Domain context (e.g., 'coding', 'writing', 'analysis')",
+                "type": "string"
+              },
+              "style": {
+                "description": "Style preference (e.g., 'formal', 'casual', 'technical')",
+                "type": "string"
+              },
+              "target_audience": {
+                "description": "Target audience (e.g., 'developers', 'students', 'business')",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "max_suggestions": {
+            "default": 5,
+            "description": "Maximum number of completion suggestions",
+            "maximum": 10,
+            "minimum": 1,
+            "type": "number"
+          },
+          "partial_text": {
+            "description": "Partial prompt text to complete",
+            "type": "string"
+          }
+        },
+        "required": [
+          "partial_text"
+        ],
+        "type": "object"
+      },
+      "name": "get_prompt_completions"
+    }
+  ]
+}
+---

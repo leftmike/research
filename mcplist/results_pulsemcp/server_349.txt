@@ -1,0 +1,9 @@
+NAME: Dice MCP
+URL: https://mcp.dice.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

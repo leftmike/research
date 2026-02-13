@@ -1,0 +1,9 @@
+NAME: Galileo
+URL: https://api.galileo.ai/mcp/http/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Misdirected Request
+---

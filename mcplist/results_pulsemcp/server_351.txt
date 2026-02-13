@@ -1,0 +1,9 @@
+NAME: io.github.lilo-property/mcp-server
+URL: https://mcp.lilo.property/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: listing tools: calling "tools/list": sending "tools/list": Bad Request
+---

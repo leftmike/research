@@ -1,0 +1,9 @@
+NAME: Preloop
+URL: https://preloop.ai/mcp/v1
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{}
+---

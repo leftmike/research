@@ -1,0 +1,236 @@
+NAME: com.pearl.mcp/pearl-api-mcp-server
+URL: https://mcp.pearl.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "prompts": [
+    {
+      "arguments": [
+        {
+          "name": "topic",
+          "description": "General legal topic",
+          "required": true
+        },
+        {
+          "name": "question",
+          "description": "Specific legal question",
+          "required": true
+        },
+        {
+          "name": "situation",
+          "description": "Brief description of situation",
+          "required": true
+        }
+      ],
+      "name": "ask-legal-question"
+    },
+    {
+      "arguments": [
+        {
+          "name": "condition",
+          "description": "Medical condition or symptom",
+          "required": true
+        },
+        {
+          "name": "symptoms",
+          "description": "Description of symptoms",
+          "required": true
+        },
+        {
+          "name": "duration",
+          "description": "Duration of symptoms",
+          "required": true
+        },
+        {
+          "name": "history",
+          "description": "Relevant medical history",
+          "required": true
+        }
+      ],
+      "name": "ask-medical-question"
+    }
+  ],
+  "resources": [
+    {
+      "name": "General LLM guidelines",
+      "uri": "pearl://llm-guidelines"
+    }
+  ],
+  "tools": [
+    {
+      "description": "Get a quick AI-generated response without human expert review.\nUse when:\n- The user wants a rapid draft or alternative perspective\n- The topic is low-risk / exploratory and doesn't require human validation\n- Comparing approaches or brainstorming\nAvoid for: medical, legal, financial, or safety‑critical questions (use askExpert or askPearlExpert).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "chatHistory": {
+            "description": "Optional conversation history. This ensures experts see the complete context",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "question": {
+            "description": "The user's question",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Optional session ID for continuing a conversation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "type": "object"
+      },
+      "name": "askPearlAi"
+    },
+    {
+      "description": "Hybrid intake → human expert escalation.\nFlow:\n1. AI gathers clarifying context\n2. Conversation can escalate to a human expert with structured info\nUse when:\n- Problem is complex, ambiguous, multidisciplinary, or high stakes\n- A tailored recommendation or diagnostic reasoning is needed\n- You anticipate follow-up requiring human judgment\nAvoid for: trivial fact queries (use askPearlAi) or direct human request (use askExpert).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "chatHistory": {
+            "description": "Optional conversation history. This ensures experts see the complete context",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "question": {
+            "description": "The user's question",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Optional session ID for continuing a conversation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "type": "object"
+      },
+      "name": "askPearlExpert"
+    },
+    {
+      "description": "Get direct assistance from a human expert.\nUse when:\n- The user explicitly asks to speak with a real human expert\n- They need personalized advice in complex or sensitive domains\n- They request a human directly (e.g., 'Can I talk to a real expert?')\nReturns a session_id for follow-up questions.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "chatHistory": {
+            "description": "Optional conversation history. This ensures experts see the complete context",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "question": {
+            "description": "The user's question",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Optional session ID for continuing a conversation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "type": "object"
+      },
+      "name": "askExpert"
+    },
+    {
+      "description": "Submit a single AI-generated answer for human expert verification.\nUse when:\n- You need a professional to validate correctness, safety, or trustworthiness of an AI answer\n- The user asks to have the previous answer double‑checked by a real expert\nParameters:\n- answer: REQUIRED string. The AI answer to verify.\n- chatHistory: OPTIONAL array\u003cMessage\u003e. Prior conversation context (excluding the answer if duplicated).\n- sessionId: OPTIONAL string to continue an existing verification session. Auto-generated if omitted.\nReturns JSON with verified answer, session_id, status, and guidance for follow-up.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "description": "The AI-generated answer that requires human verification",
+            "minLength": 1,
+            "type": "string"
+          },
+          "chatHistory": {
+            "description": "Optional prior messages for context (ordered, oldest first)",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "content": {
+                  "description": "Message content",
+                  "type": "string"
+                },
+                "role": {
+                  "description": "Message role (system|user|assistant|tool)",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "sessionId": {
+            "description": "Existing session ID to continue; generated if omitted",
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer"
+        ],
+        "type": "object"
+      },
+      "name": "verifyAnswer"
+    }
+  ]
+}
+---
