@@ -1,0 +1,78 @@
+NAME: Ferryhopper
+URL: https://mcp.ferryhopper.com/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a list of global ports and their details",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_ports"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get a list of all the direct connections between ports",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "portLocation": {
+            "description": "Location name or search term used to find matching ports (not limited to exact port codes).",
+            "type": "string"
+          }
+        },
+        "required": [
+          "portLocation"
+        ],
+        "type": "object"
+      },
+      "name": "get_direct_connections_for_ports"
+    },
+    {
+      "annotations": {
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get a list available ferry trips between two ports on a specific date",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "arrivalLocation": {
+            "description": "Arrival location as a human-readable name or search term (e.g. city, port name), not a port code.",
+            "type": "string"
+          },
+          "date": {
+            "description": "Departure date in ISO format YYYY-MM-DD (e.g. 2026-03-15).",
+            "type": "string"
+          },
+          "departureLocation": {
+            "description": "Departure location as a human-readable name or search term (e.g. city, port name), not a port code.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "departureLocation",
+          "arrivalLocation",
+          "date"
+        ],
+        "type": "object"
+      },
+      "name": "search_trips"
+    }
+  ]
+}
+---

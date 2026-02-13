@@ -1,0 +1,50 @@
+NAME: Invideo
+URL: https://mcp.invideo.io/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Generate a video using a script and additional context (topic, vibe, target audience). Args: script - The video script content; topic - The main topic of the video; vibe - The vibe/tone of the video (e.g., 'educational', 'entertaining', 'professional'); targetAudience - The target audience for the video; platform - The platform to generate the video for (e.g., 'youtube', 'instagram', 'tiktok'). Returns: video URL.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "platform": {
+            "description": "The target platform for video distribution (e.g., 'youtube', 'instagram', 'tiktok')",
+            "type": "string"
+          },
+          "script": {
+            "description": "The video script content that will be used to generate the video",
+            "type": "string"
+          },
+          "targetAudience": {
+            "description": "The intended viewer demographic for the video",
+            "type": "string"
+          },
+          "topic": {
+            "description": "The main topic or subject matter of the video",
+            "type": "string"
+          },
+          "vibe": {
+            "description": "The desired tone/mood of the video (e.g., 'educational', 'entertaining', 'professional')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "script",
+          "topic",
+          "vibe",
+          "targetAudience",
+          "platform"
+        ],
+        "type": "object"
+      },
+      "name": "generate-video-from-script"
+    }
+  ]
+}
+---

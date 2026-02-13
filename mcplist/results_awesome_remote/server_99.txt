@@ -1,0 +1,9 @@
+NAME: Dodo Payments
+URL: https://mcp.dodopayments.com/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: missing endpoint: first event is "", want "endpoint"
+---

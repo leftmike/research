@@ -1,0 +1,241 @@
+NAME: Hive Intelligence
+URL: https://hiveintelligence.xyz/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get the schema for an endpoint in the HIVE API. You can use the schema returned by this tool to invoke an endpoint with the `invoke_api_endpoint` tool.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "endpoint": {
+            "description": "The name of the endpoint to get the schema for.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "endpoint"
+        ],
+        "type": "object"
+      },
+      "name": "get_api_endpoint_schema"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Invoke an endpoint in the HIVE API. Note: use the category endpoints to get the list of endpoints and `get_api_endpoint_schema` tool to get the schema for an endpoint.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "args": {
+            "additionalProperties": {},
+            "description": "The arguments to pass to the endpoint. This must match the schema returned by the `get_api_endpoint_schema` tool.",
+            "type": "object"
+          },
+          "endpoint_name": {
+            "description": "The name of the endpoint to invoke.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "endpoint_name",
+          "args"
+        ],
+        "type": "object"
+      },
+      "name": "invoke_api_endpoint"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"Market Data and Price\" category. Endpoints to retrieve real-time and historical cryptocurrency prices, market caps, trading volumes, OHLC data, global market statistics, supported currencies, basic market performance metrics across different timeframes and asset platforms, stablecoin market analytics, stablecoin price tracking, comprehensive stablecoin market cap data across multiple chains, social sentiment-enhanced market metrics including Galaxy Score™ and AltRank™ rankings, centralized exchange (CEX) trading data including real-time tickers, order books, recent trades, candlestick charts, best bid/ask prices, derivatives pricing (index, mark, and premium), and perpetual futures funding rates across major exchanges.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_market_and_price_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"On-Chain DEX \u0026 Pool Analytics\" category. Endpoints for analyzing decentralized exchange pools, liquidity data, trading pairs, DEX rankings, pool filtering, trending pools, OHLCV data for pools/tokens, trading volume analysis, comprehensive on-chain trading metrics across multiple networks and DEXs, real-time DEX trading analytics, advanced token trading intelligence with DEXScreener-style metrics, trader statistics (makers, buyers, sellers), aggregated trading data by tokens, volume breakdowns, trading activity analysis, exchange platform analysis, comprehensive exchange ecosystem metrics including user statistics, DEX volume analytics across protocols and chains, and options trading analytics with protocol-specific data.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_onchain_dex_pool_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"Portfolio \u0026 Wallet\" category. Endpoints for tracking user wallet balances, transaction history, portfolio positions across protocols and chains, net asset calculations, token holdings analysis, comprehensive wallet activity monitoring, real-time balance tracking, balance update history over time, multi-token portfolio analysis, balance changes with transaction context, financial auditing capabilities for individual users and addresses, wallet filtering and discovery, and NFT holdings tracking.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_portfolio_wallet_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"Token \u0026 Contract data\" category. Endpoints for detailed token and contract analysis including token metadata, holder distributions, contract information, token filtering and discovery, holder rankings, comprehensive token intelligence across multiple networks, advanced transaction analysis and forensics, detailed transaction data (hash, sender, recipient, value, gas costs), internal transactions with signatures, transaction status validation, address tracking capabilities for security analysis and investigation, token lifecycle events, trader analytics, and project metadata including websites and social media links.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_token_contract_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"DeFi Protocol Analytics\" category. Endpoints for comprehensive DeFi protocol analysis including Total Value Locked (TVL) data, protocol listings, chain-specific TVL metrics, historical TVL tracking across all chains, protocol fee analysis, yield farming analytics with APY data, detailed protocol information, comprehensive DeFi ecosystem statistics, blockchain network TVL tracking, yield pool management and historical charts, and protocol fee structures across different DeFi platforms.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_defi_protocol_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"NFT Analytics\" category. Endpoints for comprehensive NFT ecosystem analysis including collection data, market analytics, user NFT holdings, collection floor prices, trading volumes, historical NFT market data, NFT liquidity pools and AMM marketplaces (like Sudoswap), NFT DeFi analytics, Prime ecosystem pools, Parallel trading card game assets, NFT pool management, collection holder analysis, advanced NFT search and filtering, contract metadata, cross-chain NFT analytics, social sentiment tracking for NFT collections, and time series market trend analysis.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_nft_analytics_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"Security \u0026 Risk Analysis\" category. Comprehensive security endpoints for token security analysis, NFT authenticity verification, honeypot detection, malicious address identification, phishing site detection, contract approval risks, dApp security assessment, ABI data decoding, and comprehensive security metrics to protect users from scams, rugpulls, and malicious contracts.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_security_risk_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"Network \u0026 Infrastructure\" category. Endpoints for blockchain network information, network health monitoring, gas price tracking, network statistics, asset platform data, infrastructure metrics across different blockchain networks, real-time mempool monitoring, pending transaction analysis, transaction status simulation, MEV detection and protection, gas fee optimization, arbitrage opportunity identification, comprehensive blockchain activity monitoring, community-contributed insights and annotations, data platform system updates monitoring, centralized exchange (CEX) infrastructure including system status monitoring, server time synchronization, available trading markets/pairs browsing, and supported currencies listing across major exchanges.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_network_infrastructure_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"Search \u0026 Discovery\" category. Endpoints for cryptocurrency search functionality, trending analysis, coin categorization, token discovery, new coin listings, comprehensive search capabilities across coins, categories, and markets, event categorization and labeling systems.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_search_discovery_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"Social Media \u0026 Sentiment Analytics\" category. Endpoints for social media analytics, sentiment analysis, influencer tracking, social engagement metrics, trending topics analysis, news aggregation, creator analytics, post engagement tracking, social dominance metrics, Galaxy Score™, AltRank™, and comprehensive social sentiment indicators across crypto assets, stocks, and NFTs. Includes real-time social monitoring, influencer identification, content virality analysis, and social trend detection.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_social_sentiment_endpoints"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get all endpoints in the \"Web Search \u0026 Research\" category. Neural web search endpoints powered by Exa AI for comprehensive internet research. Includes crypto news search from trusted sources (CoinDesk, Cointelegraph, The Block, Decrypt), academic research paper discovery from arXiv and ResearchGate, Twitter/X social sentiment analysis, general web search with domain filtering, URL content extraction, and similar content discovery. Ideal for real-time market research, news monitoring, sentiment analysis, and deep web research beyond on-chain data.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_web_search_endpoints"
+    }
+  ]
+}
+---

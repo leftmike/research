@@ -1,0 +1,877 @@
+NAME: OpenZeppelin Cairo
+URL: https://mcp.openzeppelin.com/contracts/cairo/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Make a fungible token per the ERC-20 standard.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "access": {
+            "properties": {
+              "darDefaultDelayIncrease": {
+                "description": "The default delay increase in seconds for the default admin role (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "darInitialDelay": {
+                "description": "The initial delay for the default admin role (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "darMaxTransferDelay": {
+                "description": "The maximum delay in seconds for a default admin transfer (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "type": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "const": "ownable",
+                            "type": "string"
+                          },
+                          {
+                            "const": "roles",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "const": "roles-dar",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "const": false,
+                    "type": "boolean"
+                  }
+                ],
+                "description": "The type of access control to provision. Ownable is a simple mechanism with a single account authorized for all privileged actions. Roles is a flexible mechanism with a separate role for each privileged action. A role can have many authorized accounts. Roles (Default Admin Rules) provides additional enforced security measures on top of standard Roles mechanism for managing the most privileged role: default admin."
+              }
+            },
+            "required": [
+              "type",
+              "darInitialDelay",
+              "darDefaultDelayIncrease",
+              "darMaxTransferDelay"
+            ],
+            "type": "object"
+          },
+          "appName": {
+            "description": "Required when votes is enabled, for hashing and signing typed structured data. Name for domain separator implementing SNIP12Metadata trait. Prevents two applications from producing the same hash.",
+            "type": "string"
+          },
+          "appVersion": {
+            "description": "Required when votes is enabled, for hashing and signing typed structured data. Version for domain separator implementing SNIP12Metadata trait. Prevents two versions of the same application from producing the same hash.",
+            "type": "string"
+          },
+          "burnable": {
+            "description": "Whether token holders will be able to destroy their tokens",
+            "type": "boolean"
+          },
+          "decimals": {
+            "description": "The number of decimals to use for the contract. Defaults to 18.",
+            "type": "string"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "macros": {
+            "description": "The macros to use for the contract.",
+            "properties": {
+              "withComponents": {
+                "description": "Whether to use the \"with_components\" macro for simplified contract structure.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "withComponents"
+            ],
+            "type": "object"
+          },
+          "mintable": {
+            "description": "Whether privileged accounts will be able to create more supply or emit more tokens",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "pausable": {
+            "description": "Whether privileged accounts will be able to pause specifically marked functionality. Useful for emergency response.",
+            "type": "boolean"
+          },
+          "premint": {
+            "description": "The number of tokens to premint for the deployer.",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "The short symbol for the token",
+            "type": "string"
+          },
+          "upgradeable": {
+            "description": "Whether the smart contract is upgradeable.",
+            "type": "boolean"
+          },
+          "votes": {
+            "description": "Whether to keep track of historical balances for voting in on-chain governance, with a way to delegate one's voting power to a trusted account.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "symbol",
+          "access"
+        ],
+        "type": "object"
+      },
+      "name": "cairo-erc20"
+    },
+    {
+      "description": "Make a non-fungible token per the ERC-721 standard.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "access": {
+            "properties": {
+              "darDefaultDelayIncrease": {
+                "description": "The default delay increase in seconds for the default admin role (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "darInitialDelay": {
+                "description": "The initial delay for the default admin role (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "darMaxTransferDelay": {
+                "description": "The maximum delay in seconds for a default admin transfer (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "type": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "const": "ownable",
+                            "type": "string"
+                          },
+                          {
+                            "const": "roles",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "const": "roles-dar",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "const": false,
+                    "type": "boolean"
+                  }
+                ],
+                "description": "The type of access control to provision. Ownable is a simple mechanism with a single account authorized for all privileged actions. Roles is a flexible mechanism with a separate role for each privileged action. A role can have many authorized accounts. Roles (Default Admin Rules) provides additional enforced security measures on top of standard Roles mechanism for managing the most privileged role: default admin."
+              }
+            },
+            "required": [
+              "type",
+              "darInitialDelay",
+              "darDefaultDelayIncrease",
+              "darMaxTransferDelay"
+            ],
+            "type": "object"
+          },
+          "appName": {
+            "description": "Required when votes is enabled, for hashing and signing typed structured data. Name for domain separator implementing SNIP12Metadata trait. Prevents two applications from producing the same hash.",
+            "type": "string"
+          },
+          "appVersion": {
+            "description": "Required when votes is enabled, for hashing and signing typed structured data. Version for domain separator implementing SNIP12Metadata trait. Prevents two versions of the same application from producing the same hash.",
+            "type": "string"
+          },
+          "baseUri": {
+            "description": "A base uri for the non-fungible token.",
+            "type": "string"
+          },
+          "burnable": {
+            "description": "Whether token holders will be able to destroy their tokens",
+            "type": "boolean"
+          },
+          "enumerable": {
+            "description": "Whether to allow on-chain enumeration of all tokens or those owned by an account. Increases gas cost of transfers.",
+            "type": "boolean"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "macros": {
+            "description": "The macros to use for the contract.",
+            "properties": {
+              "withComponents": {
+                "description": "Whether to use the \"with_components\" macro for simplified contract structure.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "withComponents"
+            ],
+            "type": "object"
+          },
+          "mintable": {
+            "description": "Whether privileged accounts will be able to create more supply or emit more tokens",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "pausable": {
+            "description": "Whether privileged accounts will be able to pause specifically marked functionality. Useful for emergency response.",
+            "type": "boolean"
+          },
+          "royaltyInfo": {
+            "description": "Provides information for how much royalty is owed and to whom, based on a sale price. Follows ERC-2981 standard.",
+            "properties": {
+              "defaultRoyaltyFraction": {
+                "description": "The royalty fraction that will be default for all tokens. It will be used for a token if there's no custom royalty fraction set for it.",
+                "type": "string"
+              },
+              "enabled": {
+                "description": "Whether to enable royalty feature for the contract",
+                "type": "boolean"
+              },
+              "feeDenominator": {
+                "description": "The denominator used to interpret a token's fee and to calculate the result fee fraction.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "enabled",
+              "defaultRoyaltyFraction",
+              "feeDenominator"
+            ],
+            "type": "object"
+          },
+          "symbol": {
+            "description": "The short symbol for the token",
+            "type": "string"
+          },
+          "upgradeable": {
+            "description": "Whether the smart contract is upgradeable.",
+            "type": "boolean"
+          },
+          "votes": {
+            "description": "Whether to keep track of individual units for voting in on-chain governance. Voting durations can be expressed as block numbers or timestamps.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "symbol",
+          "access"
+        ],
+        "type": "object"
+      },
+      "name": "cairo-erc721"
+    },
+    {
+      "description": "Make a non-fungible token per the ERC-1155 standard.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "access": {
+            "properties": {
+              "darDefaultDelayIncrease": {
+                "description": "The default delay increase in seconds for the default admin role (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "darInitialDelay": {
+                "description": "The initial delay for the default admin role (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "darMaxTransferDelay": {
+                "description": "The maximum delay in seconds for a default admin transfer (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "type": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "const": "ownable",
+                            "type": "string"
+                          },
+                          {
+                            "const": "roles",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "const": "roles-dar",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "const": false,
+                    "type": "boolean"
+                  }
+                ],
+                "description": "The type of access control to provision. Ownable is a simple mechanism with a single account authorized for all privileged actions. Roles is a flexible mechanism with a separate role for each privileged action. A role can have many authorized accounts. Roles (Default Admin Rules) provides additional enforced security measures on top of standard Roles mechanism for managing the most privileged role: default admin."
+              }
+            },
+            "required": [
+              "type",
+              "darInitialDelay",
+              "darDefaultDelayIncrease",
+              "darMaxTransferDelay"
+            ],
+            "type": "object"
+          },
+          "baseUri": {
+            "description": "The location of the metadata for the token. Clients will replace any instance of {id} in this string with the tokenId.",
+            "type": "string"
+          },
+          "burnable": {
+            "description": "Whether token holders will be able to destroy their tokens",
+            "type": "boolean"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "macros": {
+            "description": "The macros to use for the contract.",
+            "properties": {
+              "withComponents": {
+                "description": "Whether to use the \"with_components\" macro for simplified contract structure.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "withComponents"
+            ],
+            "type": "object"
+          },
+          "mintable": {
+            "description": "Whether privileged accounts will be able to create more supply or emit more tokens",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "pausable": {
+            "description": "Whether privileged accounts will be able to pause specifically marked functionality. Useful for emergency response.",
+            "type": "boolean"
+          },
+          "royaltyInfo": {
+            "description": "Provides information for how much royalty is owed and to whom, based on a sale price. Follows ERC-2981 standard.",
+            "properties": {
+              "defaultRoyaltyFraction": {
+                "description": "The royalty fraction that will be default for all tokens. It will be used for a token if there's no custom royalty fraction set for it.",
+                "type": "string"
+              },
+              "enabled": {
+                "description": "Whether to enable royalty feature for the contract",
+                "type": "boolean"
+              },
+              "feeDenominator": {
+                "description": "The denominator used to interpret a token's fee and to calculate the result fee fraction.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "enabled",
+              "defaultRoyaltyFraction",
+              "feeDenominator"
+            ],
+            "type": "object"
+          },
+          "updatableUri": {
+            "description": "Whether privileged accounts will be able to set a new URI for all token types.",
+            "type": "boolean"
+          },
+          "upgradeable": {
+            "description": "Whether the smart contract is upgradeable.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "baseUri",
+          "access"
+        ],
+        "type": "object"
+      },
+      "name": "cairo-erc1155"
+    },
+    {
+      "description": "Make a custom smart contract that represents an account that can be deployed and interacted with other contracts, and can be extended to implement custom logic. An account is a special type of contract that is used to validate and execute transactions.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "declare": {
+            "description": "Whether to enable the account to declare other contract classes.",
+            "type": "boolean"
+          },
+          "deploy": {
+            "description": "Whether to enables the account to be counterfactually deployed.",
+            "type": "boolean"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "macros": {
+            "description": "The macros to use for the contract.",
+            "properties": {
+              "withComponents": {
+                "description": "Whether to use the \"with_components\" macro for simplified contract structure.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "withComponents"
+            ],
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "outsideExecution": {
+            "description": "Whether to allow a protocol to submit transactions on behalf of the account, as long as it has the relevant signatures.",
+            "type": "boolean"
+          },
+          "pubkey": {
+            "description": "Whether to enables the account to change its own public key.",
+            "type": "boolean"
+          },
+          "type": {
+            "description": "Type of signature used for signature checking by the Account contract, Starknet account uses the STARK curve, Ethereum-flavored account uses the Secp256k1 curve.",
+            "enum": [
+              "stark",
+              "eth"
+            ],
+            "type": "string"
+          },
+          "upgradeable": {
+            "description": "Whether the smart contract is upgradeable.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ],
+        "type": "object"
+      },
+      "name": "cairo-account"
+    },
+    {
+      "description": "Make a multi-signature smart contract, requiring a quorum of registered signers to approve and collectively execute transactions.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "macros": {
+            "description": "The macros to use for the contract.",
+            "properties": {
+              "withComponents": {
+                "description": "Whether to use the \"with_components\" macro for simplified contract structure.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "withComponents"
+            ],
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "quorum": {
+            "description": "The minimal number of confirmations required by the Multisig to approve a transaction.",
+            "type": "string"
+          },
+          "upgradeable": {
+            "description": "Whether the smart contract is upgradeable.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "quorum"
+        ],
+        "type": "object"
+      },
+      "name": "cairo-multisig"
+    },
+    {
+      "description": "Make a contract to implement governance, such as for a DAO.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "appName": {
+            "description": "Required when votes is enabled, for hashing and signing typed structured data. Name for domain separator implementing SNIP12Metadata trait. Prevents two applications from producing the same hash.",
+            "type": "string"
+          },
+          "appVersion": {
+            "description": "Required when votes is enabled, for hashing and signing typed structured data. Version for domain separator implementing SNIP12Metadata trait. Prevents two versions of the same application from producing the same hash.",
+            "type": "string"
+          },
+          "clockMode": {
+            "description": "The clock mode used by the voting token. For now, only timestamp mode where the token uses voting durations expressed as timestamps is supported. For Governor, this must be chosen to match what the ERC20 or ERC721 voting token uses.",
+            "enum": [
+              "timestamp"
+            ],
+            "type": "string"
+          },
+          "decimals": {
+            "description": "The number of decimals to use for the contract, default is 18 for ERC20Votes and 0 for ERC721Votes (because it does not apply to ERC721Votes).",
+            "type": "number"
+          },
+          "delay": {
+            "description": "The delay since proposal is created until voting starts, in readable date time format matching /^(\\d+(?:\\.\\d+)?) +(second|minute|hour|day|week|month|year)s?$/, default is \"1 day\".",
+            "type": "string"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "macros": {
+            "description": "The macros to use for the contract.",
+            "properties": {
+              "withComponents": {
+                "description": "Whether to use the \"with_components\" macro for simplified contract structure.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "withComponents"
+            ],
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "period": {
+            "description": "The length of period during which people can cast their vote, in readable date time format matching /^(\\d+(?:\\.\\d+)?) +(second|minute|hour|day|week|month|year)s?$/, default is \"1 week\".",
+            "type": "string"
+          },
+          "proposalThreshold": {
+            "description": "Minimum number of votes an account must have to create a proposal, default is 0.",
+            "type": "string"
+          },
+          "quorumAbsolute": {
+            "description": "The absolute quorum required, in cases of quorumMode equals absolute.",
+            "type": "string"
+          },
+          "quorumMode": {
+            "description": "The type of quorum mode to use, either by percentage or absolute value.",
+            "enum": [
+              "percent",
+              "absolute"
+            ],
+            "type": "string"
+          },
+          "quorumPercent": {
+            "description": "The percent required, in cases of quorumMode equals percent.",
+            "type": "number"
+          },
+          "settings": {
+            "description": "Whether to allow governance to update voting settings (delay, period, proposal threshold).",
+            "type": "boolean"
+          },
+          "timelock": {
+            "anyOf": [
+              {
+                "const": false,
+                "type": "boolean"
+              },
+              {
+                "const": "openzeppelin",
+                "type": "string"
+              }
+            ],
+            "description": "Whether to add a delay to actions taken by the Governor. Gives users time to exit the system if they disagree with governance decisions. If \"openzeppelin\", Module compatible with OpenZeppelin's TimelockController."
+          },
+          "upgradeable": {
+            "description": "Whether the smart contract is upgradeable.",
+            "type": "boolean"
+          },
+          "votes": {
+            "description": "The type of voting to use. Either erc20votes, meaning voting power with a votes-enabled ERC20 token. Either erc721votes, meaning voting power with a votes-enabled ERC721 token. Voters can entrust their voting power to a delegate.",
+            "enum": [
+              "erc20votes",
+              "erc721votes"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "delay",
+          "period"
+        ],
+        "type": "object"
+      },
+      "name": "cairo-governor"
+    },
+    {
+      "description": "Make a vesting smart contract that manages the gradual release of ERC-20 tokens to a designated beneficiary based on a predefined vesting schedule.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "cliffDuration": {
+            "description": "The duration of the cliff period. Must be less than or equal to the total duration. In readable date time format matching /^(\\d+(?:\\.\\d+)?) +(second|minute|hour|day|week|month|year)s?$/",
+            "type": "string"
+          },
+          "duration": {
+            "description": "The total duration of the vesting period. In readable date time format matching /^(\\d+(?:\\.\\d+)?) +(second|minute|hour|day|week|month|year)s?$/",
+            "type": "string"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "macros": {
+            "description": "The macros to use for the contract.",
+            "properties": {
+              "withComponents": {
+                "description": "Whether to use the \"with_components\" macro for simplified contract structure.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "withComponents"
+            ],
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "schedule": {
+            "description": "A vesting schedule implementation, tokens can either be vested gradually following a linear curve or with custom vesting schedule that requires the implementation of the VestingSchedule trait.",
+            "enum": [
+              "linear",
+              "custom"
+            ],
+            "type": "string"
+          },
+          "startDate": {
+            "description": "The timestamp marking the beginning of the vesting period. In HTML input datetime-local format",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "startDate",
+          "duration",
+          "cliffDuration",
+          "schedule"
+        ],
+        "type": "object"
+      },
+      "name": "cairo-vesting"
+    },
+    {
+      "description": "Make a custom smart contract.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "access": {
+            "properties": {
+              "darDefaultDelayIncrease": {
+                "description": "The default delay increase in seconds for the default admin role (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "darInitialDelay": {
+                "description": "The initial delay for the default admin role (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "darMaxTransferDelay": {
+                "description": "The maximum delay in seconds for a default admin transfer (in case Roles (Default Admin Rules) is used).",
+                "type": "string"
+              },
+              "type": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "const": "ownable",
+                            "type": "string"
+                          },
+                          {
+                            "const": "roles",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "const": "roles-dar",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "const": false,
+                    "type": "boolean"
+                  }
+                ],
+                "description": "The type of access control to provision. Ownable is a simple mechanism with a single account authorized for all privileged actions. Roles is a flexible mechanism with a separate role for each privileged action. A role can have many authorized accounts. Roles (Default Admin Rules) provides additional enforced security measures on top of standard Roles mechanism for managing the most privileged role: default admin."
+              }
+            },
+            "required": [
+              "type",
+              "darInitialDelay",
+              "darDefaultDelayIncrease",
+              "darMaxTransferDelay"
+            ],
+            "type": "object"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "macros": {
+            "description": "The macros to use for the contract.",
+            "properties": {
+              "withComponents": {
+                "description": "Whether to use the \"with_components\" macro for simplified contract structure.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "withComponents"
+            ],
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "pausable": {
+            "description": "Whether privileged accounts will be able to pause specifically marked functionality. Useful for emergency response.",
+            "type": "boolean"
+          },
+          "upgradeable": {
+            "description": "Whether the smart contract is upgradeable.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "access"
+        ],
+        "type": "object"
+      },
+      "name": "cairo-custom"
+    }
+  ]
+}
+---

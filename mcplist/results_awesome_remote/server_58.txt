@@ -1,0 +1,197 @@
+NAME: TweetSave
+URL: https://mcp.tweetsave.org/sse
+TRANSPORT: sse
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Fetch a single tweet with all its content including text, media (photos, videos, GIFs), polls, and engagement metrics.\n\nThis tool retrieves tweet data from Twitter/X using the FxTwitter API. It returns the tweet content, author info, media URLs, and engagement stats.\n\nArgs:\n  - url (string): Tweet URL or tweet ID\n  - response_format ('markdown' | 'json'): Output format (default: 'markdown')\n\nReturns:\n  Tweet data including:\n  - Author info (name, username, avatar)\n  - Tweet text\n  - Media URLs (photos, videos)\n  - Engagement (likes, retweets, replies, views)\n  - Poll data (if applicable)\n  - Quote tweet (if applicable)\n\nExamples:\n  - \"Get tweet from https://x.com/elonmusk/status/123456\"\n  - \"Fetch this tweet: 123456789\"\n\nNote: Does not fetch replies. Use tweetsave_to_blog for a complete blog post with formatting.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "response_format": {
+            "default": "markdown",
+            "description": "Output format: 'markdown' for human-readable or 'json' for structured data",
+            "enum": [
+              "markdown",
+              "json"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "description": "Tweet URL or tweet ID. Examples: 'https://x.com/user/status/123456' or '123456'",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "tweetsave_get_tweet",
+      "title": "Get Tweet"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Fetch a tweet thread (multiple connected tweets by the same author).\n\nNote: Current implementation fetches the main tweet. Full thread crawling requires additional API access.\n\nArgs:\n  - url (string): URL or ID of any tweet in the thread\n  - response_format ('markdown' | 'json'): Output format (default: 'markdown')\n\nReturns:\n  Array of tweets in the thread with all content and media.\n\nExamples:\n  - \"Get the full thread from this tweet: https://x.com/user/status/123\"",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "response_format": {
+            "default": "markdown",
+            "description": "Output format: 'markdown' for human-readable or 'json' for structured data",
+            "enum": [
+              "markdown",
+              "json"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "description": "URL or ID of any tweet in the thread",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "tweetsave_get_thread",
+      "title": "Get Tweet Thread"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Convert a tweet into a formatted blog post with title, content, media, and metadata.\n\nThis tool transforms a tweet into a readable blog post format, perfect for:\n- Archiving tweets\n- Creating content from threads\n- Generating blog posts from viral tweets\n\nArgs:\n  - url (string): Tweet URL or tweet ID\n  - include_engagement (boolean): Include likes/retweets/etc. (default: true)\n  - response_format ('markdown' | 'json'): Output format (default: 'markdown')\n\nReturns:\n  BlogPost with:\n  - Generated title from tweet content\n  - Author info with avatar\n  - Formatted content with media\n  - Tags from hashtags\n  - Read time estimate\n  - Engagement summary\n  - Source link\n\nExamples:\n  - \"Convert this tweet to a blog post: https://x.com/user/status/123\"\n  - \"Make a blog from tweet 123456789\"",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "include_engagement": {
+            "default": true,
+            "description": "Include engagement metrics (likes, retweets, etc.)",
+            "type": "boolean"
+          },
+          "response_format": {
+            "default": "markdown",
+            "description": "Output format: 'markdown' for blog post or 'json' for structured data",
+            "enum": [
+              "markdown",
+              "json"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "description": "Tweet URL or tweet ID to convert",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "tweetsave_to_blog",
+      "title": "Convert Tweet to Blog Post"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Fetch multiple tweets at once (max 10).\n\nUseful for:\n- Collecting tweets from a list\n- Building a feed from multiple sources\n- Comparing multiple tweets\n\nArgs:\n  - urls (string[]): Array of tweet URLs or IDs (max 10)\n  - response_format ('markdown' | 'json'): Output format (default: 'markdown')\n\nReturns:\n  Array of tweets or a combined feed in markdown format.\n\nExamples:\n  - \"Fetch these tweets: [url1, url2, url3]\"",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "response_format": {
+            "default": "markdown",
+            "description": "Output format: 'markdown' or 'json'",
+            "enum": [
+              "markdown",
+              "json"
+            ],
+            "type": "string"
+          },
+          "urls": {
+            "description": "Array of tweet URLs or IDs (max 10)",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "urls"
+        ],
+        "type": "object"
+      },
+      "name": "tweetsave_batch",
+      "title": "Batch Fetch Tweets"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Extract direct media URLs (photos, videos, GIFs) from a tweet.\n\nReturns direct URLs that can be downloaded or embedded. Video URLs are the highest quality available.\n\nArgs:\n  - url (string): Tweet URL or tweet ID\n  - media_type ('all' | 'photos' | 'videos'): Filter by media type (default: 'all')\n\nReturns:\n  List of media items with:\n  - type (photo/video/gif)\n  - url (direct download URL)\n  - dimensions (width/height)\n  - duration (for videos)\n\nExamples:\n  - \"Get all media from this tweet: https://x.com/user/status/123\"\n  - \"Extract video URLs from tweet 123456\"",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "media_type": {
+            "default": "all",
+            "description": "Type of media to extract: 'all', 'photos', or 'videos'",
+            "enum": [
+              "all",
+              "photos",
+              "videos"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "description": "Tweet URL or tweet ID",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "tweetsave_extract_media",
+      "title": "Extract Media URLs"
+    }
+  ]
+}
+---

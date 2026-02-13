@@ -1,0 +1,9 @@
+NAME: xbird
+URL: https://xbirdapi.up.railway.app/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: timeout
+EXIT_CODE: 124
+OUTPUT:
+
+---

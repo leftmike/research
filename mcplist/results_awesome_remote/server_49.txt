@@ -1,0 +1,9 @@
+NAME: Scorecard
+URL: https://scorecard-mcp.dare-d5b.workers.dev/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: missing endpoint: first event is "", want "endpoint"
+---

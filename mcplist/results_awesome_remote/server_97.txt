@@ -1,0 +1,85 @@
+NAME: zip1.io
+URL: https://zip1.io/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Create a shortened URL using zip1.io with optional custom alias, password protection, and max clicks limit",
+      "inputSchema": {
+        "properties": {
+          "alias": {
+            "description": "Custom alias for the short URL (optional, alphanumeric and hyphens only)",
+            "type": "string"
+          },
+          "description": {
+            "description": "Description for the short URL (optional, max 100 characters)",
+            "type": "string"
+          },
+          "max_clicks": {
+            "description": "Maximum number of clicks allowed before the link expires (optional)",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "password": {
+            "description": "Password to protect the short URL (optional)",
+            "type": "string"
+          },
+          "url": {
+            "description": "The long URL to shorten (must include http:// or https://)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "create_short_url"
+    },
+    {
+      "description": "Get detailed statistics and analytics for a shortened URL including click counts, countries, and recent activity",
+      "inputSchema": {
+        "properties": {
+          "short_code": {
+            "description": "The short code or custom alias of the URL to get stats for",
+            "type": "string"
+          }
+        },
+        "required": [
+          "short_code"
+        ],
+        "type": "object"
+      },
+      "name": "get_url_stats"
+    },
+    {
+      "description": "Check if a URL is valid and can be shortened by zip1.io",
+      "inputSchema": {
+        "properties": {
+          "url": {
+            "description": "The URL to validate",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "name": "validate_url"
+    },
+    {
+      "description": "Generate a random 6-character alphanumeric short code suggestion (the actual code will be generated when creating the URL)",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "generate_short_code"
+    }
+  ]
+}
+---

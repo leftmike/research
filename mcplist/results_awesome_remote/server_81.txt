@@ -1,0 +1,133 @@
+NAME: OpenZeppelin Stylus
+URL: https://mcp.openzeppelin.com/contracts/stylus/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Make a fungible token per the ERC-20 standard.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "burnable": {
+            "description": "Whether token holders will be able to destroy their tokens",
+            "type": "boolean"
+          },
+          "flashmint": {
+            "description": "Whether to include built-in flash loans to allow lending tokens without requiring collateral as long as they're returned in the same transaction.",
+            "type": "boolean"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "permit": {
+            "description": "Whether without paying gas, token holders will be able to allow third parties to transfer from their account.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "stylus-erc20"
+    },
+    {
+      "description": "Make a non-fungible token per the ERC-721 standard.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "burnable": {
+            "description": "Whether token holders will be able to destroy their tokens",
+            "type": "boolean"
+          },
+          "enumerable": {
+            "description": "Whether to allow on-chain enumeration of all tokens or those owned by an account. Increases gas cost of transfers.",
+            "type": "boolean"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "stylus-erc721"
+    },
+    {
+      "description": "Make a non-fungible token per the ERC-1155 standard.\n\nReturns the source code of the generated contract, formatted in a Markdown code block. Does not write to disk.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "burnable": {
+            "description": "Whether token holders will be able to destroy their tokens",
+            "type": "boolean"
+          },
+          "info": {
+            "description": "Metadata about the contract and author",
+            "properties": {
+              "license": {
+                "description": "The license used by the contract, default is \"MIT\"",
+                "type": "string"
+              },
+              "securityContact": {
+                "description": "Email where people can contact you to report security issues. Will only be visible if contract source code is verified.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the contract",
+            "type": "string"
+          },
+          "supply": {
+            "description": "Whether to keep track of total supply of tokens",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "stylus-erc1155"
+    }
+  ]
+}
+---
