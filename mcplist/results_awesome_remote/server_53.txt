@@ -1,0 +1,9 @@
+NAME: Stytch
+URL: http://mcp.stytch.dev/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: connection_blocked
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": sending "initialize": Forbidden
+---

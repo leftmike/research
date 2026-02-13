@@ -1,0 +1,260 @@
+NAME: VibeMarketing
+URL: https://vibemarketing.ninja/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Get all connected social media accounts across all platforms",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 10,
+            "description": "Maximum number of accounts to return per platform",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "platform": {
+            "default": "all",
+            "description": "Filter by platform or get all platforms",
+            "enum": [
+              "x",
+              "linkedin",
+              "all"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_accounts"
+    },
+    {
+      "description": "Get all posts across all platforms",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of posts to return",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "platform": {
+            "default": "all",
+            "description": "Filter by platform or get all platforms",
+            "enum": [
+              "x",
+              "linkedin",
+              "all"
+            ],
+            "type": "string"
+          },
+          "status": {
+            "description": "Filter by post status (use \"any\" to get all statuses)",
+            "enum": [
+              "any",
+              "draft",
+              "scheduled",
+              "published",
+              "failed"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_all_posts"
+    },
+    {
+      "description": "Schedule a new social media post",
+      "inputSchema": {
+        "properties": {
+          "accountId": {
+            "description": "Account ID to post from",
+            "format": "uuid",
+            "type": "string"
+          },
+          "content": {
+            "description": "Post content",
+            "maxLength": 10000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "mediaUrls": {
+            "description": "Optional media URLs",
+            "items": {
+              "format": "uri",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "platform": {
+            "description": "Social media platform",
+            "enum": [
+              "x",
+              "linkedin"
+            ],
+            "type": "string"
+          },
+          "scheduledFor": {
+            "description": "When to publish the post",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "platform",
+          "accountId",
+          "scheduledFor"
+        ],
+        "type": "object"
+      },
+      "name": "schedule_post"
+    },
+    {
+      "description": "Schedule multiple social media posts at once (up to 50 posts per batch). More efficient than scheduling posts individually.",
+      "inputSchema": {
+        "properties": {
+          "posts": {
+            "description": "Array of posts to schedule",
+            "items": {
+              "properties": {
+                "accountId": {
+                  "description": "Account ID to post from",
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "content": {
+                  "description": "Post content",
+                  "maxLength": 10000,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "mediaUrls": {
+                  "description": "Optional media URLs",
+                  "items": {
+                    "format": "uri",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "platform": {
+                  "description": "Social media platform",
+                  "enum": [
+                    "x",
+                    "linkedin"
+                  ],
+                  "type": "string"
+                },
+                "scheduledFor": {
+                  "description": "When to publish the post",
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "content",
+                "platform",
+                "accountId",
+                "scheduledFor"
+              ],
+              "type": "object"
+            },
+            "maxItems": 50,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "posts"
+        ],
+        "type": "object"
+      },
+      "name": "bulk_schedule_posts"
+    },
+    {
+      "description": "Get current subscription status and usage",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "name": "get_subscription_status"
+    },
+    {
+      "description": "Delete a scheduled post (cannot delete published posts)",
+      "inputSchema": {
+        "properties": {
+          "platform": {
+            "description": "Platform the post is on",
+            "enum": [
+              "x",
+              "linkedin"
+            ],
+            "type": "string"
+          },
+          "postId": {
+            "description": "ID of the post to delete",
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "postId",
+          "platform"
+        ],
+        "type": "object"
+      },
+      "name": "delete_post"
+    },
+    {
+      "description": "Update a scheduled post (cannot update published posts)",
+      "inputSchema": {
+        "properties": {
+          "content": {
+            "description": "New content for the post (optional)",
+            "type": "string"
+          },
+          "mediaUrls": {
+            "description": "New media URLs (optional)",
+            "items": {
+              "format": "uri",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "platform": {
+            "description": "Platform the post is on",
+            "enum": [
+              "x",
+              "linkedin"
+            ],
+            "type": "string"
+          },
+          "postId": {
+            "description": "ID of the post to update",
+            "format": "uuid",
+            "type": "string"
+          },
+          "scheduledFor": {
+            "description": "New scheduled time in ISO 8601 format (optional)",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "postId",
+          "platform"
+        ],
+        "type": "object"
+      },
+      "name": "update_post"
+    }
+  ]
+}
+---

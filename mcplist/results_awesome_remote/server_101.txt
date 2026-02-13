@@ -1,0 +1,228 @@
+NAME: Manifold
+URL: https://api.manifold.markets/v0/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Search for prediction markets with optional filters",
+      "inputSchema": {
+        "properties": {
+          "contractType": {
+            "description": "Question type (default: ALL)",
+            "enum": [
+              "ALL",
+              "BINARY",
+              "MULTIPLE_CHOICE",
+              "DEPENDENT_MULTIPLE_CHOICE",
+              "INDEPENDENT_MULTIPLE_CHOICE",
+              "POLL",
+              "MULTI_NUMERIC",
+              "DATE"
+            ],
+            "type": "string"
+          },
+          "creatorId": {
+            "description": "Optional. Creator (user) ID to filter by",
+            "type": "string"
+          },
+          "filter": {
+            "description": "Filter by question state. Resolved means the event has happened. (default: all)",
+            "enum": [
+              "open",
+              "resolved",
+              "all"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "description": "Max number of results (default: 100)",
+            "maximum": 1000,
+            "minimum": 1,
+            "type": "number"
+          },
+          "offset": {
+            "description": "Offset for pagination (default: 0)",
+            "type": "number"
+          },
+          "sort": {
+            "description": "Sort order (default: score)",
+            "enum": [
+              "newest",
+              "score",
+              "liquidity"
+            ],
+            "type": "string"
+          },
+          "term": {
+            "description": "Search query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "term"
+        ],
+        "type": "object"
+      },
+      "name": "search-markets",
+      "title": "Search Markets"
+    },
+    {
+      "description": "Get detailed information about a specific market",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "description": "Market ID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "get-market",
+      "title": "Get Market"
+    },
+    {
+      "description": "Get user information by username",
+      "inputSchema": {
+        "properties": {
+          "username": {
+            "description": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "type": "object"
+      },
+      "name": "get-user",
+      "title": "Get User"
+    },
+    {
+      "description": "Get bets from markets or for users with various filtering options",
+      "inputSchema": {
+        "properties": {
+          "after": {
+            "description": "Optional. Get bets after this bet ID",
+            "type": "string"
+          },
+          "afterTime": {
+            "description": "Optional. Get bets after this timestamp",
+            "type": "number"
+          },
+          "answerId": {
+            "description": "Optional. Answer ID to filter by",
+            "type": "string"
+          },
+          "before": {
+            "description": "Optional. Get bets before this bet ID",
+            "type": "string"
+          },
+          "beforeTime": {
+            "description": "Optional. Get bets before this timestamp",
+            "type": "number"
+          },
+          "contractId": {
+            "description": "Optional. Contract ID(s) to filter by",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "contractSlug": {
+            "description": "Optional. Contract slug to filter by",
+            "type": "string"
+          },
+          "filterRedemptions": {
+            "description": "Optional. Filter redemptions",
+            "type": "boolean"
+          },
+          "id": {
+            "description": "Optional. Bet ID to filter by",
+            "type": "string"
+          },
+          "kinds": {
+            "description": "Optional. Filter by bet kind",
+            "enum": [
+              "open-limit"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "description": "Optional. Number of bets to return (default: 1000)",
+            "maximum": 10000,
+            "minimum": 0,
+            "type": "number"
+          },
+          "minAmount": {
+            "description": "Optional. Minimum bet amount",
+            "minimum": 0,
+            "type": "number"
+          },
+          "order": {
+            "description": "Optional. Sort order by creation time",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          },
+          "userId": {
+            "description": "Optional. User ID to filter by",
+            "type": "string"
+          },
+          "username": {
+            "description": "Optional. Username to filter by",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "get-bets",
+      "title": "Get Bets"
+    },
+    {
+      "description": "Search for users by username or display name",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "description": "Max number of results (default: 500)",
+            "maximum": 1000,
+            "minimum": 0,
+            "type": "number"
+          },
+          "page": {
+            "description": "Page number for pagination (default: 0)",
+            "minimum": 0,
+            "type": "number"
+          },
+          "term": {
+            "description": "Search query for username or display name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "term"
+        ],
+        "type": "object"
+      },
+      "name": "search-users",
+      "title": "Search Users"
+    }
+  ]
+}
+---

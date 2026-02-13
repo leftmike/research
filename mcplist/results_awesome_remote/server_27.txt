@@ -1,0 +1,9 @@
+NAME: Kollektiv
+URL: https://mcp.thekollektiv.ai/sse
+TRANSPORT: sse
+AUTH_REQUIRED: unknown
+STATUS: connection_blocked
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: Get "https://mcp.thekollektiv.ai/sse": Forbidden
+---

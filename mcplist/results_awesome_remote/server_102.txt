@@ -1,0 +1,166 @@
+NAME: Javadocs
+URL: https://www.javadocs.dev/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "description": "Gets the latest version of a given artifact",
+      "inputSchema": {
+        "properties": {
+          "artifactId": {
+            "description": "Maven Central Artifact ID",
+            "type": "string"
+          },
+          "groupId": {
+            "description": "Maven Central Group ID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "groupId",
+          "artifactId"
+        ],
+        "title": "GroupArtifact",
+        "type": "object"
+      },
+      "name": "get_latest_version"
+    },
+    {
+      "description": "Gets a list of the contents of a javadoc jar",
+      "inputSchema": {
+        "properties": {
+          "artifactId": {
+            "description": "Maven Central Artifact ID",
+            "type": "string"
+          },
+          "groupId": {
+            "description": "Maven Central Group ID",
+            "type": "string"
+          },
+          "version": {
+            "description": "Maven Central Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "groupId",
+          "artifactId",
+          "version"
+        ],
+        "title": "GroupArtifactVersion",
+        "type": "object"
+      },
+      "name": "get_javadoc_content_list"
+    },
+    {
+      "description": "Gets the contents of a javadoc symbol. Get the symbol link from the get_javadoc_content_list tool.",
+      "inputSchema": {
+        "properties": {
+          "artifactId": {
+            "description": "Maven Central Artifact ID",
+            "type": "string"
+          },
+          "groupId": {
+            "description": "Maven Central Group ID",
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "version": {
+            "description": "Maven Central Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "groupId",
+          "artifactId",
+          "version",
+          "link"
+        ],
+        "title": "JavadocSymbol",
+        "type": "object"
+      },
+      "name": "get_javadoc_symbol_contents"
+    },
+    {
+      "description": "Gets the contents of a source file. Get the list of files from the list_source_contents tool.",
+      "inputSchema": {
+        "properties": {
+          "artifactId": {
+            "description": "Maven Central Artifact ID",
+            "type": "string"
+          },
+          "groupId": {
+            "description": "Maven Central Group ID",
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "version": {
+            "description": "Maven Central Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "groupId",
+          "artifactId",
+          "version",
+          "link"
+        ],
+        "title": "JavadocSymbol",
+        "type": "object"
+      },
+      "name": "get_source_contents"
+    },
+    {
+      "description": "Gets a list of the contents of a source jar",
+      "inputSchema": {
+        "properties": {
+          "artifactId": {
+            "description": "Maven Central Artifact ID",
+            "type": "string"
+          },
+          "groupId": {
+            "description": "Maven Central Group ID",
+            "type": "string"
+          },
+          "version": {
+            "description": "Maven Central Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "groupId",
+          "artifactId",
+          "version"
+        ],
+        "title": "GroupArtifactVersion",
+        "type": "object"
+      },
+      "name": "list_source_contents"
+    },
+    {
+      "description": "Gets the group and artifact for a given symbol/class/package",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "Symbol",
+        "type": "object"
+      },
+      "name": "symbol_to_artifact"
+    }
+  ]
+}
+---

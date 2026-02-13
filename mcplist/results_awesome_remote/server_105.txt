@@ -1,0 +1,825 @@
+NAME: SubwayInfo NYC
+URL: https://subwayinfo.nyc/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "resources": [
+    {
+      "name": "mta-widget",
+      "uri": "ui://mta/widget.html"
+    }
+  ],
+  "tools": [
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get upcoming train arrivals at a station. Accepts station ID or name (e.g., \"127\", \"Times Square\", \"14th Street\").",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "direction": {
+            "description": "N=uptown/Bronx-bound, S=downtown/Brooklyn-bound",
+            "enum": [
+              "N",
+              "S"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Max arrivals to return (default: 10, max: 100)",
+            "exclusiveMinimum": 0,
+            "maximum": 100,
+            "type": "number"
+          },
+          "line": {
+            "description": "Filter by line (e.g., \"1\", \"A\", \"F\")",
+            "type": "string"
+          },
+          "station_id": {
+            "description": "Station ID or name (e.g., \"127\", \"Times Square\", \"Penn Station\", \"14th Street\")",
+            "type": "string"
+          }
+        },
+        "required": [
+          "station_id"
+        ],
+        "type": "object"
+      },
+      "name": "mta_get_arrivals",
+      "title": "Get Train Arrivals"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get current service status for a subway line",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "line": {
+            "description": "Line identifier (e.g., \"A\", \"1\", \"L\")",
+            "type": "string"
+          }
+        },
+        "required": [
+          "line"
+        ],
+        "type": "object"
+      },
+      "name": "mta_get_line_status",
+      "title": "Get Line Status"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "List active service alerts across the subway system. By default only shows currently active alerts.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "active_only": {
+            "default": true,
+            "description": "Only show currently active alerts (default: true). Set false to include future planned work.",
+            "type": "boolean"
+          },
+          "alert_type": {
+            "description": "Filter by type (Delays, Planned Work, etc.)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max alerts to return (default: 20, max: 50)",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "number"
+          },
+          "line": {
+            "description": "Filter by specific line",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "mta_list_alerts",
+      "title": "List Service Alerts"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Search for stations by name or line",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "default": 10,
+            "description": "Max results to return (default: 10, max: 100)",
+            "exclusiveMinimum": 0,
+            "maximum": 100,
+            "type": "number"
+          },
+          "line": {
+            "description": "Filter by line (e.g., \"A\", \"1\")",
+            "type": "string"
+          },
+          "query": {
+            "description": "Station name search (e.g., \"Times Square\", \"34 St\")",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "mta_search_stations",
+      "title": "Search Stations"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Get detailed information about a specific station. Accepts station ID or name.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "station_id": {
+            "description": "Station ID or name (e.g., \"127\", \"Times Square\", \"Penn Station\")",
+            "type": "string"
+          }
+        },
+        "required": [
+          "station_id"
+        ],
+        "type": "object"
+      },
+      "name": "mta_get_station_info",
+      "title": "Get Station Info"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get route suggestions between two stations. Accepts station IDs or names.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "destination_station_id": {
+            "description": "Destination station ID or name (e.g., \"R17\", \"Grand Central\", \"Union Square\")",
+            "type": "string"
+          },
+          "origin_station_id": {
+            "description": "Starting station ID or name (e.g., \"127\", \"Times Square\", \"Penn Station\")",
+            "type": "string"
+          }
+        },
+        "required": [
+          "origin_station_id",
+          "destination_station_id"
+        ],
+        "type": "object"
+      },
+      "name": "mta_plan_trip",
+      "title": "Plan Trip"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get active bus service alerts. Optionally filter by route or severity.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "route": {
+            "description": "Filter by route (e.g., \"M1\", \"BX12\", \"Q32\")",
+            "type": "string"
+          },
+          "severity": {
+            "description": "Filter by severity level",
+            "enum": [
+              "info",
+              "warning",
+              "severe"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "bus_list_alerts",
+      "title": "List Bus Alerts"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get upcoming bus arrivals at a stop. Accepts stop ID or name (e.g., \"402940\", \"5 Av/W 42 St\").",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "direction": {
+            "description": "Filter by direction",
+            "enum": [
+              "inbound",
+              "outbound",
+              "northbound",
+              "southbound",
+              "eastbound",
+              "westbound"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Max arrivals to return (default: 10, max: 50)",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "number"
+          },
+          "route": {
+            "description": "Filter by route (e.g., \"M1\", \"M15\", \"BX12\")",
+            "type": "string"
+          },
+          "stop_id": {
+            "description": "Stop ID or name (e.g., \"402940\", \"5 Av/W 42 St\", \"Times Square\")",
+            "type": "string"
+          }
+        },
+        "required": [
+          "stop_id"
+        ],
+        "type": "object"
+      },
+      "name": "bus_get_arrivals",
+      "title": "Get Bus Arrivals"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get detailed information about a bus route including type, boroughs served, and description.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "route_id": {
+            "description": "Route ID or name (e.g., \"M1\", \"BX12\", \"Q32\", \"M15-SBS\")",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route_id"
+        ],
+        "type": "object"
+      },
+      "name": "bus_get_route_info",
+      "title": "Get Bus Route Info"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Search bus stops by name, route, or borough. Use this to find stop IDs for bus_get_arrivals.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "borough": {
+            "description": "Filter by borough (Manhattan, Brooklyn, Queens, Bronx, Staten Island)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max results to return (default: 20, max: 50)",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "number"
+          },
+          "query": {
+            "description": "Search by stop name (e.g., \"5 Av/W 42 St\", \"Times Square\")",
+            "type": "string"
+          },
+          "route": {
+            "description": "Filter by route (e.g., \"M1\", \"BX12\", \"Q32\")",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "bus_search_stops",
+      "title": "Search Bus Stops"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get upcoming ferry arrivals at a landing. Accepts landing ID or name (e.g., \"PIER11\", \"Wall Street\", \"DUMBO\").",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "direction": {
+            "description": "inbound=toward Manhattan, outbound=away from Manhattan",
+            "enum": [
+              "inbound",
+              "outbound"
+            ],
+            "type": "string"
+          },
+          "landing_id": {
+            "description": "Landing ID or name (e.g., \"PIER11\", \"Wall Street\", \"DUMBO\", \"E34\")",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Max arrivals to return (default: 10, max: 50)",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "number"
+          },
+          "route": {
+            "description": "Filter by route (e.g., \"ER\" for East River, \"SB\" for South Brooklyn)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "landing_id"
+        ],
+        "type": "object"
+      },
+      "name": "ferry_get_arrivals",
+      "title": "Get Ferry Arrivals"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get active ferry service alerts. Optionally filter by route.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "route": {
+            "description": "Filter by route (e.g., \"ER\" for East River, \"RW\" for Rockaway)",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "ferry_list_alerts",
+      "title": "List Ferry Alerts"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Search ferry landings by name, route, or borough. Use this to find landing IDs for ferry_get_arrivals.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "borough": {
+            "description": "Filter by borough (Manhattan, Brooklyn, Queens, Bronx, Staten Island)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max results to return (default: 20)",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "number"
+          },
+          "query": {
+            "description": "Search by landing name (e.g., \"Wall Street\", \"DUMBO\")",
+            "type": "string"
+          },
+          "route": {
+            "description": "Filter by route (e.g., \"ER\" for East River, \"SB\" for South Brooklyn)",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "ferry_search_landings",
+      "title": "Search Ferry Landings"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "List all NYC Ferry routes with their landings. Optionally get details for a specific route.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "route": {
+            "description": "Get details for a specific route (e.g., \"ER\" for East River)",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "ferry_get_routes",
+      "title": "Get Ferry Routes"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get bike and dock availability at a Citibike station. Accepts station ID or name (e.g., \"Broadway \u0026 W 48 St\", \"E 40 St \u0026 Park Ave\").",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "station_id": {
+            "description": "Station ID or name (e.g., \"Broadway \u0026 W 48 St\", \"E 40 St \u0026 Park Ave\")",
+            "type": "string"
+          }
+        },
+        "required": [
+          "station_id"
+        ],
+        "type": "object"
+      },
+      "name": "bike_get_station_status",
+      "title": "Get Citibike Station Status"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Search for Citibike stations by name, borough, or availability. Returns station availability and capacity.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "borough": {
+            "description": "Filter by borough (Manhattan, Brooklyn, Queens, Bronx)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Max results to return (default: 10, max: 50)",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "number"
+          },
+          "min_bikes": {
+            "description": "Minimum bikes available",
+            "minimum": 0,
+            "type": "number"
+          },
+          "min_docks": {
+            "description": "Minimum docks available",
+            "minimum": 0,
+            "type": "number"
+          },
+          "query": {
+            "description": "Search by station name (e.g., \"Times Square\", \"Broadway\")",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "bike_search_stations",
+      "title": "Search Citibike Stations"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get an overview of Citibike availability by borough. Shows total bikes, docks, and station availability.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "borough": {
+            "description": "Get summary for specific borough (Manhattan, Brooklyn, Queens, Bronx). Omit for all boroughs.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "bike_get_availability_summary",
+      "title": "Get Citibike Availability Summary"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get upcoming LIRR or Metro-North departures at a station. Accepts station ID or name (e.g., \"PENN\", \"Grand Central\").",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "branch": {
+            "description": "Filter by branch (e.g., \"Babylon\", \"Hudson\", \"New Haven\")",
+            "type": "string"
+          },
+          "direction": {
+            "description": "Filter by direction",
+            "enum": [
+              "inbound",
+              "outbound",
+              "eastbound",
+              "westbound"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Max departures to return (default: 10, max: 50)",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "number"
+          },
+          "station_id": {
+            "description": "Station ID or name (e.g., \"PENN\", \"Jamaica\", \"Grand Central\")",
+            "type": "string"
+          },
+          "system": {
+            "description": "Filter by rail system (LIRR or MNR)",
+            "enum": [
+              "LIRR",
+              "MNR"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "station_id"
+        ],
+        "type": "object"
+      },
+      "name": "rail_get_departures",
+      "title": "Get Rail Departures"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get active LIRR and Metro-North service alerts. Optionally filter by system, branch, or severity.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "branch": {
+            "description": "Filter by branch (e.g., \"Babylon\", \"Hudson\", \"New Haven\")",
+            "type": "string"
+          },
+          "severity": {
+            "description": "Filter by severity level",
+            "enum": [
+              "info",
+              "warning",
+              "severe"
+            ],
+            "type": "string"
+          },
+          "system": {
+            "description": "Filter by rail system",
+            "enum": [
+              "LIRR",
+              "MNR"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "rail_list_alerts",
+      "title": "List Rail Alerts"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Search LIRR and Metro-North stations by name, system, or branch. Use this to find station IDs for rail_get_departures.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "branch": {
+            "description": "Filter by branch (e.g., \"Babylon\", \"Hudson\", \"New Haven\")",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max results to return (default: 20, max: 50)",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "type": "number"
+          },
+          "query": {
+            "description": "Search by station name (e.g., \"Jamaica\", \"125th Street\", \"Grand Central\")",
+            "type": "string"
+          },
+          "system": {
+            "description": "Filter by rail system",
+            "enum": [
+              "LIRR",
+              "MNR"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "rail_search_stations",
+      "title": "Search Rail Stations"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get detailed information about a LIRR or Metro-North station including accessibility, platforms, parking, and zone.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "station_id": {
+            "description": "Station ID or name (e.g., \"Jamaica\", \"125th Street\", \"Grand Central\")",
+            "type": "string"
+          }
+        },
+        "required": [
+          "station_id"
+        ],
+        "type": "object"
+      },
+      "name": "rail_get_station_info",
+      "title": "Get Rail Station Info"
+    },
+    {
+      "_meta": {
+        "openai/outputTemplate": "ui://mta/widget.html",
+        "openai/widgetAccessible": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Ask natural language questions about NYC transit (subway, bus, ferry, rail, bike). Examples: \"When is the next 1 train at Times Square?\", \"How do I get to JFK?\", \"Are there any Citibikes near Grand Central?\"",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "properties": {
+          "location": {
+            "description": "Your current location for context (e.g., \"Times Square\", \"40.758, -73.986\")",
+            "type": "string"
+          },
+          "query": {
+            "description": "Your question about NYC transit",
+            "maxLength": 500,
+            "minLength": 3,
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "name": "transit_ask",
+      "title": "Ask About NYC Transit"
+    }
+  ]
+}
+---

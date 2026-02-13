@@ -1,0 +1,52 @@
+NAME: Find-A-Domain
+URL: https://api.findadomain.dev/mcp
+TRANSPORT: streamable-http
+AUTH_REQUIRED: no
+STATUS: success
+EXIT_CODE: 0
+OUTPUT:
+{
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "description": "Check if a domain is available for a specific TLD",
+      "inputSchema": {
+        "properties": {
+          "name": {
+            "description": "Domain name to check (without TLD)",
+            "type": "string"
+          },
+          "tld": {
+            "description": "Top-level domain (e.g., com, org, net)",
+            "type": "string"
+          },
+          "whois": {
+            "description": "Whether to perform WHOIS check",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "tld"
+        ],
+        "type": "object"
+      },
+      "name": "check_domain"
+    },
+    {
+      "annotations": {
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "description": "Get a list of all available top-level domains (TLDs)",
+      "inputSchema": {
+        "type": "object"
+      },
+      "name": "list_tlds"
+    }
+  ]
+}
+---
