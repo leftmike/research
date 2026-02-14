@@ -1,0 +1,519 @@
+Analysis of Unclassified MCP Server Errors
+===========================================
+
+The test scripts classify gmcpt results into: success, auth_required, connection_blocked,
+connection_failed, and timeout. Anything else falls into "error" (status=error). This
+document analyzes every error-status result across all three sources.
+
+Total errors: 201
+  awesome_remote (awesome-remote-mcp-servers): 29 out of 106 servers
+  mcpservers_org (mcpservers.org):             14 out of  24 servers
+  pulsemcp (pulsemcp.com):                    158 out of 477 servers
+
+The errors fall into the following categories.
+
+==============================================================================
+1. SSE Missing Endpoint (103 servers)
+==============================================================================
+
+Error message:
+  missing endpoint: first event is "", want "endpoint"
+
+Sources: 23 awesome_remote, 12 mcpservers_org, 68 pulsemcp
+
+All 103 servers use SSE transport. The server accepts the HTTP connection and
+begins an SSE stream, but the first event is empty instead of the expected
+"endpoint" event that tells the client where to send JSON-RPC messages. This is
+the behavior of OAuth-protected SSE servers: they start an SSE stream but
+withhold the endpoint until the client authenticates. Since gmcpt does not
+perform OAuth, the connection stalls.
+
+PLAN.txt already documents this as a known issue: "Many SSE servers that require
+OAuth return a 'missing endpoint' error from gmcpt rather than a clear 401."
+
+These should be reclassified as auth_required (probable OAuth).
+
+Affected servers include major vendors: Linear, Notion, Atlassian, Sentry,
+PayPal, Square, Neon, Intercom, monday.com, Cloudflare (Workers, Observability,
+AutoRAG, DNS Analytics, Browser Rendering, Radar, Audit Logs, Dex Analysis, CASB,
+AI Gateway, Logpush), Asana, Wix, Webflow, Globalping, DeepWiki (SSE), Plaid,
+Prisma, PostHog, DevCycle, Twelve Labs, Enigma, and many others.
+
+==============================================================================
+2. SSE Malformed Stream: Auth Messages (6 servers)
+==============================================================================
+
+Error messages:
+  missing endpoint: malformed line in SSE stream: "Missing Authorization header"
+  missing endpoint: malformed line in SSE stream: "Bearer token is required"
+  missing endpoint: malformed line in SSE stream: "Missing or invalid access token"
+  missing endpoint: malformed line in SSE stream: "Missing access token"
+  missing endpoint: malformed line in SSE stream: "Missing API_BASE_URL header"
+  missing endpoint: malformed line in SSE stream: "Bearer auth with NWC connection
+    secret or nwc query parameter not provided"
+
+Sources: 6 pulsemcp
+
+These servers respond to the SSE connection request with a plaintext auth error
+instead of a proper HTTP 401 status code. The error is written directly into
+the SSE stream as a non-SSE-formatted line, which gmcpt reports as "malformed
+line in SSE stream".
+
+These should be reclassified as auth_required. The servers are: GoMarble,
+ThoughtSpot (SSE endpoint), Vapi, Trade It, Opsera, and Alby Bitcoin Payments
+(SSE endpoint).
+
+==============================================================================
+3. SSE Malformed Stream: "Not Found" (7 servers)
+==============================================================================
+
+Error message:
+  missing endpoint: malformed line in SSE stream: "Not Found"
+
+Sources: 1 awesome_remote (Semgrep), 1 mcpservers_org (Semgrep), 5 pulsemcp
+
+The server returns a "Not Found" plaintext response instead of an SSE stream.
+This means the SSE endpoint path is wrong, the server has been decommissioned,
+or the path requires authentication to even resolve. In the case of Semgrep, the
+/sse endpoint likely no longer exists (it may have migrated to streamable-http).
+
+These should be reclassified as connection_failed (endpoint not found).
+
+==============================================================================
+4. SSE Malformed Stream: "404 page not found" (1 server)
+==============================================================================
+
+Error message:
+  missing endpoint: malformed line in SSE stream: "404 page not found"
+
+Sources: 1 pulsemcp (Helm)
+
+Same as category 3 but with a different "not found" message format. Should be
+reclassified as connection_failed.
+
+==============================================================================
+5. SSE Malformed Stream: HTML Pages (9 servers)
+==============================================================================
+
+Error messages:
+  missing endpoint: malformed line in SSE stream: "<!DOCTYPE html>"
+  missing endpoint: malformed line in SSE stream: "<!doctype html>"
+  missing endpoint: malformed line in SSE stream: "<html lang=\"en\">"
+  missing endpoint: malformed line in SSE stream: "<html>"
+  missing endpoint: malformed line in SSE stream: "        <script>"
+  missing endpoint: malformed line in SSE stream: "                    <html>"
+
+Sources: 9 pulsemcp
+
+The server returns an HTML page instead of an SSE stream. This typically means
+the URL points to a web page (marketing site, documentation, or login page)
+rather than an active SSE endpoint. The URL may be wrong, or the server may
+redirect unauthenticated SSE requests to a web page.
+
+Affected: Poku Labs, OECD (SSE), Kolada (SSE), OneContext, Proofly, svelte-llm
+(SSE), mcpx, Excel to JSON (SSE), 1MCPServer, Foqal, Stumpy.
+
+These should be reclassified as connection_failed (wrong endpoint / not an MCP
+server at this URL).
+
+==============================================================================
+6. SSE Malformed Stream: JSON Error Responses (2 servers)
+==============================================================================
+
+Error message:
+  missing endpoint: malformed line in SSE stream: "[\"Error\",\"InternalError\"]"
+
+Sources: 1 mcpservers_org (Ahrefs SSE), 1 pulsemcp (Ahrefs)
+
+Ahrefs returns a JSON error array instead of an SSE stream. This is a
+server-side error (internal error). Should be reclassified as connection_failed
+(server error).
+
+==============================================================================
+7. SSE Malformed Stream: Other Messages (5 servers)
+==============================================================================
+
+Error messages:
+  malformed line in SSE stream: "no available server"          (Supabase SSE)
+  malformed line in SSE stream: "Internal Server Error"        (Bitte AI)
+  malformed line in SSE stream: "An unexpected error..."       (jooq-mcp)
+  malformed line in SSE stream: "{"                            (textarttools, ONLYOFFICE)
+
+Sources: 5 pulsemcp
+
+Miscellaneous plaintext or JSON responses in the SSE stream. "no available
+server" and "Internal Server Error" are server-side failures. The "{" cases are
+likely JSON error bodies. The "An unexpected error" case is a generic server
+crash.
+
+Supabase and Bitte AI: server-side error (reclassify as connection_failed).
+textarttools and ONLYOFFICE: truncated JSON body, likely an error response
+(reclassify as connection_failed).
+jooq-mcp: transient server error (reclassify as connection_failed).
+
+==============================================================================
+8. SSE Wrong Event Name (1 server)
+==============================================================================
+
+Error message:
+  missing endpoint: first event is "connect", want "endpoint"
+
+Sources: 1 pulsemcp (Tableall)
+
+The server sends an SSE event named "connect" instead of the expected "endpoint"
+event. This server is using a non-standard or older version of the MCP SSE
+protocol. Should be reclassified as error (protocol mismatch).
+
+==============================================================================
+9. HTTP 503 Service Unavailable (10 servers)
+==============================================================================
+
+Error message:
+  calling "initialize": rejected by transport: sending "initialize": Service Unavailable
+
+Sources: 2 awesome_remote, 8 pulsemcp
+
+All use streamable-http transport. The server returns HTTP 503, meaning it is
+temporarily down, overloaded, or in maintenance. Affected: OpenMesh, CustomGPT.ai,
+Generect, OSINT, Paperclip, Gemini, OECD, Kolada, SCB, Outrun.
+
+These should be reclassified as connection_failed (server unavailable).
+
+==============================================================================
+10. HTTP 400 Bad Request on Initialize (8 servers)
+==============================================================================
+
+Error message:
+  calling "initialize": sending "initialize": Bad Request
+
+Sources: 8 pulsemcp
+
+The server rejects the initialize request with HTTP 400. This can mean the
+server requires specific headers (e.g., an API key or auth token in a custom
+header), expects a different content type, or the MCP protocol version is
+incompatible.
+
+Affected: ThoughtSpot (streamable-http), KnowSync, Alby Bitcoin Payments
+(streamable-http), DAM Butler, Sophtron, DevPlan, Sideways (streamable-http),
+Nomad Stays.
+
+Likely auth_required for most of these (the server demands credentials but
+returns 400 instead of 401).
+
+==============================================================================
+11. HTTP 405 Method Not Allowed (5 servers)
+==============================================================================
+
+Error message:
+  calling "initialize": sending "initialize": Method Not Allowed
+
+Sources: 5 pulsemcp
+
+The server rejects POST requests to the MCP endpoint. This means either:
+(a) the URL is wrong (it's a GET-only endpoint or webpage), or (b) the server
+does not support streamable-http at this URL.
+
+Affected: Excel to JSON, Stytch, BioContext, hmr (promplate), AI-Archive.
+
+These should be reclassified as connection_failed (endpoint does not support
+MCP streamable-http).
+
+==============================================================================
+12. Session Not Found (10 servers)
+==============================================================================
+
+Error message:
+  calling "initialize": sending "initialize": failed to connect (session ID: ):
+    session not found
+
+Sources: 10 pulsemcp
+
+The server expects a pre-existing session (possibly established through a
+separate auth flow or session setup endpoint). gmcpt sends an initialize request
+without a session ID and the server rejects it. This pattern is common with
+servers that require authentication to establish a session first.
+
+Affected: CoinAPI (Real-time Rates, Indexes), Contextual AI, Currency
+Conversion, Finlab AI, HeyOnCall, Blooio, Kogna, Partd MCP, WordPress REST API.
+
+These should be reclassified as auth_required (session/auth required).
+
+==============================================================================
+13. Method Not Found: prompts/list (10 servers)
+==============================================================================
+
+Error messages:
+  listing prompts: calling "prompts/list": Method not found: prompts/list   (9)
+  listing prompts: calling "prompts/list": Method not found                 (1)
+
+Sources: 10 pulsemcp
+
+These servers initialize successfully and respond to tools/list, but fail when
+gmcpt calls prompts/list. The MCP spec makes prompts/list optional -- servers
+that don't support prompts are not required to implement this method. gmcpt
+calls it because it was invoked with -prompts, and treats the "method not found"
+response as a fatal error.
+
+Affected: 8 WordPress.org Trac instances, GoPluto AI, Outris Identity MCP.
+
+This is a gmcpt bug / limitation: it should treat "method not found" for
+prompts/list (and resources/list) as an empty list, not a fatal error. These
+servers are actually working. They should be reclassified as success.
+
+==============================================================================
+14. Method Not Found: resources/list (1 server)
+==============================================================================
+
+Error message:
+  listing resources: calling "resources/list": Method not found
+
+Sources: 1 pulsemcp (UIDriver)
+
+Same issue as category 13 but for resources/list instead of prompts/list. The
+server works but doesn't implement the optional resources/list method. Should be
+reclassified as success.
+
+==============================================================================
+15. Bad Request After Initialize: notifications/initialized (2 servers)
+==============================================================================
+
+Error message:
+  sending "notifications/initialized": Bad Request
+
+Sources: 1 awesome_remote (WebZum), 1 pulsemcp (gas-library-hub)
+
+The server accepts the initialize request but rejects the subsequent
+"notifications/initialized" notification with HTTP 400. This is a server-side
+protocol implementation bug: the server doesn't handle the standard MCP
+notifications/initialized message.
+
+Should be reclassified as error (server protocol bug).
+
+==============================================================================
+16. Bad Request After Initialize: tools/list (1 server)
+==============================================================================
+
+Error message:
+  listing tools: calling "tools/list": sending "tools/list": Bad Request
+
+Sources: 1 pulsemcp (lilo-property)
+
+The server initializes but rejects the tools/list call with HTTP 400. Another
+server-side protocol implementation bug. Should be reclassified as error
+(server protocol bug).
+
+==============================================================================
+17. HTTP 502 Bad Gateway (2 servers)
+==============================================================================
+
+Error message:
+  calling "initialize": rejected by transport: sending "initialize": Bad Gateway
+
+Sources: 2 pulsemcp (svelte-llm streamable-http, La Palma 24)
+
+The reverse proxy or load balancer in front of the server returns 502. The
+backend server is unreachable or crashing. Should be reclassified as
+connection_failed.
+
+==============================================================================
+18. HTTP 402 Payment Required (1 server)
+==============================================================================
+
+Error message:
+  calling "initialize": sending "initialize": Payment Required
+
+Sources: 1 awesome_remote (Dappier)
+
+The server requires a paid subscription. This is a form of auth: the caller
+must provide valid credentials tied to a paid account. Could be reclassified
+as auth_required.
+
+==============================================================================
+19. HTTP 406 Not Acceptable (2 servers)
+==============================================================================
+
+Error messages:
+  calling "initialize": sending "initialize": Not Acceptable   (Context Awesome)
+  calling "initialize": failed to write: 406 Not Acceptable    (Gralio)
+
+Sources: 1 awesome_remote, 1 pulsemcp
+
+The server rejects the request's Accept or Content-Type headers. This is likely
+a protocol mismatch: the server may not support the content negotiation that
+gmcpt uses for streamable-http. Could be reclassified as connection_failed
+(protocol mismatch).
+
+==============================================================================
+20. HTTP 421 Misdirected Request (1 server)
+==============================================================================
+
+Error message:
+  calling "initialize": sending "initialize": Misdirected Request
+
+Sources: 1 pulsemcp (Galileo)
+
+The server returns HTTP 421 which means the request was directed to a server
+that is not able to produce a response for the given URI. Likely a TLS/SNI or
+reverse proxy configuration issue. Should be reclassified as connection_failed.
+
+==============================================================================
+21. HTTP 500 Internal Server Error (1 server)
+==============================================================================
+
+Error message:
+  calling "initialize": rejected by transport: sending "initialize":
+    Internal Server Error
+
+Sources: 1 pulsemcp (Hub Tools)
+
+The server crashes during initialization. Should be reclassified as
+connection_failed (server error).
+
+==============================================================================
+22. HTTP 501 Not Implemented (1 server)
+==============================================================================
+
+Error message:
+  standalone SSE stream: Not Implemented
+
+Sources: 1 pulsemcp (Build Vault)
+
+The server responds to the streamable-http endpoint with 501 Not Implemented.
+This means the server is deployed but the MCP functionality is not yet
+implemented. Should be reclassified as connection_failed.
+
+==============================================================================
+23. HTTP 404 Not Found via SSE write (1 server)
+==============================================================================
+
+Error message:
+  calling "initialize": failed to write: 404 Not Found
+
+Sources: 1 pulsemcp (Sideways SSE)
+
+After connecting to the SSE stream, the client tried to POST to the returned
+endpoint but got a 404. The endpoint URL may be wrong or the server may be
+misconfigured. Should be reclassified as connection_failed.
+
+==============================================================================
+24. Empty HTTP Error Body (3 servers)
+==============================================================================
+
+Error message:
+  calling "initialize": sending "initialize":
+  (message ends with colon and no further text)
+
+Sources: 3 pulsemcp (Rostro, HowRisky, Meminal)
+
+The server returns an HTTP error with an empty body. gmcpt formats this as the
+HTTP method path followed by nothing. The server is responding with an error
+status code but no message. Should be reclassified as connection_failed
+(server returned empty error).
+
+==============================================================================
+25. Invalid JSON-RPC Version Tag (2 servers)
+==============================================================================
+
+Error messages:
+  listing tools: calling "tools/list": sending "tools/list": failed to decode
+    response: invalid message version tag ""; expected "2.0"
+  listing prompts: connection closed: calling "prompts/list": client is closing:
+    standalone SSE stream: failed to decode event: invalid message version tag
+    ""; expected "2.0"
+
+Sources: 2 pulsemcp (SEO LinkMap, Exotel)
+
+The server initializes but sends JSON-RPC responses without the required
+"jsonrpc": "2.0" field (or with an empty string). This is a server-side bug in
+JSON-RPC protocol compliance. Should be reclassified as error (server protocol
+bug).
+
+==============================================================================
+26. Invalid JSON Unmarshaling (1 server)
+==============================================================================
+
+Error message:
+  calling "initialize": json: cannot unmarshal bool into Go struct field
+    ServerCapabilities.capabilities.tools of type mcp.ToolCapabilities
+
+Sources: 1 pulsemcp (echo3D)
+
+The server sends a capabilities object where the "tools" field is a boolean
+(e.g., true) instead of the expected object (e.g., {"listChanged": false}).
+This is a server-side bug: the server's MCP implementation uses the wrong
+type for the tools capability. Should be reclassified as error (server
+protocol bug).
+
+==============================================================================
+27. Failed to Decode: Invalid Request (2 servers)
+==============================================================================
+
+Error messages:
+  calling "initialize": sending "initialize": failed to decode response:
+    invalid request                                     (Web-To-MCP)
+  calling "initialize": sending "initialize": failed to decode event:
+    invalid request                                     (Idealift)
+
+Sources: 2 pulsemcp
+
+The server responds to initialize with something that cannot be decoded as a
+valid JSON-RPC response. Should be reclassified as error (server protocol bug).
+
+==============================================================================
+28. Template Variable in URL (1 server)
+==============================================================================
+
+Error message:
+  Get "https://<YOUR_PINECONE_ASSISTANT_HOST>/mcp/assistants/
+    %3CYOUR_ASSISTANT_NAME%3E/sse": Bad Request
+
+Sources: 1 pulsemcp (Pinecone Assistant)
+
+The URL contains template variables (<YOUR_PINECONE_ASSISTANT_HOST>) that were
+not filtered out. The pulsemcp test script filters URLs containing "{" but this
+URL uses "<>" angle bracket templates instead. Should be reclassified as error
+(untestable URL -- template variables).
+
+==============================================================================
+SUMMARY TABLE
+==============================================================================
+
+Category                              Count  Recommended Reclassification
+------------------------------------  -----  ----------------------------------------
+1.  SSE missing endpoint (empty)       103   auth_required (probable OAuth)
+2.  SSE auth message in stream           6   auth_required
+3.  SSE "Not Found"                      7   connection_failed
+4.  SSE "404 page not found"             1   connection_failed
+5.  SSE HTML pages                       9   connection_failed
+6.  SSE JSON error (Ahrefs)              2   connection_failed
+7.  SSE other messages                   5   connection_failed
+8.  SSE wrong event name                 1   error (protocol mismatch)
+9.  HTTP 503 Service Unavailable        10   connection_failed
+10. HTTP 400 Bad Request (init)          8   auth_required (probable)
+11. HTTP 405 Method Not Allowed          5   connection_failed
+12. Session not found                   10   auth_required
+13. Method not found: prompts/list      10   success (gmcpt limitation)
+14. Method not found: resources/list     1   success (gmcpt limitation)
+15. Bad Request: notifications           2   error (server protocol bug)
+16. Bad Request: tools/list              1   error (server protocol bug)
+17. HTTP 502 Bad Gateway                 2   connection_failed
+18. HTTP 402 Payment Required            1   auth_required
+19. HTTP 406 Not Acceptable              2   connection_failed
+20. HTTP 421 Misdirected Request         1   connection_failed
+21. HTTP 500 Internal Server Error       1   connection_failed
+22. HTTP 501 Not Implemented             1   connection_failed
+23. HTTP 404 via SSE write               1   connection_failed
+24. Empty HTTP error body                3   connection_failed
+25. Invalid JSON-RPC version             2   error (server protocol bug)
+26. Invalid JSON unmarshal               1   error (server protocol bug)
+27. Failed to decode response            2   error (server protocol bug)
+28. Template variable URL                1   error (untestable)
+                                       ---
+                                       201
+
+If reclassified per the recommendations above:
+
+  auth_required:    128  (103 + 6 + 10 + 8 + 1)
+  connection_failed: 50  (7 + 1 + 9 + 2 + 5 + 10 + 5 + 2 + 2 + 1 + 1 + 1 + 1 + 3)
+  success:           11  (10 + 1)
+  error:             12  (1 + 2 + 1 + 2 + 1 + 2 + 1 + 1 + 1)
