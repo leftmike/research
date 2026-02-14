@@ -1,0 +1,818 @@
+MCP Servers - Successfully Queried by gmcpt
+Servers from which gmcpt was able to list tools, prompts, and resources.
+Sources: mcpservers.org, awesome-remote-mcp-servers, pulsemcp.com, registry.modelcontextprotocol.io
+==============================================================================
+
+SUMMARY
+  Total unique server endpoints: 151
+
+==============================================================================
+
+Server: ToolBartender
+  URL: http://mcp.toolbartender.dev/mcp
+  Transport: streamable-http
+  Tools: tb_parse_goal, tb_plan_create, tb_plan_validate, tb_plan_render_prompt, tb_plan_explain
+
+Server: CurrentTimeUTC
+  URL: https://a.currenttimeutc.com/mcp
+  Transport: streamable-http
+  Tools: get_utc_time, convert_time, list_timezones
+  Resources: Timezone List
+
+Server: com.biodnd/agent-fin
+  URL: https://agent-fin.biodnd.com/sse
+  Transport: sse
+  Tools: equity_fundamental_cash, equity_fundamental_dividends, equity_price_historical, equity_price_quote, equity_fundamental_income, equity_fundamental_balance, equity_fundamental_metrics, equity_calendar_ipo, equity_compare_groups, equity_compare_company_facts, equity_estimates_consensus, equity_discovery_losers, equity_discovery_active, equity_discovery_undervalued_large_caps, equity_discovery_undervalued_growth, equity_discovery_aggressive_small_caps, equity_discovery_growth_tech, equity_profile, equity_screener, equity_search, equity_ownership_share_statistics, equity_shorts_fails_to_deliver, equity_shorts_short_interest, equity_shorts_short_volume
+
+Server: com.biodnd/agent-ip
+  URL: https://agent-ip.biodnd.com/sse
+  Transport: sse
+  Tools: search_patents
+
+Server: com.biodnd/agent-press
+  URL: https://agent-press.biodnd.com/sse
+  Transport: sse
+  Tools: news_company
+
+Server: ProSearch (Tencent)
+  URL: https://agent.html5.qq.com/prosearch/sse
+  Transport: sse
+  Tools: prosearch
+
+Server: ProSearch (Tencent)
+  URL: https://agent.html5.qq.com/prosearch_vip/sse
+  Transport: sse
+  Tools: prosearch_vip
+
+Server: io.github.wowcool/agentsafe
+  URL: https://agentsafe.locationledger.com/mcp
+  Transport: streamable-http
+  Tools: check_email_safety
+
+Server: AIStatusDashboard
+  URL: https://aistatusdashboard.com/mcp
+  Transport: streamable-http
+  Tools: status.get_summary, status.get_health_matrix, incidents.search, incidents.get, metrics.query, recommendations.get_fallback_plan, policy.generate
+  Prompts: prompt://diagnose_outage, prompt://choose_fallback_plan, prompt://draft_customer_update, prompt://generate_postmortem_outline
+  Resources: Providers, Provider surfaces, Provider regions, Provider models, Incident, Metric series, MCP Quickstart
+
+Server: Find-A-Domain
+  URL: https://api.findadomain.dev/mcp
+  Transport: streamable-http
+  Tools: check_domain, list_tlds
+
+Server: io.github.Pink707Legendary/stock-moves-explained
+  URL: https://api.justhappened.wtf/mcp
+  Transport: streamable-http
+  Tools: stock-moves-explained
+
+Server: Manifold
+  URL: https://api.manifold.markets/v0/mcp
+  Transport: streamable-http
+  Tools: search-markets, get-market, get-user, get-bets, search-users
+
+Server: trade.neglect/mcp-server
+  URL: https://api.neglect.trade/mcp
+  Transport: streamable-http
+  Tools: get-token-metadata, get-token-marketdata, get-token-holders, get-trending-tokens, search-tokens, get-latest-graduated-tokens, get-token-ath, get-tokens-by-deployer, get-token-history, get-token-performance, get-token-price, get-wallet-holdings, get-wallet-token-pnl, get-token-history-range, get-mcp-config, get-token-audit, get-api-health, get-pair-audit, get-token-audit-multiple, get-pair-audit-multiple
+
+Server: io.github.james-robson/push-realm
+  URL: https://api.pushrealm.com/mcp
+  Transport: streamable-http
+  Tools: search_learnings, submit_learning, confirm_learning, reject_learning, vote_learning, report_learning, link_learnings, unlink_learnings, get_learning_relations, add_comment
+
+Server: com.safe-mcp/google-analytics-unofficial
+  URL: https://api.safe-mcp.com/mcp
+  Transport: streamable-http
+  Tools: ga4_get_account, stats_significance_test, ga4_get_data, ga4_run_funnel_report
+
+Server: io.github.elestirelbilinc-sketch/vap-e
+  URL: https://api.vapagent.com/mcp
+  Transport: streamable-http
+  Tools: generate_image, get_task, list_tasks, check_balance, estimate_cost, generate_video, estimate_video_cost, generate_music, estimate_music_cost, inpaint, ai_edit, background_remove, upscale, video_trim, video_merge, get_operation
+  Resources: Account Information, Account Balance, Current Pricing, Recent Tasks
+
+Server: Vivideo
+  URL: https://api.vivideo.ai/mcp
+  Transport: streamable-http
+  Tools: text_to_video, check_video_status, list_files, get_user_info
+
+Server: com.exoquery/mcp-server
+  URL: https://backend.exoquery.com/mcp
+  Transport: streamable-http
+  Tools: getExoQueryDocs, getExoQueryDocsMulti, listExoQueryDocs, runRawSql, validateAndRunExoquery, validateExoquery
+
+Server: com.simplecohortllc.bible/shepherd-bible-api
+  URL: https://bible.simplecohortllc.com/mcp
+  Transport: streamable-http
+  Tools: bible_translations, bible_books, bible_chapter, bible_verse, bible_search
+
+Server: BlogCaster MCP
+  URL: https://blogcaster-mcp.rrpb2580.workers.dev/mcp
+  Transport: streamable-http
+  Tools: getLoginLink, whoami, logout, publishPost, updatePost, getBlogs, deletePost
+
+Server: io.github.Airpote/avalanche-docs
+  URL: https://build.avax.network/api/mcp
+  Transport: streamable-http
+  Tools: avalanche_docs_search, avalanche_docs_fetch, avalanche_docs_list_sections
+  Resources: Documentation Index, Academy Index, Integrations Index
+
+Server: Skybridge Capitals Example
+  URL: https://capitals.skybridge.tech
+  Transport: sse
+  Tools: explore-capitals
+  Resources: explore-capitals, explore-capitals
+
+Server: Shopify Catalog
+  URL: https://catalog.shopify.com/api/mcp
+  Transport: streamable-http
+  Tools: get_cart, update_cart, create_cart
+
+Server: io.github.BalajSaleem/criterion
+  URL: https://criterion.life/api/mcp
+  Transport: streamable-http
+  Tools: search_quran, search_hadith, get_verse
+
+Server: Currency Conversion
+  URL: https://currency-mcp.wesbos.com/sse
+  Transport: sse
+  Tools: convert_currency, get_latest_rates, get_currencies, get_historical_rates
+
+Server: com.defaultverifier/settlement-witness
+  URL: https://defaultverifier.com/mcp
+  Transport: streamable-http
+  Tools: settlement_witness
+
+Server: com.dillilabs.deva/dilli-email-validation-api-server
+  URL: https://deva.dillilabs.com/mcp
+  Transport: streamable-http
+  Tools: validate_email
+
+Server: dev.continue/docs
+  URL: https://docs.continue.dev/mcp
+  Transport: streamable-http
+  Tools: SearchContinue
+
+Server: com.cloudflare.mcp/mcp
+  URL: https://docs.mcp.cloudflare.com/mcp
+  Transport: streamable-http
+  Tools: search_cloudflare_documentation, migrate_pages_to_workers_guide
+  Prompts: workers-prompt-full
+
+Server: Cloudflare Docs
+  URL: https://docs.mcp.cloudflare.com/sse
+  Transport: sse
+  Tools: search_cloudflare_documentation, migrate_pages_to_workers_guide
+  Prompts: workers-prompt-full
+
+Server: com.medusajs/medusa-mcp
+  URL: https://docs.medusajs.com/mcp
+  Transport: streamable-http
+  Tools: ask_medusa_question
+
+Server: io.github.Vonage/vonage-documentation-mcp
+  URL: https://documentation-mcp.vonage.dev/mcp
+  Transport: streamable-http
+  Tools: vonage_docs_search, vonage_code_generator, vonage_api_reference, vonage_troubleshooter, vonage_tutorial_finder, vonage_sdk_info, vonage_use_case_examples
+
+Server: xyz.dreamtap/mcp
+  URL: https://dreamtap.xyz/mcp
+  Transport: streamable-http
+  Tools: get_inspirations
+
+Server: io.github.bookyo/nsfw-image-detector
+  URL: https://elysiatools.com/mcp/sse?toolId=nsfw-image-detector
+  Transport: sse
+  Tools: nsfw-image-detector
+
+Server: xportalx
+  URL: https://fflpdljiuruqdnewvwkk.supabase.co/functions/v1/mcp
+  Transport: streamable-http
+  Tools: fetch_api, fetch_page, fetch_pdf, extract, crawl, markdown_convert, dexscreener_token, coinbase_price, verify_agent, coinbase_facilitator, x402_proxy, x402_proxy_price, erc8004_register, failure_reason, mcp_pricing, solve_captcha, zora_wallet, swap, create_wallet, fund_wallet, fund_wallet_eth, withdraw_wallet, send_tokens, get_wallet_balance, x402_send, nansen_smart_money_holdings, nansen_smart_money_netflows, nansen_token_god_mode, nansen_wallet_profiler
+
+Server: Flux (AO & Arweave)
+  URL: https://flux-2esw.onrender.com/sse
+  Transport: sse
+  Tools: spawn, send-message-to-process, apm-install, load-token-blueprint, create-sqlite-based-handler, run-lua-in-process, load-blueprint, load-local-blueprint, load-official-blueprint, list-available-handlers, create-handler, run-handler-using-handler-name
+
+Server: Fortuna
+  URL: https://fortuna-mcp.siliconsociety.org/sse
+  Transport: sse
+  Tools: fortuna_info, dice, random_range, random_float
+
+Server: GitMCP
+  URL: https://gitmcp.io/docs
+  Transport: streamable-http
+  Tools: match_common_libs_owner_repo_mapping, fetch_generic_documentation, search_generic_documentation, search_generic_code, fetch_generic_url_content
+
+Server: Hugging Face
+  URL: https://hf.co/mcp
+  Transport: streamable-http
+  Tools: hf_whoami, space_search, model_search, paper_search, dataset_search, hub_repo_details, hf_doc_search, hf_doc_fetch, gr1_z_image_turbo_generate
+  Prompts: User Summary, Paper Summary, Model Details, Dataset Details
+
+Server: Hive Intelligence
+  URL: https://hiveintelligence.xyz/mcp
+  Transport: streamable-http
+  Tools: get_api_endpoint_schema, invoke_api_endpoint, get_market_and_price_endpoints, get_onchain_dex_pool_endpoints, get_portfolio_wallet_endpoints, get_token_contract_endpoints, get_defi_protocol_endpoints, get_nft_analytics_endpoints, get_security_risk_endpoints, get_network_infrastructure_endpoints, get_search_discovery_endpoints, get_social_sentiment_endpoints, get_web_search_endpoints
+
+Server: Hugging Face
+  URL: https://huggingface.co/mcp
+  Transport: streamable-http
+  Tools: hf_whoami, space_search, model_search, paper_search, dataset_search, hub_repo_details, hf_doc_search, hf_doc_fetch, gr1_z_image_turbo_generate
+  Prompts: User Summary, Paper Summary, Model Details, Dataset Details
+
+Server: io.github.stayce/icd-mcp
+  URL: https://icd-mcp-server.staycek.workers.dev/mcp
+  Transport: streamable-http
+  Tools: icd
+
+Server: me.in-context/portfolio
+  URL: https://in-context.me/mcp
+  Transport: streamable-http
+  Tools: view_portfolio, booking_get_slots, booking_create
+  Resources: in-context.me Portfolio
+
+Server: md.install/try
+  URL: https://install.md/mcp/try
+  Transport: streamable-http
+  Tools: create_session, list_projects, get_project_details, create_project, update_project, delete_project, add_tool, update_tool, toggle_tool, delete_tool, reorder_steps, add_data_source, delete_data_source
+  Prompts: create_project_guide
+
+Server: JxBrowser MCP Server
+  URL: https://jxbrowser.mcp.teamdev.com/
+  Transport: streamable-http
+  Tools: get-quickstart-guide, ask-jxbrowser-question
+
+Server: io.github.alright-alright/konstruct
+  URL: https://konstruct-api.aerynw.workers.dev/mcp
+  Transport: streamable-http
+  Tools: konstruct_query, konstruct_advisory, konstruct_explore, konstruct_concept, konstruct_concepts, konstruct_edges, konstruct_frameworks, konstruct_stats, konstruct_load_pack
+
+Server: io.github.topofgames/la-ei-romania
+  URL: https://laei.ro/mcp
+  Transport: streamable-http
+  Tools: cauta-anunturi, detalii-anunt, obtine-categorii, obtine-locatii, statistici-anunturi, explorare-orase
+  Prompts: welcome-user
+  Resources: Example Log File, Users List, User: Alice, User: Bob, User: Charlie
+
+Server: com.microsoft/microsoft-learn-mcp
+  URL: https://learn.microsoft.com/api/mcp
+  Transport: streamable-http
+  Tools: microsoft_docs_search, microsoft_code_sample_search, microsoft_docs_fetch
+
+Server: Lenny's Podcast
+  URL: https://lenny-mcp.onrender.com/mcp
+  Transport: streamable-http
+  Tools: search_transcripts, get_episode, list_episodes
+
+Server: LunarCrush
+  URL: https://lunarcrush.ai/mcp
+  Transport: streamable-http
+  Tools: List, Cryptocurrencies, Stocks, Topic, Topic_Time_Series, Topic_Posts, Creator, Post, Search, Fetch, Authentication
+  Resources: LunarCrush API Docs
+
+Server: LunarCrush
+  URL: https://lunarcrush.ai/sse
+  Transport: sse
+  Tools: List, Cryptocurrencies, Stocks, Topic, Topic_Time_Series, Topic_Posts, Creator, Post, Search, Fetch, Authentication
+  Resources: LunarCrush API Docs
+
+Server: Math MCP Learning
+  URL: https://math-mcp.fastmcp.app/mcp
+  Transport: streamable-http
+  Tools: calculate, statistics, compound_interest, convert_units, save_calculation, load_variable, plot_function, create_histogram, plot_line_chart, plot_scatter_chart, plot_box_plot, plot_financial_line, matrix_multiply, matrix_transpose, matrix_determinant, matrix_inverse, matrix_eigenvalues
+  Prompts: math_tutor, formula_explainer
+  Resources: simple_test, list_available_functions, get_calculation_history, get_workspace
+
+Server: Agentic Commerce
+  URL: https://mcp-agentic-commerce.netlify.app/mcp
+  Transport: streamable-http
+  Tools: find_restaurants, detect_seller_square, view_restaurant, order_takeout, view_menu, view_receipt
+
+Server: com.qovery/mcp-server
+  URL: https://mcp-api-ai.qovery.com/mcp?token={qovery_token}
+  Transport: streamable-http
+  Tools: devops_copilot_chat
+
+Server: Appwrite Docs
+  URL: https://mcp-for-docs.appwrite.io
+  Transport: streamable-http
+  Tools: getDocsPage, getFeatureExamples, getTableOfContents, listFeatures, search
+
+Server: FinFeedAPI FX Historical
+  URL: https://mcp-historical.fx.finfeedapi.com/mcp
+  Transport: streamable-http
+  Tools: List_all_assets, List_all_assets_by_asset_ID, List_all_asset_icons, Get_specific_rate, Get_all_current_rates, Timeseries_periods, Timeseries_data
+
+Server: FinFeedAPI Stock API
+  URL: https://mcp-historical.stock.finfeedapi.com/mcp
+  Transport: streamable-http
+  Tools: Get_Admin_Messages, List_of_exchanges, Get_Level_3_Order_Book, Get_Level_2_Price_Level_Book, Get_Level_1_Quotes, List_of_symbols_for_the_exchange, Get_System_Events, List_all_periods, Historical_data, Historical_data_by_exchange, Latest_data, Get_Trades
+
+Server: FinFeedAPI FX Realtime
+  URL: https://mcp-realtime.fx.finfeedapi.com/mcp
+  Transport: streamable-http
+  Tools: List_all_assets, List_all_assets_by_asset_ID, List_all_asset_icons, Get_specific_rate, Get_all_current_rates
+
+Server: so.jinko/jinko-mcp
+  URL: https://mcp-remote.jinko.so/mcp
+  Transport: streamable-http
+  Tools: search-hotels, load-more-hotels, get-filtering-metadata, get-hotel-details, book-hotel
+  Resources: Hotel Search Results, More Hotel Results
+
+Server: com.monikaskorykow/workshops
+  URL: https://mcp-workshops.jani-828.workers.dev/sse
+  Transport: sse
+  Tools: list_workshops, get_workshop_details, get_promotions, search_workshops
+
+Server: io.github.Servicedsi/123elec-mcp
+  URL: https://mcp.123elec.com/mcp
+  Transport: streamable-http
+  Tools: search_products, get_product, check_stock, get_categories, get_recommendations
+
+Server: com.teamwork/mcp
+  URL: https://mcp.ai.teamwork.com
+  Transport: streamable-http
+  Tools: twdesk-create_company, twdesk-create_customer, twdesk-create_file, twdesk-create_message, twdesk-create_priority, twdesk-create_status, twdesk-create_tag, twdesk-create_ticket, twdesk-create_type, twdesk-get_company, twdesk-get_customer, twdesk-get_inbox, twdesk-get_priority, twdesk-get_status, twdesk-get_tag, twdesk-get_ticket, twdesk-get_type, twdesk-get_user, twdesk-list_companies, twdesk-list_customers, twdesk-list_inboxes, twdesk-list_priorities, twdesk-list_statuses, twdesk-list_tags, twdesk-list_tickets, twdesk-list_types, twdesk-list_users, twdesk-search_tickets, twdesk-update_company, twdesk-update_customer, twdesk-update_priority, twdesk-update_status, twdesk-update_tag, twdesk-update_ticket, twdesk-update_type, twprojects-add_project_member, twprojects-complete_timer, twprojects-create_comment, twprojects-create_company, twprojects-create_jobrole, twprojects-create_milestone, twprojects-create_notebook, twprojects-create_project, twprojects-create_project_category, twprojects-create_skill, twprojects-create_tag, twprojects-create_task, twprojects-create_tasklist, twprojects-create_team, twprojects-create_timelog, twprojects-create_timer, twprojects-create_user, twprojects-get_comment, twprojects-get_company, twprojects-get_jobrole, twprojects-get_milestone, twprojects-get_notebook, twprojects-get_project, twprojects-get_project_category, twprojects-get_skill, twprojects-get_tag, twprojects-get_task, twprojects-get_tasklist, twprojects-get_team, twprojects-get_timelog, twprojects-get_timer, twprojects-get_user, twprojects-get_user_me, twprojects-list_activities, twprojects-list_activities_by_project, twprojects-list_comments, twprojects-list_comments_by_file_version, twprojects-list_comments_by_milestone, twprojects-list_comments_by_notebook, twprojects-list_comments_by_task, twprojects-list_companies, twprojects-list_industries, twprojects-list_jobroles, twprojects-list_milestones, twprojects-list_milestones_by_project, twprojects-list_notebooks, twprojects-list_project_categories, twprojects-list_projects, twprojects-list_skills, twprojects-list_tags, twprojects-list_tasklists, twprojects-list_tasklists_by_project, twprojects-list_tasks, twprojects-list_tasks_by_project, twprojects-list_tasks_by_tasklist, twprojects-list_teams, twprojects-list_teams_by_company, twprojects-list_teams_by_project, twprojects-list_timelogs, twprojects-list_timelogs_by_project, twprojects-list_timelogs_by_task, twprojects-list_timers, twprojects-list_users, twprojects-list_users_by_project, twprojects-pause_timer, twprojects-resume_timer, twprojects-update_comment, twprojects-update_company, twprojects-update_jobrole, twprojects-update_milestone, twprojects-update_notebook, twprojects-update_project, twprojects-update_project_category, twprojects-update_skill, twprojects-update_tag, twprojects-update_task, twprojects-update_tasklist, twprojects-update_team, twprojects-update_timelog, twprojects-update_timer, twprojects-update_user, twprojects-users_workload
+  Prompts: twprojects_task_skills_and_roles
+
+Server: CoinGecko
+  URL: https://mcp.api.coingecko.com/sse
+  Transport: sse
+  Tools: get_asset_platforms, get_id_coins, get_list_coins_categories, get_new_coins_list, get_coins_markets, get_coins_top_gainers_losers, get_coins_contract, get_range_contract_coins_market_chart, get_coins_history, get_range_coins_market_chart, get_range_coins_ohlc, get_id_exchanges, get_list_exchanges, get_exchanges_tickers, get_range_exchanges_volume_chart, get_global, get_id_nfts, get_list_nfts, get_markets_nfts, get_nfts_market_chart, get_onchain_categories, get_pools_onchain_categories, get_onchain_networks, get_networks_onchain_new_pools, get_network_networks_onchain_new_pools, get_networks_onchain_dexes, get_addresses_pools_networks_onchain_multi, get_pools_networks_onchain_info, get_timeframe_pools_networks_onchain_ohlcv, get_pools_networks_onchain_trades, get_addresses_tokens_networks_onchain_multi, get_tokens_networks_onchain_info, get_tokens_networks_onchain_top_holders, get_tokens_networks_onchain_holders_chart, get_timeframe_tokens_networks_onchain_ohlcv, get_tokens_networks_onchain_pools, get_tokens_networks_onchain_trades, get_tokens_networks_onchain_top_traders, get_pools_onchain_megafilter, get_pools_onchain_trending_search, get_search_onchain_pools, get_addresses_networks_simple_onchain_token_price, get_holding_chart_public_treasury, get_transaction_history_public_treasury, get_search, get_search_trending, get_simple_price, get_simple_supported_vs_currencies, get_id_simple_token_price, search_docs
+
+Server: com.apple-rag/mcp-server
+  URL: https://mcp.apple-rag.com
+  Transport: streamable-http
+  Tools: search, fetch
+
+Server: org.aquaview/aquaview-mcp
+  URL: https://mcp.aquaview.org/sse
+  Transport: sse
+  Tools: search_datasets, get_item, list_collections, aggregate
+  Resources: get_geo_hints
+
+Server: com.blockscout/mcp-server
+  URL: https://mcp.blockscout.com/mcp
+  Transport: streamable-http
+  Tools: __unlock_blockchain_analysis__, get_block_info, get_block_number, get_address_by_ens_name, get_transactions_by_address, get_token_transfers_by_address, lookup_token_by_symbol, get_contract_abi, inspect_contract_code, read_contract, get_address_info, get_tokens_by_address, nft_tokens_by_address, get_transaction_info, get_chains_list, direct_api_call
+
+Server: Company Ethics Information (Boikot)
+  URL: https://mcp.boikot.xyz/mcp
+  Transport: streamable-http
+  Tools: lookup_company_information
+
+Server: ScamShield
+  URL: https://mcp.brokerchooser.com/servers/mcp
+  Transport: streamable-http
+  Tools: is-broker-scam-tool
+
+Server: Cortex
+  URL: https://mcp.cortex.io/mcp
+  Transport: streamable-http
+  Tools: listAllEntities, listEntityDescriptors, listDependenciesForEntity, getDependency, getEntityDetails, getCustomDataForEntity, getCustomDataForEntityByKey, listCustomEventsForEntity, getCustomEventForEntityByUuid, getDeploysForEntity, getCurrentOncallForEntity, getEntityDescriptor, listEntityDestinationsForRelationshipType, listEntitySourcesForRelationshipType, getCustomMetricData, queryPointInTimeMetrics, listMetricDefinitions, listInitiatives, getInitiative, getMyWorkspace, listRelationshipTypes, getRelationshipTypeDetails, listEntityRelationships, listScorecards, getScorecard, getScorecardNextStepsForEntity, listScorecardScores, getTeamDetails, query_docs, get_more_tools
+
+Server: io.cycloid.mcp/server
+  URL: https://mcp.cycloid.io/mcp
+  Transport: streamable-http
+  Tools: CYCLOID_EVENT_LIST, CYCLOID_BLUEPRINT_STACK_CREATE, CYCLOID_BLUEPRINT_LIST, CYCLOID_STACKFORMS_VALIDATE, CYCLOID_CATALOG_REPO_LIST, CYCLOID_PIPELINE_LIST
+  Resources: get_events_resource, get_blueprints_resource, get_service_catalogs_resource, get_pipelines_resource
+
+Server: DeepRecall - Product Safety Intelligence
+  URL: https://mcp.deeprecall.io/mcp
+  Transport: streamable-http
+  Tools: search_recalls, get_data_sources
+  Resources: get_info
+
+Server: com.dexpaprika/dexpaprika
+  URL: https://mcp.dexpaprika.com/sse
+  Transport: sse
+  Tools: getNetworks, getCapabilities, getNetworkDexes, getNetworkPools, getDexPools, getPoolDetails, getPoolOHLCV, getPoolTransactions, getTokenDetails, getTokenPools, getTokenMultiPrices, search, getStats
+
+Server: com.dexpaprika/dexpaprika
+  URL: https://mcp.dexpaprika.com/streamable-http
+  Transport: streamable-http
+  Tools: getNetworks, getCapabilities, getNetworkDexes, getNetworkPools, getDexPools, getPoolDetails, getPoolOHLCV, getPoolTransactions, getTokenDetails, getTokenPools, getTokenMultiPrices, search, getStats
+
+Server: Astro Docs
+  URL: https://mcp.docs.astro.build/mcp
+  Transport: streamable-http
+  Tools: search_astro_docs
+
+Server: Exa Search
+  URL: https://mcp.exa.ai/mcp
+  Transport: streamable-http
+  Tools: web_search_exa, company_research_exa, get_code_context_exa
+  Prompts: web_search_help, code_search_help
+  Resources: tools_list
+
+Server: Ferryhopper
+  URL: https://mcp.ferryhopper.com/mcp
+  Transport: streamable-http
+  Tools: get_ports, get_direct_connections_for_ports, search_trips
+
+Server: com.findyourfivepm/mcp-server
+  URL: https://mcp.findyourfivepm.com
+  Transport: streamable-http
+  Tools: find_random_fivepm_city, get_city_info
+
+Server: Jinko MCP
+  URL: https://mcp.gojinko.com
+  Transport: sse
+  Tools: find_destination, find_flight
+  Resources: destination-carousel, flight-carousel
+
+Server: com.sonatype/dependency-management-mcp-server
+  URL: https://mcp.guide.sonatype.com/mcp
+  Transport: streamable-http
+  Tools: getComponentVersion, getLatestComponentVersion, getRecommendedComponentVersions
+
+Server: com.homevisto/mcp-server
+  URL: https://mcp.homevisto.com/mcp
+  Transport: streamable-http
+  Tools: list_missions, get_mission, search_missions, get_nearby_missions, get_mission_stats
+
+Server: com.infobip/mcp
+  URL: https://mcp.infobip.com/search
+  Transport: streamable-http
+  Tools: explore
+
+Server: com.infobip/mcp
+  URL: https://mcp.infobip.com/search/sse
+  Transport: sse
+  Tools: explore
+
+Server: Invideo
+  URL: https://mcp.invideo.io/sse
+  Transport: sse
+  Tools: generate-video-from-script
+
+Server: IO Aerospace MCP Server
+  URL: https://mcp.io-aerospace.org
+  Transport: streamable-http
+  Tools: degrees_to_radians, meters_to_miles, get_deep_space_station_planetodetic_coordinates, find_occulting_constraint, parsec_to_meters, arcseconds_to_radians, convert_state_vector_to_equinoctial_elements, find_distance_constraint, get_ephemeris_as_state_vectors, kilometers_to_meters, miles_to_meters, feet_to_meters, meters_to_light_years, get_horizontal_coordinates, arcseconds_to_degrees, convert_hours_to_degrees, radians_to_degrees, radians_to_arcseconds, astronomical_units_to_meters, find_coordinate_constraint, meters_to_feet, degrees_to_arcseconds, get_celestial_body_properties, convert_state_vector_to_the_given_frame, light_years_to_meters, convert_keplerian_elements_to_state_vector, meters_to_parsec, meters_to_kilometers, convert_degrees_to_hours, convert_state_vector_to_keplerian_elements, convert_equinoctial_elements_to_state_vector, meters_to_astronomical_units, current_date_time, convert_date_time, get_dss_frame, get_deep_space_station_state_vector, convert_state_vector_to_equatorial_coordinates
+
+Server: travel.kismet/mcp-server
+  URL: https://mcp.kismet.travel/mcp
+  Transport: streamable-http
+  Tools: semantic_search_hotels, get_availability_rate_inventory, compare_hotel_prices, search, fetch
+
+Server: travel.kismet/mcp-server
+  URL: https://mcp.kismet.travel/sse
+  Transport: sse
+  Tools: semantic_search_hotels, get_availability_rate_inventory, compare_hotel_prices, search, fetch
+
+Server: Kiwi Flight Search
+  URL: https://mcp.kiwi.com
+  Transport: streamable-http
+  Tools: search-flight, feedback-to-devs
+
+Server: Ludo AI Game Assets
+  URL: https://mcp.ludo.ai/mcp
+  Transport: streamable-http
+  Tools: validateApiKeyEndpoint, createImage, generateWithStyle, editImage, animateSprite, generatePose, transferMotion, createVideo, removeBackground, create3DModel, createSoundEffect, createMusic, createVoice, createSpeech, createSpeechPreset
+
+Server: com.mermaidchart/mermaid-mcp
+  URL: https://mcp.mermaidchart.com/sse
+  Transport: sse
+  Tools: validate_and_render_mermaid_diagram, get_diagram_title, get_diagram_summary, list_tools
+
+Server: io.github.n-3inc/reinfo
+  URL: https://mcp.n-3.ai/mcp?tools=get-time,reinfolib-real-estate-price,reinfolib-city-list
+  Transport: streamable-http
+  Tools: get-time, reinfolib-real-estate-price, reinfolib-city-list
+
+Server: io.github.n-3inc/kkj
+  URL: https://mcp.n-3.ai/mcp?tools=reinfolib-real-estate-price,reinfolib-city-list
+  Transport: streamable-http
+  Tools: reinfolib-real-estate-price, reinfolib-city-list
+
+Server: OpenZeppelin Cairo
+  URL: https://mcp.openzeppelin.com/contracts/cairo/mcp
+  Transport: streamable-http
+  Tools: cairo-erc20, cairo-erc721, cairo-erc1155, cairo-account, cairo-multisig, cairo-governor, cairo-vesting, cairo-custom
+
+Server: OpenZeppelin Solidity
+  URL: https://mcp.openzeppelin.com/contracts/solidity/mcp
+  Transport: streamable-http
+  Tools: solidity-erc20, solidity-erc721, solidity-erc1155, solidity-stablecoin, solidity-rwa, solidity-account, solidity-governor, solidity-custom
+
+Server: OpenZeppelin Stellar
+  URL: https://mcp.openzeppelin.com/contracts/stellar/mcp
+  Transport: streamable-http
+  Tools: stellar-fungible, stellar-stablecoin, stellar-non-fungible
+
+Server: OpenZeppelin Stylus
+  URL: https://mcp.openzeppelin.com/contracts/stylus/mcp
+  Transport: streamable-http
+  Tools: stylus-erc20, stylus-erc721, stylus-erc1155
+
+Server: com.partstable/partstable
+  URL: https://mcp.partstable.com/mcp
+  Transport: streamable-http
+  Tools: normalize-pn, validate-pn, search-parts, get-substitutes, get-vendor-trust, score-listing, fetch-page, verify-pn-oem, get-price-history
+  Prompts: research-rfq, validate-batch, price-check
+
+Server: io.github.PayRam/payram-helper-mcp
+  URL: https://mcp.payram.com/mcp
+  Transport: streamable-http
+  Tools: test_payram_connection, generate_payment_sdk_snippet, generate_payment_http_snippet, generate_payment_status_snippet, generate_payment_route_snippet, snippet_nextjs_payment_route, snippet_express_payment_route, snippet_fastapi_payment_route, snippet_laravel_payment_route, snippet_go_payment_handler, snippet_spring_payment_controller, generate_payout_sdk_snippet, generate_payout_status_snippet, generate_referral_sdk_snippet, generate_referral_validation_snippet, generate_referral_status_snippet, generate_referral_route_snippet, generate_webhook_handler, generate_webhook_event_router, generate_mock_webhook_event, assess_payram_project, explain_payram_basics, get_payram_links, explain_payment_flow, explain_payram_concepts, explain_referrals_basics, explain_referral_flow, get_referral_dashboard_guide, prepare_payram_test, get_payram_doc_by_id, list_payram_docs, generate_env_template, generate_setup_checklist, suggest_file_structure, scaffold_payram_app
+
+Server: com.pearl.mcp/pearl-api-mcp-server
+  URL: https://mcp.pearl.com/mcp
+  Transport: streamable-http
+  Tools: askPearlAi, askPearlExpert, askExpert, verifyAnswer
+  Prompts: ask-legal-question, ask-medical-question
+  Resources: General LLM guidelines
+
+Server: com.pearl.mcp/pearl-api-mcp-server
+  URL: https://mcp.pearl.com/sse
+  Transport: sse
+  Tools: askPearlAi, askPearlExpert, askExpert, verifyAnswer
+  Prompts: ask-legal-question, ask-medical-question
+  Resources: General LLM guidelines
+
+Server: Peek.com
+  URL: https://mcp.peek.com
+  Transport: streamable-http
+  Tools: experience_availability, experience_details, list_tags, render_activity_tiles, search_experiences, search_regions
+
+Server: LangChain Hub
+  URL: https://mcp.prompts.mcpcentral.io/mcp
+  Transport: streamable-http
+  Tools: list_prompts, get_prompt, get_prompt_statistics, search_prompts, like_prompt, unlike_prompt, get_prompt_versions, get_user_prompts, get_popular_prompts, get_prompt_content, compare_prompts, validate_prompt, get_prompt_completions
+  Prompts: analyze-prompt, compare-prompts, improve-prompt, adapt-prompt, generate-prompt, test-prompt
+  Resources: Popular Prompts Collection, Recent Prompts Collection, Trending Prompts Collection
+
+Server: Raindrop
+  URL: https://mcp.raindrop.run/mcp
+  Transport: streamable-http
+  Tools: document-search, next-page, document-query, chunk-search, summarize-page, put-object, get-object, delete-object, list-objects, create-smartbucket, get-annotation, put-annotation, list-annotations, put-memory, get-memory, search-memory, delete-memory, summarize-memory, start-session, end-session, rehydrate-session, refresh-session, search-episodic-memory, put-procedure, get-procedure, delete-procedure, list-procedures, search-procedures, put-semantic-memory, get-semantic-memory, search-semantic-memory, delete-semantic-memory, login, set_team, prd_step, get_prd, prisma_step, documentation_step, code_step, tests_step, deployment_step, endpoint_test_step, update_app_step, update_prd_step, reattach_to_session, configure_raindrop, update_conversation_memory, mcp_end_step, submit_bug
+
+Server: Raindrop
+  URL: https://mcp.raindrop.run/sse
+  Transport: sse
+  Tools: document-search, next-page, document-query, chunk-search, summarize-page, put-object, get-object, delete-object, list-objects, create-smartbucket, get-annotation, put-annotation, list-annotations, put-memory, get-memory, search-memory, delete-memory, summarize-memory, start-session, end-session, rehydrate-session, refresh-session, search-episodic-memory, put-procedure, get-procedure, delete-procedure, list-procedures, search-procedures, put-semantic-memory, get-semantic-memory, search-semantic-memory, delete-semantic-memory, login, set_team, prd_step, get_prd, prisma_step, documentation_step, code_step, tests_step, deployment_step, endpoint_test_step, update_app_step, update_prd_step, reattach_to_session, configure_raindrop, update_conversation_memory, mcp_end_step, submit_bug
+
+Server: Remote MCP
+  URL: https://mcp.remote-mcp.com
+  Transport: streamable-http
+  Tools: ListRemoteMCPServers
+
+Server: com.ritzademo/acme-todo
+  URL: https://mcp.ritzademo.com/mcp/ritza-rzx-our91
+  Transport: streamable-http
+  Tools: todo_api_replace_todo, todo_api_update_todo, todo_api_delete_todo, todo_api_get_todo, todo_api_create_todo, todo_api_add_secret_todo, todo_api_list_todos, todo_api_read_secret_todos
+
+Server: FinFeedAPI SEC API
+  URL: https://mcp.sec.finfeedapi.com/mcp
+  Transport: streamable-http
+  Tools: Download_file_from_SEC_EDGAR_archive, Extract_and_classify_SEC_filing_content, Extract_specific_item_content_from_SEC_filing, Query_SEC_filing_metadata, Full_text_search_of_SEC_filing_documents, Convert_XBRL_data_to_JSON_format
+
+Server: ai.shawndurrani/mcp-merchant
+  URL: https://mcp.shawndurrani.ai/sse
+  Transport: sse
+  Tools: health, searchProducts, listProducts, forceRefresh
+
+Server: com.skiplagged/mcp
+  URL: https://mcp.skiplagged.com/mcp
+  Transport: streamable-http
+  Tools: sk_flights_search, sk_destinations_anywhere, sk_flex_departure_calendar, sk_flex_return_calendar, sk_hotels_search, sk_cars_search, sk_hotel_details, sk_faq_search, sk_resolve_location, sk_resolve_iata
+  Prompts: sk_plan_trip
+  Resources: sk_flights_search, sk_hotels_search, sk_flex_departure_calendar
+
+Server: ai.specproof/specproof-mcp
+  URL: https://mcp.specproof.ai/
+  Transport: streamable-http
+  Tools: search_specifications, semantic_search, get_document_content, list_documents, get_database_stats, search_contributions, get_contribution_content, semantic_search_contributions
+
+Server: Svelte MCP
+  URL: https://mcp.svelte.dev/mcp
+  Transport: streamable-http
+  Tools: get-documentation, list-sections, playground-link, svelte-autofixer
+  Prompts: svelte-task
+  Resources: playground-link-ui, cli/overview, cli/faq, cli/sv-create, cli/sv-add, cli/sv-check, cli/sv-migrate, cli/devtools-json, cli/drizzle, cli/eslint, cli/better-auth, cli/mcp, cli/mdsvex, cli/paraglide, cli/playwright, cli/prettier, cli/storybook, cli/sveltekit-adapter, cli/tailwind, cli/vitest, cli/add-on, kit/introduction, kit/creating-a-project, kit/project-types, kit/project-structure, kit/web-standards, kit/routing, kit/load, kit/form-actions, kit/page-options, kit/state-management, kit/remote-functions, kit/building-your-app, kit/adapters, kit/adapter-auto, kit/adapter-node, kit/adapter-static, kit/single-page-apps, kit/adapter-cloudflare, kit/adapter-cloudflare-workers, kit/adapter-netlify, kit/adapter-vercel, kit/writing-adapters, kit/advanced-routing, kit/hooks, kit/errors, kit/link-options, kit/service-workers, kit/server-only-modules, kit/snapshots, kit/shallow-routing, kit/observability, kit/packaging, kit/auth, kit/performance, kit/icons, kit/images, kit/accessibility, kit/seo, kit/faq, kit/integrations, kit/debugging, kit/migrating-to-sveltekit-2, kit/migrating, kit/additional-resources, kit/glossary, kit/@sveltejs-kit, kit/@sveltejs-kit-hooks, kit/@sveltejs-kit-node-polyfills, kit/@sveltejs-kit-node, kit/@sveltejs-kit-vite, kit/$app-environment, kit/$app-forms, kit/$app-navigation, kit/$app-paths, kit/$app-server, kit/$app-state, kit/$app-stores, kit/$app-types, kit/$env-dynamic-private, kit/$env-dynamic-public, kit/$env-static-private, kit/$env-static-public, kit/$lib, kit/$service-worker, kit/configuration, kit/cli, kit/types, mcp/overview, mcp/local-setup, mcp/remote-setup, mcp/tools, mcp/resources, mcp/prompts, mcp/plugin, mcp/subagent, mcp/opencode-plugin, mcp/opencode-subagent, mcp/skills, svelte/overview, svelte/getting-started, svelte/svelte-files, svelte/svelte-js-files, svelte/what-are-runes, svelte/$state, svelte/$derived, svelte/$effect, svelte/$props, svelte/$bindable, svelte/$inspect, svelte/$host, svelte/basic-markup, svelte/if, svelte/each, svelte/key, svelte/await, svelte/snippet, svelte/@render, svelte/@html, svelte/@attach, svelte/@const, svelte/@debug, svelte/bind, svelte/use, svelte/transition, svelte/in-and-out, svelte/animate, svelte/style, svelte/class, svelte/await-expressions, svelte/scoped-styles, svelte/global-styles, svelte/custom-properties, svelte/nested-style-elements, svelte/svelte-boundary, svelte/svelte-window, svelte/svelte-document, svelte/svelte-body, svelte/svelte-head, svelte/svelte-element, svelte/svelte-options, svelte/stores, svelte/context, svelte/lifecycle-hooks, svelte/imperative-component-api, svelte/hydratable, svelte/testing, svelte/typescript, svelte/custom-elements, svelte/v4-migration-guide, svelte/v5-migration-guide, svelte/faq, svelte/svelte, svelte/svelte-action, svelte/svelte-animate, svelte/svelte-attachments, svelte/svelte-compiler, svelte/svelte-easing, svelte/svelte-events, svelte/svelte-legacy, svelte/svelte-motion, svelte/svelte-reactivity-window, svelte/svelte-reactivity, svelte/svelte-server, svelte/svelte-store, svelte/svelte-transition, svelte/compiler-errors, svelte/compiler-warnings, svelte/runtime-errors, svelte/runtime-warnings, svelte/legacy-overview, svelte/legacy-let, svelte/legacy-reactive-assignments, svelte/legacy-export-let, svelte/legacy-$$props-and-$$restProps, svelte/legacy-on, svelte/legacy-slots, svelte/legacy-$$slots, svelte/legacy-svelte-fragment, svelte/legacy-svelte-component, svelte/legacy-svelte-self, svelte/legacy-component-api
+
+Server: io.github.timescale/pg-aiguide
+  URL: https://mcp.tigerdata.com/docs
+  Transport: streamable-http
+  Tools: search_docs, view_skill
+  Prompts: design-postgres-tables, find-hypertable-candidates, migrate-postgres-tables-to-hypertables, pgvector-semantic-search, postgres-hybrid-text-search, setup-timescaledb-hypertables
+
+Server: io.github.mcpcentral-io/mcp-time
+  URL: https://mcp.time.mcpcentral.io
+  Transport: streamable-http
+  Tools: current_time, relative_time, days_in_month, get_timestamp, convert_time, get_week_year
+
+Server: TweetSave
+  URL: https://mcp.tweetsave.org/sse
+  Transport: sse
+  Tools: tweetsave_get_tweet, tweetsave_get_thread, tweetsave_to_blog, tweetsave_batch, tweetsave_extract_media
+
+Server: Twelve Data
+  URL: https://mcp.twelvedata.com/mcp/
+  Transport: streamable-http
+  Tools: u-tool, doc-tool
+
+Server: Twig RAG Agents
+  URL: https://mcp.twig.so/mcp
+  Transport: streamable-http
+  Tools: check_mcp_server_health, search_knowledge, ask_a_question
+  Prompts: WhatIsTwig
+
+Server: com.vaadin/docs-mcp
+  URL: https://mcp.vaadin.com/docs/
+  Transport: streamable-http
+  Tools: get_vaadin_primer, search_vaadin_docs, get_full_document, get_vaadin_version, get_components_by_version, get_component_java_api, get_component_react_api, get_component_web_component_api, get_component_styling
+
+Server: webforJ MCP Server
+  URL: https://mcp.webforj.com/mcp
+  Transport: streamable-http
+  Tools: webforj-create-project, webforj-knowledge-base, webforj-create-theme
+  Prompts: create-app, create-theme, search-webforj
+
+Server: webforJ MCP Server
+  URL: https://mcp.webforj.com/sse
+  Transport: sse
+  Tools: webforj-create-project, webforj-knowledge-base, webforj-create-theme
+  Prompts: create-app, create-theme, search-webforj
+
+Server: Oh My Posh Validator
+  URL: https://ohmyposh.dev/api/mcp
+  Transport: streamable-http
+  Tools: validate_config, validate_segment
+
+Server: Preloop
+  URL: https://preloop.ai/mcp/v1
+  Transport: streamable-http
+
+Server: com.proxylink-mcp/mcp-server
+  URL: https://proxylink-mcp.com
+  Transport: streamable-http
+  Tools: lookup_company, search_knowledge_base, rate_knowledge_base_answer, create_support_ticket
+  Resources: Knowledge Base Usage Guide
+
+Server: dev.promplate/hmr
+  URL: https://pyth-on-line.promplate.dev/hmr/mcp
+  Transport: streamable-http
+  Tools: learn-hmr-basics, view-hmr-core-sources, view-hmr-unit-tests
+  Prompts: learn-hmr-basics, view-hmr-core-sources, view-hmr-unit-tests
+  Resources: About HMR, HMR Sources, HMR Unit Tests
+
+Server: io.github.ndkasndakn/refund-decide
+  URL: https://refund.decide.fyi/api/mcp
+  Transport: streamable-http
+  Tools: refund_eligibility
+
+Server: com.remote-mcp/registry-mcp
+  URL: https://registry-mcp.remote-mcp.com
+  Transport: streamable-http
+  Tools: ListMCPServers, GetMCPServer
+
+Server: com.remote-mcp/registry-mcp
+  URL: https://registry-mcp.remote-mcp.com/sse
+  Transport: sse
+  Tools: ListMCPServers, GetMCPServer
+
+Server: EdgeOne Pages
+  URL: https://remote.mcpservers.org/edgeone-pages/mcp
+  Transport: streamable-http
+  Tools: deploy-html
+
+Server: Fetch
+  URL: https://remote.mcpservers.org/fetch/mcp
+  Transport: streamable-http
+  Tools: fetch
+
+Server: Sequential Thinking
+  URL: https://remote.mcpservers.org/sequentialthinking/mcp
+  Transport: streamable-http
+  Tools: sequentialthinking
+
+Server: Riksdag & Regering MCP
+  URL: https://riksdag-regering-ai.onrender.com/mcp
+  Transport: streamable-http
+  Tools: search_ledamoter, search_dokument, search_dokument_fulltext, search_anforanden, search_voteringar, search_regering, get_g0v_document_types, get_g0v_category_codes, get_g0v_latest_update, get_g0v_document_content, analyze_g0v_by_department, get_dokument, get_ledamot, get_motioner, get_propositioner, get_betankanden, get_fragor, get_interpellationer, get_utskott, get_regering_document, summarize_regering_document, get_dokument_innehall, fetch_paginated_documents, fetch_paginated_anforanden, batch_fetch_documents, get_calendar_events, get_voting_group, list_reports, fetch_report, enhanced_government_search, get_sync_status, get_data_dictionary
+  Prompts: search-documents, search-ledamoter, search-voteringar, get-calendar-events, fetch-report
+  Resources: Riksdagens ledamöter, Politiska partier, Dokumenttyper, Riksmöten, Regeringens departement, Riksdagsstatistik, Begrepp och dataprodukter, Processguide, Verktygsguide, README
+
+Server: io.github.moldy93/smard-x402
+  URL: https://smard-energy-prices-x402.favo.workers.dev/mcp
+  Transport: streamable-http
+  Tools: smard_prices
+
+Server: SubwayInfo NYC
+  URL: https://subwayinfo.nyc/mcp
+  Transport: streamable-http
+  Tools: mta_get_arrivals, mta_get_line_status, mta_list_alerts, mta_search_stations, mta_get_station_info, mta_plan_trip, bus_list_alerts, bus_get_arrivals, bus_get_route_info, bus_search_stops, ferry_get_arrivals, ferry_list_alerts, ferry_search_landings, ferry_get_routes, bike_get_station_status, bike_search_stations, bike_get_availability_summary, rail_get_departures, rail_list_alerts, rail_search_stations, rail_get_station_info, transit_ask
+  Resources: mta-widget
+
+Server: io.github.richardtkemp/theothers
+  URL: https://theothers.richardkemp.uk/mcp
+  Transport: streamable-http
+  Tools: create_listing, update_listing, close_listing, get_my_listings, search_listings, send_message, get_messages
+
+Server: io.github.aezizhu/model-id-cheatsheet
+  URL: https://universal-model-registry-production.up.railway.app/sse
+  Transport: sse
+  Tools: check_model_status, compare_models, get_model_info, list_models, recommend_model, search_models
+  Resources: all-models, current-models, pricing-summary
+
+Server: ai.urlcheck/urlcheck-mcp
+  URL: https://urlcheck.ai/mcp
+  Transport: streamable-http
+  Tools: url_scanner_scan, url_scanner_scan_with_intent
+
+Server: Sideways
+  URL: https://usesideways.com/mcp
+  Transport: streamable-http
+  Tools: get-sideways-strategy-category-reframe, get-sideways-strategy-category-reduce, get-sideways-strategy-category-expand, get-sideways-strategy-category-disrupt, get-sideways-strategy-category-embody, get-sideways-strategy-category-pause
+  Prompts: sideways-reframe, sideways-reduce, sideways-expand, sideways-disrupt, sideways-embody, sideways-pause
+  Resources: Categories Index, Strategies Metadata, Category: Reframe, Category: Reduce, Category: Expand, Category: Disrupt, Category: Embody, Category: Pause
+
+Server: Sideways
+  URL: https://usesideways.com/sse
+  Transport: sse
+  Tools: get-sideways-strategy-category-reframe, get-sideways-strategy-category-reduce, get-sideways-strategy-category-expand, get-sideways-strategy-category-disrupt, get-sideways-strategy-category-embody, get-sideways-strategy-category-pause
+  Prompts: sideways-reframe, sideways-reduce, sideways-expand, sideways-disrupt, sideways-embody, sideways-pause
+  Resources: Categories Index, Strategies Metadata, Category: Reframe, Category: Reduce, Category: Expand, Category: Disrupt, Category: Embody, Category: Pause
+
+Server: org.virtualflybrain/vfb3-mcp
+  URL: https://vfb3-mcp.virtualflybrain.org
+  Transport: streamable-http
+  Tools: get_term_info, run_query, search_terms
+
+Server: VibeMarketing
+  URL: https://vibemarketing.ninja/mcp
+  Transport: streamable-http
+  Tools: get_accounts, get_all_posts, schedule_post, bulk_schedule_posts, get_subscription_status, delete_post, update_post
+
+Server: com.zeltser/website-search
+  URL: https://website-mcp.zeltser.com/mcp
+  Transport: streamable-http
+  Tools: search_zeltser, get_article, get_index_info, get_capabilities, get_security_writing_guidelines, ir_get_template, ir_get_guidelines, ir_load_context, ir_review_report
+
+Server: io.usewire/un-demographics
+  URL: https://wire-public.mcp.usewire.io/container/UQfmLvKhhRJaSqY3/mcp
+  Transport: streamable-http
+  Tools: get_location, list_locations, filter_locations, search_locations, get_country, list_countries, filter_countries, search_countries, get_demographic_metric, list_demographic_metrics, filter_demographic_metrics, search_demographic_metrics
+
+Server: A Christmas Carol
+  URL: https://wire-public.mcp.usewire.io/container/gUeioF26GkeQPHxj/mcp
+  Transport: streamable-http
+  Tools: semantic_search_a_christmas_carol
+
+Server: Vintage Chocolate Recipes
+  URL: https://wire-public.mcp.usewire.io/container/iLleTz6882Fru1XK/mcp
+  Transport: streamable-http
+  Tools: get_recipe, list_recipes, filter_recipes, search_recipes, semantic_search_recipes
+
+Server: Lenny's Podcast Transcripts
+  URL: https://wire-public.mcp.usewire.io/container/ogYiGchr47Fcjb4i/mcp
+  Transport: streamable-http
+  Tools: get_podcast, list_podcasts, filter_podcasts, search_podcasts, get_episode, list_episodes, filter_episodes, search_episodes, semantic_search
+
+Server: goog.workspace-developer/developer-tools
+  URL: https://workspace-developer.goog/mcp
+  Transport: streamable-http
+  Tools: search_workspace_docs, fetch_workspace_docs
+
+Server: com.1stdibs/1stDibs
+  URL: https://www.1stdibs.com/soa/mcp/
+  Transport: streamable-http
+  Tools: read_taxonomy, browse_items, search_items, item_details
+
+Server: Leni
+  URL: https://www.heyleni.ai/mcp
+  Transport: streamable-http
+  Tools: search, fetch, leni_create_task, leni_find_tasks, leni_complete_task, leni_update_task, leni_delete_task, leni_archive_task, leni_restore_task, leni_create_project, leni_find_projects, leni_update_project, leni_get_task_history, leni_undo_task_change, leni_undo, leni_list_recent_operations, leni_show_tasks
+  Resources: task-list
+
+Server: com.ivisa.www/mcp
+  URL: https://www.ivisa.com/mcp
+  Transport: streamable-http
+  Tools: product-information-tool
+
+Server: com.ivisa.www/mcp
+  URL: https://www.ivisa.com/mcp/chatgpt
+  Transport: streamable-http
+  Tools: visa-availability-tool
+  Resources: visa-availability-resource
+
+Server: Javadocs
+  URL: https://www.javadocs.dev/mcp
+  Transport: streamable-http
+  Tools: get_latest_version, get_javadoc_content_list, get_javadoc_symbol_contents, get_source_contents, list_source_contents, symbol_to_artifact
+
+Server: io.github.bahfahh/noteit-mcp
+  URL: https://www.noteit-mcp.com/api/mcp
+  Transport: streamable-http
+  Tools: noteit_profiles_list, noteit_profiles_getConfig, noteit_profiles_generate, noteit_notes_create, noteit_notes_read, noteit_notes_list, noteit_web_create, noteit_flow_create
+  Resources: Noteit MCP About, Noteit MCP Tools Manual
+
+Server: zip1.io
+  URL: https://zip1.io/mcp
+  Transport: streamable-http
+  Tools: create_short_url, get_url_stats, validate_url, generate_short_code
