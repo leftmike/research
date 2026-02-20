@@ -1,0 +1,9 @@
+NAME: Microsoft Learn MCP
+URL: https://learn_mcp--microsoft.run.tools
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://learn_mcp--microsoft.run.tools": Bad Request
+---

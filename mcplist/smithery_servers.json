@@ -1,0 +1,1028 @@
+[
+  {
+    "name": "Exa Search",
+    "qualifiedName": "exa",
+    "url": "https://exa.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Context7",
+    "qualifiedName": "upstash/context7-mcp",
+    "url": "https://context7-mcp--upstash.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Google Calendar",
+    "qualifiedName": "googlecalendar",
+    "url": "https://googlecalendar.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Supabase",
+    "qualifiedName": "Supabase",
+    "url": "https://supabase.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Linkup",
+    "qualifiedName": "LinkupPlatform/linkup-mcp-server",
+    "url": "https://linkup-mcp-server--linkupplatform.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "apiKey"
+    ],
+    "schema_props": [
+      "apiKey"
+    ]
+  },
+  {
+    "name": "GitHub",
+    "qualifiedName": "github",
+    "url": "https://github.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Notion",
+    "qualifiedName": "notion",
+    "url": "https://notion.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Brave Search",
+    "qualifiedName": "brave",
+    "url": "https://brave.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "braveApiKey"
+    ],
+    "schema_props": [
+      "braveApiKey",
+      "enabledTools",
+      "loggingLevel",
+      "disabledTools"
+    ]
+  },
+  {
+    "name": "Browserbase",
+    "qualifiedName": "browserbasehq/mcp-browserbase",
+    "url": "https://browserbase.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "browserbaseApiKey",
+      "browserbaseProjectId"
+    ],
+    "schema_props": [
+      "server",
+      "context",
+      "proxies",
+      "viewPort",
+      "keepAlive",
+      "modelName",
+      "modelApiKey",
+      "experimental",
+      "advancedStealth",
+      "browserbaseApiKey",
+      "browserbaseProjectId"
+    ]
+  },
+  {
+    "name": "Google Sheets",
+    "qualifiedName": "googlesheets",
+    "url": "https://googlesheets.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Slack",
+    "qualifiedName": "slack",
+    "url": "https://slack.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Google Super",
+    "qualifiedName": "googlesuper",
+    "url": "https://googlesuper.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Bright Data",
+    "qualifiedName": "brightdata",
+    "url": "https://brightdata.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "token"
+    ],
+    "schema_props": [
+      "pro",
+      "token",
+      "tools",
+      "groups",
+      "browser",
+      "unlocker"
+    ]
+  },
+  {
+    "name": "Gmail",
+    "qualifiedName": "gmail",
+    "url": "https://gmail.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Airtable",
+    "qualifiedName": "airtable",
+    "url": "https://airtable.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Microsoft Learn MCP",
+    "qualifiedName": "microsoft/learn_mcp",
+    "url": "https://learn_mcp--microsoft.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "EduBase",
+    "qualifiedName": "EduBase/MCP",
+    "url": "https://mcp--edubase.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "edubaseApiUrl",
+      "edubaseApiApp",
+      "edubaseApiKey"
+    ],
+    "schema_props": [
+      "edubaseApiApp",
+      "edubaseApiKey",
+      "edubaseApiUrl"
+    ]
+  },
+  {
+    "name": "AI Research Assistant",
+    "qualifiedName": "hamid-vakilzadeh/mcpsemanticscholar",
+    "url": "https://mcpsemanticscholar--hamid-vakilzadeh.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "debug",
+      "WILEY_TDM_CLIENT_TOKEN",
+      "SEMANTIC_SCHOLAR_API_KEY"
+    ]
+  },
+  {
+    "name": "youtube-mcp",
+    "qualifiedName": "sfiorini/youtube-mcp",
+    "url": "https://youtube-mcp--sfiorini.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "youtubeApiKey",
+      "youtubeTranscriptLang"
+    ]
+  },
+  {
+    "name": "Fetch",
+    "qualifiedName": "smithery-ai/fetch",
+    "url": "https://fetch--smithery-ai.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "timeout",
+      "userAgent",
+      "followRedirects"
+    ]
+  },
+  {
+    "name": "\ud55c\uad6d\ud22c\uc790 \ucf54\ub529\ub3c4\uc6b0\ubbf8 MCP",
+    "qualifiedName": "KISOpenAPI/kis-code-assistant-mcp",
+    "url": "https://kis-code-assistant-mcp--kisopenapi.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Weather MCP Server",
+    "qualifiedName": "isdaniel/mcp_weather_server",
+    "url": "https://mcp_weather_server--isdaniel.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "debug"
+    ]
+  },
+  {
+    "name": "United States Weather",
+    "qualifiedName": "smithery-ai/national-weather-service",
+    "url": "https://national-weather-service--smithery-ai.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Clear Thought 1.5",
+    "qualifiedName": "waldzellai/clear-thought",
+    "url": "https://clear-thought--waldzellai.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "maxHistorySize",
+      "disableThoughtLogging"
+    ]
+  },
+  {
+    "name": "Saju Insights",
+    "qualifiedName": "hjsh200219/fortuneteller",
+    "url": "https://fortuneteller--hjsh200219.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Web Scout",
+    "qualifiedName": "pinkpixel-dev/web-scout-mcp",
+    "url": "https://web-scout-mcp--pinkpixel-dev.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "jina-httpstreamable",
+    "qualifiedName": "alexcz-a11y/jina-httpstreamable",
+    "url": "https://jina-httpstreamable--alexcz-a11y.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "bearerToken"
+    ]
+  },
+  {
+    "name": "Math-MCP",
+    "qualifiedName": "EthanHenrickson/math-mcp",
+    "url": "https://math-mcp--ethanhenrickson.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Vibe Marketing MCP (HyperFeed.ai)",
+    "qualifiedName": "synthetic-ci/vibe-marketing",
+    "url": "https://vibe-marketing--synthetic-ci.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "debug",
+      "hyperFeedApiKey"
+    ]
+  },
+  {
+    "name": "Clay MCP",
+    "qualifiedName": "clay-inc/clay-mcp",
+    "url": "https://clay-mcp--clay-inc.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Paper Search",
+    "qualifiedName": "adamamer20/paper-search-mcp-openai",
+    "url": "https://paper-search-mcp-openai--adamamer20.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Exa Websets",
+    "qualifiedName": "exa-labs/websets-mcp-server",
+    "url": "https://websets-mcp-server--exa-labs.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "debug",
+      "exaApiKey",
+      "enabledTools"
+    ]
+  },
+  {
+    "name": "AKShare One MCP Server",
+    "qualifiedName": "zwldarren/akshare-one-mcp",
+    "url": "https://akshare-one-mcp--zwldarren.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "exa-mcp",
+    "qualifiedName": "AgentWings/exa-mcp-server",
+    "url": "https://exa-mcp-server--agentwings.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "debug",
+      "tools",
+      "exaApiKey",
+      "enabledTools"
+    ]
+  },
+  {
+    "name": "paper-search-mcp-openai-v2",
+    "qualifiedName": "TitanSneaker/paper-search-mcp-openai-v2",
+    "url": "https://paper-search-mcp-openai-v2--titansneaker.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Financial Modeling Prep (FMP) Server ",
+    "qualifiedName": "imbenrabi/financial-modeling-prep-mcp-server",
+    "url": "https://financial-modeling-prep-mcp-server--imbenrabi.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "FrankfurterMCP",
+    "qualifiedName": "anirbanbasu/frankfurtermcp",
+    "url": "https://frankfurtermcp--anirbanbasu.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Playwright",
+    "qualifiedName": "enriquedlh97/playwright-mcp",
+    "url": "https://playwright-mcp--enriquedlh97.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "headless",
+      "outputDir",
+      "browserName",
+      "capabilities",
+      "imageResponses"
+    ]
+  },
+  {
+    "name": "MCP Server for Singapore Government Open Data",
+    "qualifiedName": "aniruddha-adhikary/gahmen-mcp",
+    "url": "https://gahmen-mcp--aniruddha-adhikary.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "HubSpot MCP",
+    "qualifiedName": "shinzo-labs/hubspot-mcp",
+    "url": "https://hubspot-mcp--shinzo-labs.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "HUBSPOT_ACCESS_TOKEN"
+    ],
+    "schema_props": [
+      "HUBSPOT_ACCESS_TOKEN"
+    ]
+  },
+  {
+    "name": "BoardGameGeek",
+    "qualifiedName": "kkjdaniel/bgg-mcp",
+    "url": "https://bgg-mcp--kkjdaniel.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "BGG_COOKIE",
+      "BGG_API_KEY",
+      "BGG_USERNAME"
+    ]
+  },
+  {
+    "name": "macrostrat-mcp",
+    "qualifiedName": "blake365/macrostrat-mcp",
+    "url": "https://macrostrat-mcp--blake365.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Bodrum MCP Server",
+    "qualifiedName": "ebartan/bodrum-mcp-2025",
+    "url": "https://bodrum-mcp-2025--ebartan.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "debug"
+    ]
+  },
+  {
+    "name": "WebSim Explorer",
+    "qualifiedName": "gigachadtrey/websimm",
+    "url": "https://websimm--gigachadtrey.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Nanci Literature Review Assistant",
+    "qualifiedName": "BarnacleLabs/chimera-mcp-smithery",
+    "url": "https://chimera-mcp-smithery--barnaclelabs.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "NetworkCalc",
+    "qualifiedName": "ramadasmr/networkcalc-mcp",
+    "url": "https://networkcalc-mcp--ramadasmr.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Polymarket",
+    "qualifiedName": "aryankeluskar/polymarket-mcp",
+    "url": "https://polymarket-mcp--aryankeluskar.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "debug"
+    ]
+  },
+  {
+    "name": "NPM Sentinel MCP",
+    "qualifiedName": "Nekzus/npm-sentinel-mcp",
+    "url": "https://npm-sentinel-mcp--nekzus.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Code Sentinel",
+    "qualifiedName": "salrad/code-sentinel",
+    "url": "https://code-sentinel--salrad.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Python execute",
+    "qualifiedName": "STUzhy/py_execute_mcp",
+    "url": "https://py_execute_mcp--stuzhy.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Bible MCP",
+    "qualifiedName": "cameronapak/free-use-bible-mcp",
+    "url": "https://free-use-bible-mcp--cameronapak.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "RSS Reader",
+    "qualifiedName": "kwp-lab/rss-reader-mcp",
+    "url": "https://rss-reader-mcp--kwp-lab.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Greeting & Utilities",
+    "qualifiedName": "devbrother2024/my-mcp-server-250925",
+    "url": "https://my-mcp-server-250925--devbrother2024.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "grokipedia-mcp",
+    "qualifiedName": "skymoore/grokipedia-mcp",
+    "url": "https://grokipedia-mcp--skymoore.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "host",
+      "port"
+    ]
+  },
+  {
+    "name": "PlantUML Diagrams",
+    "qualifiedName": "infobip/plantuml-mcp-server",
+    "url": "https://plantuml-mcp-server--infobip.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Arch Linux [ Not Updated ]",
+    "qualifiedName": "nihalxkumar/arch-mcp",
+    "url": "https://arch-mcp--nihalxkumar.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Clinical Trials Data Server",
+    "qualifiedName": "plainyogurt21/clintrials-mcp",
+    "url": "https://clintrials-mcp--plainyogurt21.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "my-mcp-server-251209",
+    "qualifiedName": "devbrother2024/my-mcp-server-251209",
+    "url": "https://my-mcp-server-251209--devbrother2024.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Financial Modeling Prep",
+    "qualifiedName": "cfocoder/financial-modeling-prep-mcp-server",
+    "url": "https://financial-modeling-prep-mcp-server--cfocoder.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Next.js Tailwind Assistant",
+    "qualifiedName": "CaullenOmdahl/nextjs-react-tailwind-assistant",
+    "url": "https://nextjs-react-tailwind-assistant--caullenomdahl.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "cacheTimeout",
+      "maxSearchResults"
+    ]
+  },
+  {
+    "name": "Where's my train? MTA Guide",
+    "qualifiedName": "sasabasara/where_is_my_train_mcp",
+    "url": "https://where_is_my_train_mcp--sasabasara.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Keywords Everywhere MCP Server",
+    "qualifiedName": "hithereiamaliff/mcp-keywords-everywhere",
+    "url": "https://mcp-keywords-everywhere--hithereiamaliff.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Icons8 MCP Server",
+    "qualifiedName": "icons8community/icons8mpc",
+    "url": "https://icons8mpc--icons8community.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "my-mcp-server",
+    "qualifiedName": "ssuyjk-del/my-mcp-server",
+    "url": "https://my-mcp-server--ssuyjk-del.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "hfToken"
+    ]
+  },
+  {
+    "name": "Scientific Computation MCP Server",
+    "qualifiedName": "Aman-Amith-Shastry/scientific_computation_mcp",
+    "url": "https://scientific_computation_mcp--aman-amith-shastry.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Context Awesome",
+    "qualifiedName": "bh-rat/context-awesome",
+    "url": "https://context-awesome--bh-rat.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "joemcp",
+    "qualifiedName": "lumberjack-so/joemcp",
+    "url": "https://joemcp--lumberjack-so.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "apiKey",
+      "apiBaseUrl",
+      "requestTimeout"
+    ]
+  },
+  {
+    "name": "my-mcp-server",
+    "qualifiedName": "hamcommania-design/my-mcp-server",
+    "url": "https://my-mcp-server--hamcommania-design.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "hfToken"
+    ]
+  },
+  {
+    "name": "Public Transport",
+    "qualifiedName": "mirodn/mcp-server-public-transport",
+    "url": "https://mcp-server-public-transport--mirodn.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "ai-marketing-agent",
+    "qualifiedName": "enji/ai-marketing-agent",
+    "url": "https://ai-marketing-agent--enji.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Felix-MCP",
+    "qualifiedName": "FelixYifeiWang/felix-mcp-smithery",
+    "url": "https://felix-mcp-smithery--felixyifeiwang.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Ziwei & Bazi Astrology",
+    "qualifiedName": "spyfree/mingli-mcp",
+    "url": "https://mingli-mcp--spyfree.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "sts-faker-mcp",
+    "qualifiedName": "data-mindset/sts-faker-mcp",
+    "url": "https://sts-faker-mcp--data-mindset.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Somnia",
+    "qualifiedName": "fozagtx/somnia-mcp",
+    "url": "https://somnia-mcp--fozagtx.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "PyMCP",
+    "qualifiedName": "anirbanbasu/pymcp",
+    "url": "https://pymcp--anirbanbasu.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Shadcn Vue MCP Server",
+    "qualifiedName": "HelloGGX/shadcn-vue-mcp",
+    "url": "https://shadcn-vue-mcp--helloggx.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Google Scholar Search Server",
+    "qualifiedName": "mochow13/google-scholar-mcp",
+    "url": "https://google-scholar-mcp--mochow13.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "time-mcp",
+    "qualifiedName": "xiaobenyang-com/time-mcp",
+    "url": "https://time-mcp--xiaobenyang-com.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Turf Network",
+    "qualifiedName": "Turf-Tech/turf-mcp-server",
+    "url": "https://turf-mcp-server--turf-tech.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "coinex_mcp_server",
+    "qualifiedName": "helix-song/coinex_mcp_server",
+    "url": "https://coinex_mcp_server--helix-song.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Mapbox",
+    "qualifiedName": "Waldzell-Agentics/mcp-server",
+    "url": "https://mcp-server--waldzell-agentics.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "MAPBOX_ACCESS_TOKEN"
+    ],
+    "schema_props": [
+      "VERBOSE_ERRORS",
+      "MAPBOX_ACCESS_TOKEN"
+    ]
+  },
+  {
+    "name": "DuckDuckGo & Felo AI Search",
+    "qualifiedName": "OEvortex/ddg_search",
+    "url": "https://ddg_search--oevortex.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "OpenWebSearch",
+    "qualifiedName": "Aas-ee/open-websearch",
+    "url": "https://open-websearch--aas-ee.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "proxyUrl",
+      "useProxy",
+      "corsOrigin",
+      "enableCors",
+      "defaultSearchEngine"
+    ]
+  },
+  {
+    "name": "Code Runner",
+    "qualifiedName": "dravidsajinraj-iex/code-runner-mcp",
+    "url": "https://code-runner-mcp--dravidsajinraj-iex.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "debug",
+      "maxMemoryUsage",
+      "enableNetworking",
+      "maxExecutionTime"
+    ]
+  },
+  {
+    "name": "Cowsay",
+    "qualifiedName": "mrseanchow/cowsay-mcp",
+    "url": "https://cowsay-mcp--mrseanchow.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "serverToken",
+      "caseSensitive"
+    ]
+  },
+  {
+    "name": "MCP Seeker",
+    "qualifiedName": "agonzalez/prueba-mcp-seeker",
+    "url": "https://prueba-mcp-seeker--agonzalez.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "icons8mcp",
+    "qualifiedName": "icons8community/icons8mcp",
+    "url": "https://icons8mcp--icons8community.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Seah Boon Keong - Chat with BNM API Datasets",
+    "qualifiedName": "seahbk1006/seahboonkeong-chat-bnmapi",
+    "url": "https://seahboonkeong-chat-bnmapi--seahbk1006.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Immolog MCP SSE Server",
+    "qualifiedName": "momo590/mcp-sse-immolog",
+    "url": "https://mcp-sse-immolog--momo590.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Hyperion Blockchain Server",
+    "qualifiedName": "cuongpo/hyperion-mcp-server",
+    "url": "https://hyperion-mcp-server--cuongpo.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Chrome DevTools Automation",
+    "qualifiedName": "SHAY5555-gif/chrome-devtools-mcp-2",
+    "url": "https://chrome-devtools-mcp-2--shay5555-gif.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "12306 Ticket Search Server",
+    "qualifiedName": "DeniseLewis200081/rail",
+    "url": "https://rail--deniselewis200081.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "GoHighLevel Connect",
+    "qualifiedName": "Funding-Machine/ghl-mcp-fundingmachine",
+    "url": "https://ghl-mcp-fundingmachine--funding-machine.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "apiKey",
+      "locationId"
+    ],
+    "schema_props": [
+      "apiKey",
+      "baseUrl",
+      "locationId",
+      "skipConnectionTest"
+    ]
+  },
+  {
+    "name": "WhatsApp Web Server",
+    "qualifiedName": "samihalawa/whatsapp-go-mcp",
+    "url": "https://whatsapp-go-mcp--samihalawa.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Leaper Vision Toolkit",
+    "qualifiedName": "leaper-mcp/leaper-mcp-proxy",
+    "url": "https://leaper-mcp-proxy--leaper-mcp.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": []
+  },
+  {
+    "name": "Conduit for Figma",
+    "qualifiedName": "amalinakurniasari/conduit",
+    "url": "https://conduit--amalinakurniasari.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "port",
+      "serverUrl",
+      "reconnectInterval"
+    ]
+  },
+  {
+    "name": "Conduit for Figma",
+    "qualifiedName": "amalinakurniasari/figmamcp",
+    "url": "https://figmamcp--amalinakurniasari.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [],
+    "schema_props": [
+      "port",
+      "serverUrl",
+      "reconnectInterval"
+    ]
+  },
+  {
+    "name": "alibabacloud-devops-mcp-server",
+    "qualifiedName": "yjiace/alibabacloud-devops-mcp-server",
+    "url": "https://alibabacloud-devops-mcp-server--yjiace.run.tools",
+    "transport": "streamable-http",
+    "conn_type": "http",
+    "required_config": [
+      "yunxiaoAccessToken"
+    ],
+    "schema_props": [
+      "yunxiaoAccessToken"
+    ]
+  }
+]

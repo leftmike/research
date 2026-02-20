@@ -1,0 +1,9 @@
+NAME: Python execute
+URL: https://py_execute_mcp--stuzhy.run.tools
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://py_execute_mcp--stuzhy.run.tools": Bad Request
+---

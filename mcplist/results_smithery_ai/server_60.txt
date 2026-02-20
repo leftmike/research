@@ -1,0 +1,9 @@
+NAME: Where's my train? MTA Guide
+URL: https://where_is_my_train_mcp--sasabasara.run.tools
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://where_is_my_train_mcp--sasabasara.run.tools": Bad Request
+---

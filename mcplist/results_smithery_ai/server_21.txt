@@ -1,0 +1,9 @@
+NAME: Weather MCP Server
+URL: https://mcp_weather_server--isdaniel.run.tools
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://mcp_weather_server--isdaniel.run.tools": Bad Request
+---

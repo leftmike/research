@@ -1,0 +1,9 @@
+NAME: DuckDuckGo & Felo AI Search
+URL: https://ddg_search--oevortex.run.tools
+TRANSPORT: streamable-http
+AUTH_REQUIRED: unknown
+STATUS: error
+EXIT_CODE: 1
+OUTPUT:
+/home/user/research/mcplist/gmcpt list: calling "initialize": rejected by transport: sending "initialize": Post "https://ddg_search--oevortex.run.tools": Bad Request
+---
