@@ -1,0 +1,141 @@
+Plan: Find MCP Server Source Code and Analyze for Sampling/Elicitation Support
+================================================================================
+
+Goal
+----
+For MCP servers listed on the three websites already used in mcplist
+(registry.modelcontextprotocol.io, pulsemcp.com, and
+github.com/jaw9c/awesome-remote-mcp-servers), find as many source code
+repositories as possible and analyze them for sampling or elicitation support.
+
+Background: Sampling and Elicitation in MCP
+--------------------------------------------
+- **Sampling** (sampling/createMessage): Allows an MCP server to request the
+  client to perform LLM inference. The server sends a sampling/createMessage
+  request to the client, which generates a response using its LLM and returns
+  it. This enables patterns like agentic loops where the server needs the LLM
+  to process intermediate results.
+
+- **Elicitation** (elicitation/create): Allows an MCP server to request
+  structured input from the user through the client. The server sends an
+  elicitation/create request, and the client presents a form/dialog to the
+  user and returns their response.
+
+Source code indicators:
+  - Sampling: "sampling", "createMessage", "create_message",
+    "CreateMessageRequest", "sampling/createMessage",
+    "request_context.session.create_message", "SamplingCapability"
+  - Elicitation: "elicitation", "elicit", "ElicitationRequest",
+    "elicitation/create", "ElicitationCapability"
+
+Data Sources
+------------
+1. **registry.modelcontextprotocol.io** (872 remote servers)
+   - The API (https://registry.modelcontextprotocol.io/v0.1/servers) returns a
+     `repository` object for each server with `url`, `source`, and optionally
+     `subfolder` fields. This is the best source for GitHub URLs.
+   - Strategy: Re-fetch the registry API and extract repository URLs directly.
+
+2. **pulsemcp.com** (488 endpoints from ~430 servers)
+   - The slug-based JSON data does not include repo URLs.
+   - Strategy: For each server slug, fetch the pulsemcp detail page
+     (https://www.pulsemcp.com/servers/{slug}) and extract any GitHub/GitLab
+     links from the page content.
+
+3. **github.com/jaw9c/awesome-remote-mcp-servers** (106 endpoints)
+   - This is a curated GitHub list. The README itself contains links to each
+     server's website or repo.
+   - Strategy: Fetch the raw README and parse out GitHub repo URLs associated
+     with each server entry.
+
+Step 1: Collect Repository URLs
+-------------------------------
+Write a Python script (collect_repos.py) that:
+
+  a) Fetches the registry API (all pages) and extracts repository URLs.
+     Expected: many servers will have GitHub repo URLs.
+
+  b) Fetches pulsemcp.com detail pages for each slug and extracts GitHub/GitLab
+     links. Use concurrent fetching (20 workers) since there are ~430 slugs.
+
+  c) Fetches the awesome-remote-mcp-servers README from GitHub and parses out
+     repo URLs for each server entry.
+
+  d) Deduplicates repos across all three sources and produces a consolidated
+     JSON file (repos.json) with:
+     - repo_url: GitHub/GitLab clone URL
+     - server_names: list of server names from the three sources
+     - source: which website(s) listed this server
+     - subfolder: optional subfolder within the repo (from registry)
+
+Step 2: Clone/Fetch Repositories and Search for Sampling/Elicitation
+--------------------------------------------------------------------
+Write a Python script (analyze_repos.py) that:
+
+  a) For each unique repository URL, uses the GitHub API (or raw file fetching)
+     to search the repo contents for sampling/elicitation indicators WITHOUT
+     cloning. Strategy:
+     - Use GitHub code search API: `gh api search/code?q=sampling+repo:owner/name`
+     - Or fetch key files (package.json, pyproject.toml, *.py, *.ts) and grep.
+
+  b) Actually, given the large number of repos, a more practical approach:
+     - Shallow-clone each repo (git clone --depth 1) into a temp directory
+     - Run grep for sampling/elicitation patterns across all source files
+     - Record matches with file paths and matching lines
+     - Clean up clones after analysis
+
+  c) For repos that match, classify whether the usage is:
+     - **Implements sampling**: Server code that calls create_message/sampling
+     - **Implements elicitation**: Server code that calls elicit/elicitation
+     - **SDK/library reference**: Just imports or re-exports the type
+     - **Documentation/comment only**: Mentioned in docs/comments but not used
+
+Step 3: Produce Results
+-----------------------
+Generate a report (results.txt) with:
+
+  a) Summary statistics:
+     - Total unique repos found across all three sources
+     - Repos successfully analyzed
+     - Repos with sampling support
+     - Repos with elicitation support
+
+  b) Detailed listing of servers that support sampling or elicitation:
+     - Server name(s)
+     - Repository URL
+     - Type of support (sampling, elicitation, or both)
+     - Relevant code snippets/file paths
+
+  c) A JSON file (results.json) with structured data for each analyzed repo.
+
+Step 4: Commit and Push
+-----------------------
+Commit these files to the mcpservers/ directory:
+  - PLAN.txt (this file)
+  - collect_repos.py
+  - analyze_repos.py
+  - repos.json (collected repository URLs)
+  - results.json (analysis results)
+  - results.txt (human-readable report)
+
+Performance Considerations
+--------------------------
+- Registry API: paginated, ~30 servers/page, ~30 pages. Fast.
+- PulseMCP detail pages: ~430 fetches with 20 workers. ~30 seconds.
+- Awesome list: single README fetch. Instant.
+- Repo cloning + grep: this is the bottleneck. With ~500+ unique repos,
+  shallow clones will take time. Run 10 concurrent clones with timeouts.
+  Estimate: 10-20 minutes for all repos.
+- Alternative: use GitHub search API via `gh` CLI to avoid cloning entirely.
+  This would be faster but may miss some results due to API limitations.
+  Try GitHub search first; fall back to cloning for repos where search fails.
+
+Known Issues
+------------
+- Some repos will be private or deleted. Skip these gracefully.
+- Some registry entries may have invalid/placeholder repo URLs. Validate URLs.
+- Sampling/elicitation are relatively new MCP features; expect very few servers
+  to actually implement them.
+- Some repos may contain MCP SDK code (not server code) that references these
+  features. Filter these out by checking if the repo is actually a server
+  implementation vs. an SDK/framework.
