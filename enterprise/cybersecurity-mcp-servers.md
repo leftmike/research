@@ -45,13 +45,31 @@ Community forks and third-party re-implementations are noted separately.
 **GitHub:** [`CrowdStrike/falcon-mcp`](https://github.com/CrowdStrike/falcon-mcp)
 **Status:** Public Preview (released August 2025)
 **Deployable on:** AWS Bedrock AgentCore
+**Install:** `uv tool install falcon-mcp` or `pip install falcon-mcp`
 **Announcement:** [PulseMCP listing](https://www.pulsemcp.com/servers/crowdstrike-falcon); [Medium write-up](https://mikecybersec.medium.com/supercharged-secops-series-crowdstrike-falcon-mcp-pub-preview-efe5f11c31c2)
 
-Connects AI agents to the CrowdStrike Falcon platform for automated security analysis. Exposes:
-- Detections, incidents, and behaviors
-- Threat intelligence
-- Host inventory and vulnerability data
-- Identity protection capabilities
+Connects AI agents to the CrowdStrike Falcon platform for automated security analysis. Modules are opt-in via `--modules` flag or `FALCON_MCP_MODULES` env var; all modules enabled by default.
+
+#### Modules and Tools
+
+| Module | Tools |
+|---|---|
+| **Core** | `falcon_check_connectivity`, `falcon_list_modules`, `falcon_list_enabled_modules` |
+| **Detections** | `falcon_search_detections`, `falcon_get_detection_details` |
+| **Incidents** | `falcon_search_incidents`, `falcon_get_incident_details`, `falcon_search_behaviors`, `falcon_get_behavior_details`, `falcon_show_crowd_score` |
+| **Hosts** | `falcon_search_hosts`, `falcon_get_host_details` |
+| **Intel** | `falcon_search_actors`, `falcon_search_indicators`, `falcon_search_reports`, `falcon_get_mitre_report` |
+| **Identity Protection (IDP)** | `idp_investigate_entity` (entity timeline, relationship mapping, risk assessment) |
+| **IOC** | `falcon_search_iocs`, `falcon_add_ioc`, `falcon_remove_iocs` |
+| **Cloud Security** | `falcon_search_kubernetes_containers`, `falcon_count_kubernetes_containers`, `falcon_search_images_vulnerabilities` |
+| **Discover** | `falcon_search_applications`, `falcon_search_unmanaged_assets` |
+| **Spotlight** | `falcon_search_vulnerabilities` |
+| **Serverless** | `falcon_search_serverless_vulnerabilities` |
+| **NGSIEM** | `search_ngsiem` (CQL queries against Next-Gen SIEM) |
+| **Scheduled Reports** | `falcon_search_scheduled_reports`, `falcon_launch_scheduled_report`, `falcon_search_report_executions`, `falcon_download_report_execution` |
+| **Sensor Usage** | `falcon_search_sensor_usage` |
+
+Each module exposes FQL (Falcon Query Language) guide resources alongside its tools, enabling LLMs to construct valid queries without prior FQL knowledge.
 
 > ⚠️ Not recommended for production deployments yet; stable 1.0 release pending.
 
