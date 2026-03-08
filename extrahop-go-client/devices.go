@@ -5,199 +5,206 @@ import (
 	"fmt"
 )
 
-// Device represents an ExtraHop device.
+// Device represents an ExtraHop network device.
 type Device struct {
-	ID              int64   `json:"id,omitempty"`
-	ParentID        *int64  `json:"parent_id,omitempty"`
-	NodeID          *int64  `json:"node_id,omitempty"`
-	ExtrahopID      string  `json:"extrahop_id,omitempty"`
-	Description     *string `json:"description,omitempty"`
-	UserModTime     int64   `json:"user_mod_time,omitempty"`
-	ModTime         int64   `json:"mod_time,omitempty"`
-	DiscoverTime    int64   `json:"discover_time,omitempty"`
-	VLANID          int     `json:"vlanid,omitempty"`
-	MACAddr         string  `json:"macaddr,omitempty"`
-	Vendor          string  `json:"vendor,omitempty"`
-	IsL3            bool    `json:"is_l3,omitempty"`
-	IPAddr4         *string `json:"ipaddr4,omitempty"`
-	IPAddr6         *string `json:"ipaddr6,omitempty"`
-	DeviceClass     string  `json:"device_class,omitempty"`
-	DefaultName     string  `json:"default_name,omitempty"`
-	CustomName      *string `json:"custom_name,omitempty"`
-	CDPName         string  `json:"cdp_name,omitempty"`
-	DHCPName        string  `json:"dhcp_name,omitempty"`
-	NetBIOSName     string  `json:"netbios_name,omitempty"`
-	DNSName         string  `json:"dns_name,omitempty"`
-	CustomType      string  `json:"custom_type,omitempty"`
-	AnalysisLevel   int     `json:"analysis_level,omitempty"`
-	Analysis        string  `json:"analysis,omitempty"`
-	AutoRole        string  `json:"auto_role,omitempty"`
-	CustomMake      string  `json:"custom_make,omitempty"`
-	CustomModel     string  `json:"custom_model,omitempty"`
-	CriticalityLevel *int   `json:"criticality_level,omitempty"`
-	DisplayName     string  `json:"display_name,omitempty"`
-	CloudAccount    string  `json:"cloud_account,omitempty"`
-	CloudInstanceID string  `json:"cloud_instance_id,omitempty"`
+	// ID is the unique device identifier.
+	ID int64 `json:"id,omitempty"`
+
+	// ExtrahopID is the stable ExtraHop-generated identifier.
+	ExtrahopID string `json:"extrahop_id,omitempty"`
+
+	// DisplayName is the best available name for the device (resolved at query time).
+	DisplayName string `json:"display_name,omitempty"`
+
+	// DefaultName is the system-assigned name.
+	DefaultName string `json:"default_name,omitempty"`
+
+	// CustomName is an analyst-assigned name override.
+	CustomName *string `json:"custom_name,omitempty"`
+
+	// DHCPName is the hostname observed via DHCP.
+	DHCPName string `json:"dhcp_name,omitempty"`
+
+	// DNSName is the primary DNS name for the device.
+	DNSName string `json:"dns_name,omitempty"`
+
+	// NetBIOSName is the NetBIOS hostname.
+	NetBIOSName string `json:"netbios_name,omitempty"`
+
+	// CDPName is the Cisco Discovery Protocol name.
+	CDPName string `json:"cdp_name,omitempty"`
+
+	// IPAddr4 is the primary IPv4 address.
+	IPAddr4 *string `json:"ipaddr4,omitempty"`
+
+	// IPAddr6 is the primary IPv6 address.
+	IPAddr6 *string `json:"ipaddr6,omitempty"`
+
+	// MACAddr is the MAC address (colon-separated hex).
+	MACAddr string `json:"macaddr,omitempty"`
+
+	// Vendor is the NIC/device vendor derived from the MAC OUI.
+	Vendor string `json:"vendor,omitempty"`
+
+	// DeviceClass is the detected device class (e.g. "node", "server", "remote").
+	DeviceClass string `json:"device_class,omitempty"`
+
+	// Analysis is the current analysis level ("full", "discovery", "standard").
+	Analysis string `json:"analysis,omitempty"`
+
+	// AutoRole is the system-inferred device role.
+	AutoRole string `json:"auto_role,omitempty"`
+
+	// IsL3 is true when the device is tracked by IP rather than MAC.
+	IsL3 bool `json:"is_l3,omitempty"`
+
+	// VLANID is the VLAN the device belongs to (0 = untagged).
+	VLANID int `json:"vlanid,omitempty"`
+
+	// DiscoverTime is when the device was first seen, in Unix milliseconds.
+	DiscoverTime int64 `json:"discover_time,omitempty"`
+
+	// ModTime is when the device record was last modified, in Unix milliseconds.
+	ModTime int64 `json:"mod_time,omitempty"`
+
+	// CriticalityLevel is the analyst-assigned criticality (0–3).
+	CriticalityLevel *int `json:"criticality_level,omitempty"`
+
+	// CloudAccount is the cloud provider account ID (for cloud-based devices).
+	CloudAccount string `json:"cloud_account,omitempty"`
+
+	// CloudInstanceID is the cloud instance identifier.
+	CloudInstanceID string `json:"cloud_instance_id,omitempty"`
+
+	// ParentID is the ID of the parent device (e.g. hypervisor).
+	ParentID *int64 `json:"parent_id,omitempty"`
 }
 
-// DeviceSearchRequest specifies parameters for searching devices.
+// DeviceSearchRequest searches for devices by IP address, MAC address, or name.
+// At least one filter rule should be provided for meaningful results.
 type DeviceSearchRequest struct {
+	// Filter is the top-level filter expression. Combine multiple criteria
+	// with operator "and" or "or" and nested Rules.
 	Filter *DeviceFilter `json:"filter,omitempty"`
-	Limit  int           `json:"limit,omitempty"`
-	Offset int           `json:"offset,omitempty"`
+
+	// Limit caps the number of results (default 100, max 1000).
+	Limit int `json:"limit,omitempty"`
+
+	// Offset supports pagination.
+	Offset int `json:"offset,omitempty"`
 }
 
-// DeviceFilter specifies filter criteria for device search.
+// DeviceFilter is a filter node in the device search expression tree.
+//
+// Leaf node example (match by IP):
+//
+//	DeviceFilter{Field: "ipaddr", Operator: "=", Operand: "10.0.0.1"}
+//
+// Compound node example (match by IP OR name):
+//
+//	DeviceFilter{Operator: "or", Rules: []DeviceFilter{...}}
 type DeviceFilter struct {
-	Field    string         `json:"field,omitempty"`
-	Operand  interface{}    `json:"operand,omitempty"`
-	Operator string         `json:"operator,omitempty"`
-	Rules    []DeviceFilter `json:"rules,omitempty"`
+	// Field is the device attribute to filter on.
+	// Common values: "ipaddr", "macaddr", "name", "dhcp_name", "dns_name".
+	Field string `json:"field,omitempty"`
+
+	// Operand is the value to compare against (string, int, etc.).
+	Operand interface{} `json:"operand,omitempty"`
+
+	// Operator is "=", "!=", "startswith", "and", "or".
+	Operator string `json:"operator,omitempty"`
+
+	// Rules are sub-expressions for compound operators ("and", "or").
+	Rules []DeviceFilter `json:"rules,omitempty"`
 }
 
-// DeviceService handles communication with the device-related endpoints.
+// DeviceActivity represents protocol-level activity observed on a device.
+// Used for protocol validation during live enrichment.
+type DeviceActivity struct {
+	// Protocol is the application protocol name (e.g. "HTTP", "DNS", "SMB").
+	Protocol string `json:"proto,omitempty"`
+
+	// InBytes is the total ingress byte count for this protocol.
+	InBytes int64 `json:"bytes_in,omitempty"`
+
+	// OutBytes is the total egress byte count for this protocol.
+	OutBytes int64 `json:"bytes_out,omitempty"`
+
+	// Responses is the number of responses observed.
+	Responses int64 `json:"responses,omitempty"`
+
+	// Requests is the number of requests observed.
+	Requests int64 `json:"requests,omitempty"`
+
+	// ModTime is when this activity record was last updated, in Unix milliseconds.
+	ModTime int64 `json:"mod_time,omitempty"`
+}
+
+// DeviceGroup represents a logical grouping of devices used for BKG clustering.
+type DeviceGroup struct {
+	// ID is the unique device group identifier.
+	ID int64 `json:"id,omitempty"`
+
+	// Name is the human-readable group name.
+	Name string `json:"name,omitempty"`
+
+	// Description is an optional description of the group's purpose.
+	Description string `json:"description,omitempty"`
+
+	// Type is "static" (manually managed) or "dynamic" (rule-based).
+	Type string `json:"type,omitempty"`
+
+	// ModTime is when the group was last modified, in Unix milliseconds.
+	ModTime int64 `json:"mod_time,omitempty"`
+}
+
+// DeviceService implements device-related enrichment and search APIs.
 type DeviceService struct {
 	client *Client
 }
 
-// List retrieves all devices. Use search for filtered results.
-func (s *DeviceService) List(ctx context.Context, params *DeviceListParams) ([]*Device, error) {
-	path := "/devices"
-	if params != nil {
-		path += params.encode()
-	}
-	var devices []*Device
-	_, err := s.client.get(ctx, path, &devices)
-	return devices, err
-}
-
-// DeviceListParams are optional parameters for List.
-type DeviceListParams struct {
-	ActiveFrom int64  `url:"active_from,omitempty"`
-	ActiveUntil int64 `url:"active_until,omitempty"`
-	Limit      int    `url:"limit,omitempty"`
-	Offset     int    `url:"offset,omitempty"`
-	SearchType string `url:"search_type,omitempty"`
-	Value      string `url:"value,omitempty"`
-}
-
-func (p *DeviceListParams) encode() string {
-	if p == nil {
-		return ""
-	}
-	q := make([]string, 0)
-	if p.ActiveFrom != 0 {
-		q = append(q, fmt.Sprintf("active_from=%d", p.ActiveFrom))
-	}
-	if p.ActiveUntil != 0 {
-		q = append(q, fmt.Sprintf("active_until=%d", p.ActiveUntil))
-	}
-	if p.Limit != 0 {
-		q = append(q, fmt.Sprintf("limit=%d", p.Limit))
-	}
-	if p.Offset != 0 {
-		q = append(q, fmt.Sprintf("offset=%d", p.Offset))
-	}
-	if p.SearchType != "" {
-		q = append(q, "search_type="+p.SearchType)
-	}
-	if p.Value != "" {
-		q = append(q, "value="+p.Value)
-	}
-	if len(q) == 0 {
-		return ""
-	}
-	return "?" + joinParams(q)
-}
-
-// Get retrieves a specific device by ID.
-func (s *DeviceService) Get(ctx context.Context, id int64) (*Device, error) {
-	var device Device
-	_, err := s.client.get(ctx, fmt.Sprintf("/devices/%d", id), &device)
-	return &device, err
-}
-
-// Update modifies a specific device.
-func (s *DeviceService) Update(ctx context.Context, id int64, device *Device) error {
-	_, err := s.client.patch(ctx, fmt.Sprintf("/devices/%d", id), device)
-	return err
-}
-
-// Search finds devices matching the given criteria.
+// Search finds devices matching the given criteria (IP, MAC address, or name).
+//
+// API: POST /devices/search
 func (s *DeviceService) Search(ctx context.Context, req *DeviceSearchRequest) ([]*Device, error) {
-	var devices []*Device
-	_, err := s.client.post(ctx, "/devices/search", req, &devices)
-	return devices, err
-}
-
-// GetActivity retrieves activity for a device.
-func (s *DeviceService) GetActivity(ctx context.Context, id int64) ([]map[string]interface{}, error) {
-	var activity []map[string]interface{}
-	_, err := s.client.get(ctx, fmt.Sprintf("/devices/%d/activity", id), &activity)
-	return activity, err
-}
-
-// ListAlerts retrieves alerts assigned to a device.
-func (s *DeviceService) ListAlerts(ctx context.Context, id int64) ([]*Alert, error) {
-	var alerts []*Alert
-	_, err := s.client.get(ctx, fmt.Sprintf("/devices/%d/alerts", id), &alerts)
-	return alerts, err
-}
-
-// ListTags retrieves tags assigned to a device.
-func (s *DeviceService) ListTags(ctx context.Context, id int64) ([]*Tag, error) {
-	var tags []*Tag
-	_, err := s.client.get(ctx, fmt.Sprintf("/devices/%d/tags", id), &tags)
-	return tags, err
-}
-
-// AssignTag assigns a tag to a device.
-func (s *DeviceService) AssignTag(ctx context.Context, deviceID, tagID int64) error {
-	_, err := s.client.post(ctx, fmt.Sprintf("/devices/%d/tags/%d", deviceID, tagID), nil, nil)
-	return err
-}
-
-// UnassignTag removes a tag from a device.
-func (s *DeviceService) UnassignTag(ctx context.Context, deviceID, tagID int64) error {
-	_, err := s.client.delete(ctx, fmt.Sprintf("/devices/%d/tags/%d", deviceID, tagID))
-	return err
-}
-
-// ListDeviceGroups retrieves device groups for a device.
-func (s *DeviceService) ListDeviceGroups(ctx context.Context, id int64) ([]*DeviceGroup, error) {
-	var groups []*DeviceGroup
-	_, err := s.client.get(ctx, fmt.Sprintf("/devices/%d/devicegroups", id), &groups)
-	return groups, err
-}
-
-// ListSoftware retrieves software for a device.
-func (s *DeviceService) ListSoftware(ctx context.Context, id int64) ([]*Software, error) {
-	var software []*Software
-	_, err := s.client.get(ctx, fmt.Sprintf("/devices/%d/software", id), &software)
-	return software, err
-}
-
-// ListIPAddrs retrieves IP addresses for a device.
-func (s *DeviceService) ListIPAddrs(ctx context.Context, id int64) ([]map[string]interface{}, error) {
-	var addrs []map[string]interface{}
-	_, err := s.client.get(ctx, fmt.Sprintf("/devices/%d/ipaddrs", id), &addrs)
-	return addrs, err
-}
-
-// ListDNSNames retrieves DNS names for a device.
-func (s *DeviceService) ListDNSNames(ctx context.Context, id int64) ([]string, error) {
-	var names []string
-	_, err := s.client.get(ctx, fmt.Sprintf("/devices/%d/dnsnames", id), &names)
-	return names, err
-}
-
-func joinParams(params []string) string {
-	result := ""
-	for i, p := range params {
-		if i > 0 {
-			result += "&"
-		}
-		result += p
+	var out []*Device
+	if err := s.client.post(ctx, "/devices/search", req, &out); err != nil {
+		return nil, err
 	}
-	return result
+	return out, nil
+}
+
+// Get returns full detail for a single device by its numeric ID.
+//
+// API: GET /devices/{id}
+func (s *DeviceService) Get(ctx context.Context, id int64) (*Device, error) {
+	var out Device
+	if err := s.client.get(ctx, fmt.Sprintf("/devices/%d", id), &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetActivity returns the protocol-level activity for a device.
+// Use this to validate which protocols are active on a device (live enrichment).
+//
+// API: GET /devices/{id}/activity
+func (s *DeviceService) GetActivity(ctx context.Context, id int64) ([]*DeviceActivity, error) {
+	var out []*DeviceActivity
+	if err := s.client.get(ctx, fmt.Sprintf("/devices/%d/activity", id), &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ListDeviceGroups returns the device groups that contain the specified device.
+// Use this to determine BKG cluster membership during live enrichment.
+//
+// API: GET /devices/{id}/devicegroups
+func (s *DeviceService) ListDeviceGroups(ctx context.Context, id int64) ([]*DeviceGroup, error) {
+	var out []*DeviceGroup
+	if err := s.client.get(ctx, fmt.Sprintf("/devices/%d/devicegroups", id), &out); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
