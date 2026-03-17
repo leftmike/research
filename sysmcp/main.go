@@ -16,21 +16,21 @@ import (
 )
 
 // dateTool returns the current date.
-func dateTool(_ context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[struct{}]) (*mcp.CallToolResultFor[struct{}], error) {
-	return &mcp.CallToolResultFor[struct{}]{
+func dateTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, struct{}, error) {
+	return &mcp.CallToolResult{
 		Content: []mcp.Content{
 			&mcp.TextContent{Text: time.Now().Format("2006-01-02")},
 		},
-	}, nil
+	}, struct{}{}, nil
 }
 
 // timeTool returns the current time with timezone.
-func timeTool(_ context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[struct{}]) (*mcp.CallToolResultFor[struct{}], error) {
-	return &mcp.CallToolResultFor[struct{}]{
+func timeTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, struct{}, error) {
+	return &mcp.CallToolResult{
 		Content: []mcp.Content{
 			&mcp.TextContent{Text: time.Now().Format("15:04:05 MST")},
 		},
-	}, nil
+	}, struct{}{}, nil
 }
 
 // readOSRelease parses /etc/os-release into a key=value map.
@@ -52,7 +52,7 @@ func readOSRelease() map[string]string {
 }
 
 // osTool returns OS name and kernel version (Linux-specific).
-func osTool(_ context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[struct{}]) (*mcp.CallToolResultFor[struct{}], error) {
+func osTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, struct{}, error) {
 	release := readOSRelease()
 	name := release["PRETTY_NAME"]
 	if name == "" {
@@ -69,15 +69,15 @@ func osTool(_ context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[st
 		fmt.Fprintf(&sb, "Kernel: %s\n", strings.TrimSpace(string(data)))
 	}
 
-	return &mcp.CallToolResultFor[struct{}]{
+	return &mcp.CallToolResult{
 		Content: []mcp.Content{
 			&mcp.TextContent{Text: strings.TrimRight(sb.String(), "\n")},
 		},
-	}, nil
+	}, struct{}{}, nil
 }
 
 // hardwareTool returns CPU model, core count, and total RAM (Linux-specific).
-func hardwareTool(_ context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[struct{}]) (*mcp.CallToolResultFor[struct{}], error) {
+func hardwareTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, struct{}, error) {
 	var sb strings.Builder
 
 	// CPU model from /proc/cpuinfo
@@ -112,11 +112,11 @@ func hardwareTool(_ context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParams
 		f.Close()
 	}
 
-	return &mcp.CallToolResultFor[struct{}]{
+	return &mcp.CallToolResult{
 		Content: []mcp.Content{
 			&mcp.TextContent{Text: strings.TrimRight(sb.String(), "\n")},
 		},
-	}, nil
+	}, struct{}{}, nil
 }
 
 func newServer() *mcp.Server {
@@ -162,7 +162,7 @@ func main() {
 		}
 	} else {
 		server := newServer()
-		if err := server.Run(context.Background(), mcp.NewStdioTransport()); err != nil {
+		if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 			log.Fatalf("server error: %v", err)
 		}
 	}
