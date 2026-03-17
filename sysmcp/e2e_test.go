@@ -54,6 +54,31 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+// claudeCmd returns the claude command and arguments prefix.
+// It tries "claude" first, then falls back to "npx @anthropic-ai/claude-code".
+func claudeCmd(t *testing.T) (string, []string) {
+	t.Helper()
+	if path, err := exec.LookPath("claude"); err == nil {
+		return path, nil
+	}
+	if path, err := exec.LookPath("npx"); err == nil {
+		return path, []string{"@anthropic-ai/claude-code"}
+	}
+	t.Fatal("claude CLI not found: install via npm install -g @anthropic-ai/claude-code")
+	return "", nil
+}
+
+// runClaude runs the claude CLI with the given arguments.
+func runClaude(t *testing.T, args ...string) (string, error) {
+	t.Helper()
+	bin, prefix := claudeCmd(t)
+	fullArgs := append(prefix, args...)
+	cmd := exec.Command(bin, fullArgs...)
+	cmd.Env = os.Environ()
+	out, err := cmd.CombinedOutput()
+	return string(out), err
+}
+
 func TestE2E(t *testing.T) {
 	if os.Getenv("OPENAI_API_KEY") == "" {
 		t.Skip("OPENAI_API_KEY not set; skipping e2e tests")
@@ -126,6 +151,83 @@ func TestE2E(t *testing.T) {
 			output := strings.TrimSpace(string(data))
 			if output == "" {
 				t.Fatal("codex exec produced empty output")
+			}
+
+			t.Logf("Output: %s", output)
+
+			re := regexp.MustCompile(tc.pattern)
+			if !re.MatchString(output) {
+				t.Errorf("output %q did not match pattern %q", output, tc.pattern)
+			}
+		})
+	}
+}
+
+func TestClaudeE2E(t *testing.T) {
+	if os.Getenv("ANTHROPIC_API_KEY") == "" {
+		t.Skip("ANTHROPIC_API_KEY not set; skipping Claude e2e tests")
+	}
+
+	binary := buildBinary(t)
+	mcpName := "sysmcp-claude-e2e-test"
+
+	// Defensively remove any prior registration.
+	runClaude(t, "mcp", "remove", mcpName)
+
+	// Register the MCP server.
+	t.Logf("Registering MCP server %s -> %s", mcpName, binary)
+	if out, err := runClaude(t, "mcp", "add", mcpName, "--", binary); err != nil {
+		t.Fatalf("mcp add failed: %v\n%s", err, out)
+	}
+	t.Cleanup(func() {
+		runClaude(t, "mcp", "remove", mcpName)
+	})
+
+	tests := []struct {
+		name    string
+		tool    string
+		pattern string
+	}{
+		{
+			name:    "date",
+			tool:    "date",
+			pattern: `\d{4}-\d{2}-\d{2}`,
+		},
+		{
+			name:    "time",
+			tool:    "time",
+			pattern: `\d{2}:\d{2}:\d{2}`,
+		},
+		{
+			name:    "os",
+			tool:    "os",
+			pattern: `(?i)OS:`,
+		},
+		{
+			name:    "hardware",
+			tool:    "hardware",
+			pattern: `(?i)(CPU:|Cores:|RAM:)`,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			prompt := "Use the " + tc.tool + " tool from the " + mcpName +
+				" MCP server. Reply with ONLY the tool output, nothing else."
+
+			allowedTool := "mcp__" + mcpName + "__" + tc.tool
+
+			out, err := runClaude(t,
+				"-p", prompt,
+				"--allowedTools", allowedTool,
+			)
+			if err != nil {
+				t.Fatalf("claude -p failed: %v\n%s", err, out)
+			}
+
+			output := strings.TrimSpace(out)
+			if output == "" {
+				t.Fatal("claude -p produced empty output")
 			}
 
 			t.Logf("Output: %s", output)
