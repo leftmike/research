@@ -258,3 +258,118 @@ func TestClaudeE2E(t *testing.T) {
 		})
 	}
 }
+
+// geminiCmd returns the gemini command.
+func geminiCmd(t *testing.T) string {
+	t.Helper()
+	path, err := exec.LookPath("gemini")
+	if err != nil {
+		t.Fatal("gemini CLI not found: install via npm install -g @google/gemini-cli")
+	}
+	return path
+}
+
+// runGemini runs the gemini CLI with the given arguments.
+func runGemini(t *testing.T, args ...string) (string, error) {
+	t.Helper()
+	bin := geminiCmd(t)
+	cmd := exec.Command(bin, args...)
+	cmd.Env = os.Environ()
+	out, err := cmd.CombinedOutput()
+	return string(out), err
+}
+
+// geminiIsAuthenticated returns true if the gemini CLI is configured with an active login session.
+func geminiIsAuthenticated(t *testing.T) bool {
+	t.Helper()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return false
+	}
+	settingsPath := filepath.Join(home, ".gemini", "settings.json")
+	data, err := os.ReadFile(settingsPath)
+	if err != nil {
+		return false
+	}
+	// Simple check: if it contains an auth selectedType other than 'gemini-api-key'
+	// or if GEMINI_API_KEY is set in the environment, we assume it can authenticate.
+	content := string(data)
+	if strings.Contains(content, `"selectedType":`) && !strings.Contains(content, `"selectedType": "gemini-api-key"`) {
+		return true
+	}
+	return os.Getenv("GEMINI_API_KEY") != ""
+}
+
+func TestGeminiE2E(t *testing.T) {
+	if !geminiIsAuthenticated(t) {
+		t.Skip("no Gemini auth available (set GEMINI_API_KEY or log in with `gemini`); skipping Gemini e2e tests")
+	}
+
+	binary := buildBinary(t)
+	mcpName := "sysmcp-gemini-e2e-test"
+
+	// Defensively remove any prior registration.
+	runGemini(t, "mcp", "remove", mcpName)
+
+	// Register the MCP server.
+	t.Logf("Registering MCP server %s -> %s", mcpName, binary)
+	if out, err := runGemini(t, "mcp", "add", mcpName, binary); err != nil {
+		t.Fatalf("mcp add failed: %v\n%s", err, out)
+	}
+	t.Cleanup(func() {
+		runGemini(t, "mcp", "remove", mcpName)
+	})
+
+	tests := []struct {
+		name    string
+		tool    string
+		pattern string
+	}{
+		{
+			name:    "date",
+			tool:    "date",
+			pattern: `\d{4}-\d{2}-\d{2}`,
+		},
+		{
+			name:    "time",
+			tool:    "time",
+			pattern: `\d{2}:\d{2}:\d{2}`,
+		},
+		{
+			name:    "os",
+			tool:    "os",
+			pattern: `(?i)OS:`,
+		},
+		{
+			name:    "hardware",
+			tool:    "hardware",
+			pattern: `(?i)(CPU:|Cores:|RAM:)`,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			prompt := "Use the " + tc.tool + " tool from the " + mcpName +
+				" MCP server. Reply with ONLY the tool output, nothing else."
+
+			t.Logf("Calling gemini with prompt: %s", prompt)
+			// Use --yolo to bypass tool execution confirmation prompts
+			out, err := runGemini(t, "--yolo", "-p", prompt)
+			if err != nil {
+				t.Fatalf("gemini -p failed: %v\n%s", err, out)
+			}
+
+			output := strings.TrimSpace(out)
+			if output == "" {
+				t.Fatal("gemini -p produced empty output")
+			}
+
+			t.Logf("gemini output: %s", output)
+
+			re := regexp.MustCompile(tc.pattern)
+			if !re.MatchString(output) {
+				t.Errorf("output %q did not match pattern %q", output, tc.pattern)
+			}
+		})
+	}
+}
