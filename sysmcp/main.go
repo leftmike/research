@@ -12,25 +12,26 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 // dateTool returns the current date.
-func dateTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, struct{}, error) {
+func dateTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
 			&mcp.TextContent{Text: time.Now().Format("2006-01-02")},
 		},
-	}, struct{}{}, nil
+	}, nil
 }
 
 // timeTool returns the current time with timezone.
-func timeTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, struct{}, error) {
+func timeTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
 			&mcp.TextContent{Text: time.Now().Format("15:04:05 MST")},
 		},
-	}, struct{}{}, nil
+	}, nil
 }
 
 // readOSRelease parses /etc/os-release into a key=value map.
@@ -52,7 +53,7 @@ func readOSRelease() map[string]string {
 }
 
 // osTool returns OS name and kernel version (Linux-specific).
-func osTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, struct{}, error) {
+func osTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	release := readOSRelease()
 	name := release["PRETTY_NAME"]
 	if name == "" {
@@ -73,11 +74,11 @@ func osTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToo
 		Content: []mcp.Content{
 			&mcp.TextContent{Text: strings.TrimRight(sb.String(), "\n")},
 		},
-	}, struct{}{}, nil
+	}, nil
 }
 
 // hardwareTool returns CPU model, core count, and total RAM (Linux-specific).
-func hardwareTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, struct{}, error) {
+func hardwareTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	var sb strings.Builder
 
 	// CPU model from /proc/cpuinfo
@@ -116,30 +117,34 @@ func hardwareTool(_ context.Context, _ *mcp.CallToolRequest, _ struct{}) (*mcp.C
 		Content: []mcp.Content{
 			&mcp.TextContent{Text: strings.TrimRight(sb.String(), "\n")},
 		},
-	}, struct{}{}, nil
+	}, nil
 }
 
 func newServer() *mcp.Server {
 	server := mcp.NewServer(&mcp.Implementation{Name: "sysmcp", Version: "0.1.0"}, nil)
 
-	mcp.AddTool(server, &mcp.Tool{
+	server.AddTool(&mcp.Tool{
 		Name:        "date",
 		Description: "Return the current date (YYYY-MM-DD)",
+		InputSchema: &jsonschema.Schema{Type: "object"},
 	}, dateTool)
 
-	mcp.AddTool(server, &mcp.Tool{
+	server.AddTool(&mcp.Tool{
 		Name:        "time",
 		Description: "Return the current time (HH:MM:SS timezone)",
+		InputSchema: &jsonschema.Schema{Type: "object"},
 	}, timeTool)
 
-	mcp.AddTool(server, &mcp.Tool{
+	server.AddTool(&mcp.Tool{
 		Name:        "os",
 		Description: "Return OS name and kernel version (Linux)",
+		InputSchema: &jsonschema.Schema{Type: "object"},
 	}, osTool)
 
-	mcp.AddTool(server, &mcp.Tool{
+	server.AddTool(&mcp.Tool{
 		Name:        "hardware",
 		Description: "Return CPU model, core count, and total RAM (Linux)",
+		InputSchema: &jsonschema.Schema{Type: "object"},
 	}, hardwareTool)
 
 	return server

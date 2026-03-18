@@ -163,24 +163,35 @@ func TestE2E(t *testing.T) {
 	}
 }
 
+// claudeIsAuthenticated returns true if the claude CLI has an active login session.
+func claudeIsAuthenticated(t *testing.T) bool {
+	t.Helper()
+	bin, prefix := claudeCmd(t)
+	args := append(prefix, "auth", "status")
+	cmd := exec.Command(bin, args...)
+	cmd.Env = os.Environ()
+	out, err := cmd.CombinedOutput()
+	return err == nil && strings.Contains(string(out), `"loggedIn": true`)
+}
+
 func TestClaudeE2E(t *testing.T) {
-	if os.Getenv("ANTHROPIC_API_KEY") == "" {
-		t.Skip("ANTHROPIC_API_KEY not set; skipping Claude e2e tests")
+	if os.Getenv("ANTHROPIC_API_KEY") == "" && !claudeIsAuthenticated(t) {
+		t.Skip("no Claude auth available (set ANTHROPIC_API_KEY or log in with `claude`); skipping Claude e2e tests")
 	}
 
 	binary := buildBinary(t)
 	mcpName := "sysmcp-claude-e2e-test"
 
 	// Defensively remove any prior registration.
-	runClaude(t, "mcp", "remove", mcpName)
+	runClaude(t, "mcp", "remove", "--scope", "user", mcpName)
 
-	// Register the MCP server.
+	// Register the MCP server at user scope so it's visible to all claude invocations.
 	t.Logf("Registering MCP server %s -> %s", mcpName, binary)
-	if out, err := runClaude(t, "mcp", "add", mcpName, "--", binary); err != nil {
+	if out, err := runClaude(t, "mcp", "add", "--scope", "user", mcpName, "--", binary); err != nil {
 		t.Fatalf("mcp add failed: %v\n%s", err, out)
 	}
 	t.Cleanup(func() {
-		runClaude(t, "mcp", "remove", mcpName)
+		runClaude(t, "mcp", "remove", "--scope", "user", mcpName)
 	})
 
 	tests := []struct {
@@ -215,12 +226,7 @@ func TestClaudeE2E(t *testing.T) {
 			prompt := "Use the " + tc.tool + " tool from the " + mcpName +
 				" MCP server. Reply with ONLY the tool output, nothing else."
 
-			allowedTool := "mcp__" + mcpName + "__" + tc.tool
-
-			out, err := runClaude(t,
-				"-p", prompt,
-				"--allowedTools", allowedTool,
-			)
+			out, err := runClaude(t, "-p", prompt)
 			if err != nil {
 				t.Fatalf("claude -p failed: %v\n%s", err, out)
 			}
