@@ -79,7 +79,7 @@ func runClaude(t *testing.T, args ...string) (string, error) {
 	return string(out), err
 }
 
-func TestE2E(t *testing.T) {
+func TestCodexE2E(t *testing.T) {
 	if os.Getenv("OPENAI_API_KEY") == "" {
 		t.Skip("OPENAI_API_KEY not set; skipping e2e tests")
 	}
@@ -132,6 +132,7 @@ func TestE2E(t *testing.T) {
 			prompt := "Use the " + tc.tool + " tool from the " + mcpName +
 				" MCP server. Reply with ONLY the tool output, nothing else."
 
+			t.Logf("Calling codex with prompt: %s", prompt)
 			out, err := runCodex(t,
 				"exec",
 				"--skip-git-repo-check",
@@ -153,7 +154,7 @@ func TestE2E(t *testing.T) {
 				t.Fatal("codex exec produced empty output")
 			}
 
-			t.Logf("Output: %s", output)
+			t.Logf("codex output: %s", output)
 
 			re := regexp.MustCompile(tc.pattern)
 			if !re.MatchString(output) {
@@ -226,6 +227,7 @@ func TestClaudeE2E(t *testing.T) {
 			prompt := "Use the " + tc.tool + " tool from the " + mcpName +
 				" MCP server. Reply with ONLY the tool output, nothing else."
 
+			t.Logf("Calling claude with prompt: %s", prompt)
 			out, err := runClaude(t, "-p", prompt)
 			if err != nil {
 				t.Fatalf("claude -p failed: %v\n%s", err, out)
@@ -236,7 +238,7 @@ func TestClaudeE2E(t *testing.T) {
 				t.Fatal("claude -p produced empty output")
 			}
 
-			t.Logf("Output: %s", output)
+			t.Logf("claude output: %s", output)
 
 			re := regexp.MustCompile(tc.pattern)
 			if !re.MatchString(output) {
