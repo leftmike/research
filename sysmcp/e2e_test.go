@@ -79,9 +79,20 @@ func runClaude(t *testing.T, args ...string) (string, error) {
 	return string(out), err
 }
 
+// codexIsAuthenticated returns true if the codex CLI has an active login session.
+func codexIsAuthenticated(t *testing.T) bool {
+	t.Helper()
+	bin, prefix := codexCmd(t)
+	args := append(prefix, "login", "status")
+	cmd := exec.Command(bin, args...)
+	cmd.Env = os.Environ()
+	out, err := cmd.CombinedOutput()
+	return err == nil && strings.Contains(string(out), "Logged in")
+}
+
 func TestCodexE2E(t *testing.T) {
-	if os.Getenv("OPENAI_API_KEY") == "" {
-		t.Skip("OPENAI_API_KEY not set; skipping e2e tests")
+	if os.Getenv("OPENAI_API_KEY") == "" && !codexIsAuthenticated(t) {
+		t.Skip("no Codex auth available (set OPENAI_API_KEY or log in with `codex`); skipping Codex e2e tests")
 	}
 
 	binary := buildBinary(t)
