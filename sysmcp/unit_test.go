@@ -2,17 +2,62 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 	"testing"
 
-	"github.com/mark3labs/mcp-go/client"
-	mcpgo "github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
 )
 
-// TestToolsUnit tests all four sysmcp tools using the mark3labs/mcp-go client
-// package by launching the server as a subprocess and communicating over stdio.
+// newTestServer builds a mark3labs/mcp-go MCPServer whose tool handlers call
+// the same getDate/getTime/getOS/getHardware helpers used by the real server.
+func newTestServer() *server.MCPServer {
+	s := server.NewMCPServer("sysmcp-test", "0.1.0")
+
+	s.AddTool(
+		mcp.NewTool("date", mcp.WithDescription("Return the current date (YYYY-MM-DD)")),
+		func(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			return mcp.NewToolResultText(getDate()), nil
+		},
+	)
+	s.AddTool(
+		mcp.NewTool("time", mcp.WithDescription("Return the current time (HH:MM:SS timezone)")),
+		func(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			return mcp.NewToolResultText(getTime()), nil
+		},
+	)
+	s.AddTool(
+		mcp.NewTool("os", mcp.WithDescription("Return OS name and kernel version (Linux)")),
+		func(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			return mcp.NewToolResultText(getOS()), nil
+		},
+	)
+	s.AddTool(
+		mcp.NewTool("hardware", mcp.WithDescription("Return CPU model, core count, and total RAM (Linux)")),
+		func(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			return mcp.NewToolResultText(getHardware()), nil
+		},
+	)
+
+	return s
+}
+
 func TestToolsUnit(t *testing.T) {
-	binary := buildBinary(t)
+	s := newTestServer()
+	ctx := context.Background()
+
+	// Initialize the server (required before calling tools).
+	_ = s.HandleMessage(ctx, []byte(`{
+		"jsonrpc": "2.0",
+		"id": 0,
+		"method": "initialize",
+		"params": {
+			"protocolVersion": "2024-11-05",
+			"clientInfo": {"name": "unit-test", "version": "0.0.1"},
+			"capabilities": {}
+		}
+	}`))
 
 	tests := []struct {
 		tool    string
@@ -26,43 +71,28 @@ func TestToolsUnit(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.tool, func(t *testing.T) {
-			c, err := client.NewStdioMCPClient(binary, nil)
-			if err != nil {
-				t.Fatalf("creating MCP client: %v", err)
+			msg := fmt.Sprintf(`{
+				"jsonrpc": "2.0",
+				"id": 1,
+				"method": "tools/call",
+				"params": {"name": %q, "arguments": {}}
+			}`, tc.tool)
+
+			response := s.HandleMessage(ctx, []byte(msg))
+
+			resp, ok := response.(mcp.JSONRPCResponse)
+			if !ok {
+				t.Fatalf("tool %q: expected JSONRPCResponse, got %T", tc.tool, response)
 			}
-			defer c.Close()
-
-			ctx := context.Background()
-
-			_, err = c.Initialize(ctx, mcpgo.InitializeRequest{
-				Params: mcpgo.InitializeParams{
-					ProtocolVersion: mcpgo.LATEST_PROTOCOL_VERSION,
-					ClientInfo: mcpgo.Implementation{
-						Name:    "sysmcp-unit-test",
-						Version: "0.0.1",
-					},
-				},
-			})
-			if err != nil {
-				t.Fatalf("initializing MCP connection: %v", err)
-			}
-
-			result, err := c.CallTool(ctx, mcpgo.CallToolRequest{
-				Params: mcpgo.CallToolParams{
-					Name: tc.tool,
-				},
-			})
-			if err != nil {
-				t.Fatalf("calling tool %q: %v", tc.tool, err)
+			result, ok := resp.Result.(*mcp.CallToolResult)
+			if !ok {
+				t.Fatalf("tool %q: expected *CallToolResult, got %T", tc.tool, resp.Result)
 			}
 
 			var text string
-			for _, content := range result.Content {
-				switch v := content.(type) {
-				case mcpgo.TextContent:
-					text += v.Text
-				case *mcpgo.TextContent:
-					text += v.Text
+			for _, c := range result.Content {
+				if tc2, ok := c.(mcp.TextContent); ok {
+					text += tc2.Text
 				}
 			}
 
