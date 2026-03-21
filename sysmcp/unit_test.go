@@ -1,63 +1,56 @@
 package main
 
 import (
+	"bytes"
 	"context"
-	"fmt"
+	"io"
 	"regexp"
 	"testing"
 
-	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/mark3labs/mcp-go/server"
+	mcpclient "github.com/mark3labs/mcp-go/client"
+	"github.com/mark3labs/mcp-go/client/transport"
+	mcpgo "github.com/mark3labs/mcp-go/mcp"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-// newTestServer builds a mark3labs/mcp-go MCPServer whose tool handlers call
-// the same getDate/getTime/getOS/getHardware helpers used by the real server.
-func newTestServer() *server.MCPServer {
-	s := server.NewMCPServer("sysmcp-test", "0.1.0")
-
-	s.AddTool(
-		mcp.NewTool("date", mcp.WithDescription("Return the current date (YYYY-MM-DD)")),
-		func(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			return mcp.NewToolResultText(getDate()), nil
-		},
-	)
-	s.AddTool(
-		mcp.NewTool("time", mcp.WithDescription("Return the current time (HH:MM:SS timezone)")),
-		func(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			return mcp.NewToolResultText(getTime()), nil
-		},
-	)
-	s.AddTool(
-		mcp.NewTool("os", mcp.WithDescription("Return OS name and kernel version (Linux)")),
-		func(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			return mcp.NewToolResultText(getOS()), nil
-		},
-	)
-	s.AddTool(
-		mcp.NewTool("hardware", mcp.WithDescription("Return CPU model, core count, and total RAM (Linux)")),
-		func(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			return mcp.NewToolResultText(getHardware()), nil
-		},
-	)
-
-	return s
-}
-
+// TestToolsUnit tests all four sysmcp tools by running the go-sdk server
+// in-process and connecting to it with a mark3labs/mcp-go client via io.Pipe.
 func TestToolsUnit(t *testing.T) {
-	s := newTestServer()
 	ctx := context.Background()
 
-	// Initialize the server (required before calling tools).
-	_ = s.HandleMessage(ctx, []byte(`{
-		"jsonrpc": "2.0",
-		"id": 0,
-		"method": "initialize",
-		"params": {
-			"protocolVersion": "2024-11-05",
-			"clientInfo": {"name": "unit-test", "version": "0.0.1"},
-			"capabilities": {}
-		}
-	}`))
+	// Two pipes bridge the go-sdk server and the mark3labs client.
+	// clientWriter → serverReader: client sends requests to server.
+	// serverWriter → clientReader: server sends responses to client.
+	serverReader, clientWriter := io.Pipe()
+	clientReader, serverWriter := io.Pipe()
+
+	// Run the go-sdk server on one end of the pipes.
+	go func() {
+		s := newServer()
+		_ = s.Run(ctx, &mcp.IOTransport{
+			Reader: serverReader,
+			Writer: serverWriter,
+		})
+	}()
+
+	// Connect the mark3labs client to the other ends.
+	tr := transport.NewIO(clientReader, clientWriter, io.NopCloser(bytes.NewReader(nil)))
+	c := mcpclient.NewClient(tr)
+	defer c.Close()
+
+	if err := c.Start(ctx); err != nil {
+		t.Fatalf("starting client: %v", err)
+	}
+
+	initReq := mcpgo.InitializeRequest{}
+	initReq.Params.ProtocolVersion = mcpgo.LATEST_PROTOCOL_VERSION
+	initReq.Params.ClientInfo = mcpgo.Implementation{
+		Name:    "sysmcp-unit-test",
+		Version: "0.0.1",
+	}
+	if _, err := c.Initialize(ctx, initReq); err != nil {
+		t.Fatalf("initializing: %v", err)
+	}
 
 	tests := []struct {
 		tool    string
@@ -71,27 +64,17 @@ func TestToolsUnit(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.tool, func(t *testing.T) {
-			msg := fmt.Sprintf(`{
-				"jsonrpc": "2.0",
-				"id": 1,
-				"method": "tools/call",
-				"params": {"name": %q, "arguments": {}}
-			}`, tc.tool)
+			req := mcpgo.CallToolRequest{}
+			req.Params.Name = tc.tool
 
-			response := s.HandleMessage(ctx, []byte(msg))
-
-			resp, ok := response.(mcp.JSONRPCResponse)
-			if !ok {
-				t.Fatalf("tool %q: expected JSONRPCResponse, got %T", tc.tool, response)
-			}
-			result, ok := resp.Result.(*mcp.CallToolResult)
-			if !ok {
-				t.Fatalf("tool %q: expected *CallToolResult, got %T", tc.tool, resp.Result)
+			result, err := c.CallTool(ctx, req)
+			if err != nil {
+				t.Fatalf("calling tool %q: %v", tc.tool, err)
 			}
 
 			var text string
-			for _, c := range result.Content {
-				if tc2, ok := c.(mcp.TextContent); ok {
+			for _, content := range result.Content {
+				if tc2, ok := content.(mcpgo.TextContent); ok {
 					text += tc2.Text
 				}
 			}
