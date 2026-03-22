@@ -16,21 +16,11 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-// getDate returns the current date as a YYYY-MM-DD string.
-func getDate() string {
-	return time.Now().Format("2006-01-02")
-}
-
-// getTime returns the current time as a HH:MM:SS TZ string.
-func getTime() string {
-	return time.Now().Format("15:04:05 MST")
-}
-
 // dateTool returns the current date.
 func dateTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
-			&mcp.TextContent{Text: getDate()},
+			&mcp.TextContent{Text: time.Now().Format("2006-01-02")},
 		},
 	}, nil
 }
@@ -39,7 +29,7 @@ func dateTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, e
 func timeTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
-			&mcp.TextContent{Text: getTime()},
+			&mcp.TextContent{Text: time.Now().Format("15:04:05 MST")},
 		},
 	}, nil
 }
@@ -62,8 +52,8 @@ func readOSRelease() map[string]string {
 	return result
 }
 
-// getOS returns the OS name and kernel version as a formatted string.
-func getOS() string {
+// osTool returns OS name and kernel version (Linux-specific).
+func osTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	release := readOSRelease()
 	name := release["PRETTY_NAME"]
 	if name == "" {
@@ -80,11 +70,15 @@ func getOS() string {
 		fmt.Fprintf(&sb, "Kernel: %s\n", strings.TrimSpace(string(data)))
 	}
 
-	return strings.TrimRight(sb.String(), "\n")
+	return &mcp.CallToolResult{
+		Content: []mcp.Content{
+			&mcp.TextContent{Text: strings.TrimRight(sb.String(), "\n")},
+		},
+	}, nil
 }
 
-// getHardware returns CPU model, core count, and total RAM as a formatted string.
-func getHardware() string {
+// hardwareTool returns CPU model, core count, and total RAM (Linux-specific).
+func hardwareTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	var sb strings.Builder
 
 	// CPU model from /proc/cpuinfo
@@ -119,23 +113,9 @@ func getHardware() string {
 		f.Close()
 	}
 
-	return strings.TrimRight(sb.String(), "\n")
-}
-
-// osTool returns OS name and kernel version (Linux-specific).
-func osTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
-			&mcp.TextContent{Text: getOS()},
-		},
-	}, nil
-}
-
-// hardwareTool returns CPU model, core count, and total RAM (Linux-specific).
-func hardwareTool(_ context.Context, _ *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{
-			&mcp.TextContent{Text: getHardware()},
+			&mcp.TextContent{Text: strings.TrimRight(sb.String(), "\n")},
 		},
 	}, nil
 }
