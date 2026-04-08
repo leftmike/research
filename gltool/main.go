@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -77,16 +78,58 @@ func accessLevelName(v gitlab.AccessLevelValue) string {
 	}
 }
 
+// memberJSON is the JSON representation of a project member.
+type memberJSON struct {
+	Username    string  `json:"username"`
+	ID          int64   `json:"id"`
+	Name        string  `json:"name"`
+	AccessLevel string  `json:"access_level"`
+	Expires     *string `json:"expires"`
+}
+
+func memberToJSON(m *gitlab.ProjectMember) memberJSON {
+	j := memberJSON{
+		Username:    m.Username,
+		ID:          m.ID,
+		Name:        m.Name,
+		AccessLevel: accessLevelName(m.AccessLevel),
+	}
+	if m.ExpiresAt != nil {
+		s := m.ExpiresAt.String()
+		j.Expires = &s
+	}
+	return j
+}
+
+func printJSON(v any) {
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(v); err != nil {
+		log.Fatalf("json encode: %v", err)
+	}
+}
+
 func cmdList(gl *gitlab.Client, project string, args []string) {
 	fs := flag.NewFlagSet("list", flag.ExitOnError)
+	jsonOut := fs.Bool("json", false, "output as JSON array")
 	fs.Usage = func() {
-		fmt.Fprintln(os.Stderr, "usage: gltool list")
+		fmt.Fprintln(os.Stderr, "usage: gltool list [-json]")
+		fs.PrintDefaults()
 	}
 	fs.Parse(args) //nolint:errcheck
 
 	members, _, err := gl.ProjectMembers.ListAllProjectMembers(project, nil)
 	if err != nil {
 		log.Fatalf("list members: %v", err)
+	}
+
+	if *jsonOut {
+		out := make([]memberJSON, len(members))
+		for i, m := range members {
+			out[i] = memberToJSON(m)
+		}
+		printJSON(out)
+		return
 	}
 
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
@@ -105,8 +148,9 @@ func cmdAdd(gl *gitlab.Client, project string, args []string) {
 	fs := flag.NewFlagSet("add", flag.ExitOnError)
 	level := fs.String("level", "", "access level: guest|reporter|developer|maintainer|owner (required)")
 	expires := fs.String("expires", "", "expiration date in YYYY-MM-DD format (optional)")
+	jsonOut := fs.Bool("json", false, "output result as JSON")
 	fs.Usage = func() {
-		fmt.Fprintln(os.Stderr, "usage: gltool add <username> -level <level> [-expires YYYY-MM-DD]")
+		fmt.Fprintln(os.Stderr, "usage: gltool add <username> -level <level> [-expires YYYY-MM-DD] [-json]")
 		fs.PrintDefaults()
 	}
 	fs.Parse(args) //nolint:errcheck
@@ -146,13 +190,20 @@ func cmdAdd(gl *gitlab.Client, project string, args []string) {
 	if err != nil {
 		log.Fatalf("add member: %v", err)
 	}
+
+	if *jsonOut {
+		printJSON(memberToJSON(member))
+		return
+	}
 	fmt.Printf("Added %s (id=%d) as %s\n", member.Username, member.ID, accessLevelName(member.AccessLevel))
 }
 
 func cmdRemove(gl *gitlab.Client, project string, args []string) {
 	fs := flag.NewFlagSet("remove", flag.ExitOnError)
+	jsonOut := fs.Bool("json", false, "output result as JSON")
 	fs.Usage = func() {
-		fmt.Fprintln(os.Stderr, "usage: gltool remove <username>")
+		fmt.Fprintln(os.Stderr, "usage: gltool remove [-json] <username>")
+		fs.PrintDefaults()
 	}
 	fs.Parse(args) //nolint:errcheck
 
@@ -171,7 +222,101 @@ func cmdRemove(gl *gitlab.Client, project string, args []string) {
 	if err != nil {
 		log.Fatalf("remove member: %v", err)
 	}
+
+	if *jsonOut {
+		printJSON(map[string]any{"removed": true, "username": username})
+		return
+	}
 	fmt.Printf("Removed %s from project\n", username)
+}
+
+// helpFlag describes a single flag for the help command output.
+type helpFlag struct {
+	Name        string `json:"name"`
+	Type        string `json:"type"`
+	Required    bool   `json:"required"`
+	Default     string `json:"default,omitempty"`
+	Description string `json:"description"`
+}
+
+// helpArg describes a positional argument.
+type helpArg struct {
+	Name        string `json:"name"`
+	Required    bool   `json:"required"`
+	Description string `json:"description"`
+}
+
+// helpCommand describes a subcommand.
+type helpCommand struct {
+	Name        string     `json:"name"`
+	Description string     `json:"description"`
+	Flags       []helpFlag `json:"flags"`
+	Args        []helpArg  `json:"args"`
+	Example     string     `json:"example"`
+}
+
+// helpDoc is the full machine-readable help document.
+type helpDoc struct {
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	GlobalFlags []helpFlag    `json:"global_flags"`
+	Commands    []helpCommand `json:"commands"`
+}
+
+func cmdHelp() {
+	doc := helpDoc{
+		Name:        "gltool",
+		Description: "Manage GitLab project membership: list, add, and remove members.",
+		GlobalFlags: []helpFlag{
+			{Name: "url", Type: "string", Required: true, Description: "GitLab base URL (e.g. https://gitlab.example.com). Also read from $GITLAB_URL."},
+			{Name: "token", Type: "string", Required: true, Description: "GitLab personal access token with api scope. Also read from $GITLAB_TOKEN."},
+			{Name: "project", Type: "string", Required: true, Description: "Project path (e.g. mygroup/myrepo) or numeric project ID. Also read from $GITLAB_PROJECT."},
+			{Name: "insecure", Type: "bool", Required: false, Default: "false", Description: "Skip TLS certificate verification. Use for self-hosted instances with self-signed certificates."},
+		},
+		Commands: []helpCommand{
+			{
+				Name:        "list",
+				Description: "List all direct members of the project with their access levels and expiry dates.",
+				Flags: []helpFlag{
+					{Name: "json", Type: "bool", Required: false, Default: "false", Description: "Output members as a JSON array instead of a human-readable table."},
+				},
+				Args:    []helpArg{},
+				Example: "gltool -project mygroup/myrepo list -json",
+			},
+			{
+				Name:        "add",
+				Description: "Add a GitLab user to the project with the specified access level.",
+				Flags: []helpFlag{
+					{Name: "level", Type: "string", Required: true, Description: "Access level to grant. One of: guest, reporter, developer, maintainer, owner."},
+					{Name: "expires", Type: "string", Required: false, Description: "Optional membership expiration date in YYYY-MM-DD format. Omit for no expiry."},
+					{Name: "json", Type: "bool", Required: false, Default: "false", Description: "Output the newly added member as a JSON object instead of a human-readable message."},
+				},
+				Args: []helpArg{
+					{Name: "username", Required: true, Description: "GitLab username of the user to add."},
+				},
+				Example: "gltool -project mygroup/myrepo add alice -level developer -expires 2026-12-31 -json",
+			},
+			{
+				Name:        "remove",
+				Description: "Remove a GitLab user from the project.",
+				Flags: []helpFlag{
+					{Name: "json", Type: "bool", Required: false, Default: "false", Description: "Output the result as a JSON object instead of a human-readable message."},
+				},
+				Args: []helpArg{
+					{Name: "username", Required: true, Description: "GitLab username of the user to remove."},
+				},
+				Example: "gltool -project mygroup/myrepo remove alice -json",
+			},
+			{
+				Name:        "help",
+				Description: "Print this machine-readable help document as JSON. Does not require -url, -token, or -project.",
+				Flags:       []helpFlag{},
+				Args:        []helpArg{},
+				Example:     "gltool help",
+			},
+		},
+	}
+	printJSON(doc)
 }
 
 func usage() {
@@ -184,10 +329,11 @@ Global flags:
   -insecure        Skip TLS certificate verification
 
 Subcommands:
-  list                              List project members
-  add <username> -level <level>     Add a member (levels: guest|reporter|developer|maintainer|owner)
-                 [-expires DATE]    Optional expiration date (YYYY-MM-DD)
-  remove <username>                 Remove a member`)
+  list [-json]                              List project members
+  add <username> -level <level> [-json]     Add a member (levels: guest|reporter|developer|maintainer|owner)
+                 [-expires DATE]            Optional expiration date (YYYY-MM-DD)
+  remove [-json] <username>                 Remove a member
+  help                                      Print machine-readable help as JSON`)
 }
 
 func main() {
@@ -198,6 +344,12 @@ func main() {
 
 	flag.Usage = usage
 	flag.Parse()
+
+	// help doesn't need credentials — handle it before validation.
+	if flag.NArg() > 0 && flag.Arg(0) == "help" {
+		cmdHelp()
+		return
+	}
 
 	if *urlFlag == "" {
 		*urlFlag = os.Getenv("GITLAB_URL")
