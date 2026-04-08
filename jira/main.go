@@ -243,6 +243,8 @@ func printIssue(issue *jira.Issue) {
 }
 
 func printIssueList(issues []jira.Issue) {
+	fmt.Printf("%-14s  %-20s  %-10s  %s\n", "KEY", "STATUS", "UPDATED", "TITLE")
+	fmt.Printf("%-14s  %-20s  %-10s  %s\n", strings.Repeat("-", 14), strings.Repeat("-", 20), strings.Repeat("-", 10), strings.Repeat("-", 40))
 	for _, issue := range issues {
 		f := issue.Fields
 		status := ""
