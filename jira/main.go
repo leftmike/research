@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -14,9 +15,20 @@ import (
 
 var (
 	jiraURL   = flag.String("url", "", "Jira base URL (e.g. https://mycompany.atlassian.net)")
-	jiraUser  = flag.String("user", "", "Jira username (email)")
-	jiraToken = flag.String("token", "", "Jira API token")
+	jiraUser  = flag.String("user", "", "Jira username (email); omit to use PAT/Bearer auth")
+	jiraToken = flag.String("token", "", "Jira API token (Basic Auth) or PAT (Bearer)")
 )
+
+// patTransport adds a Bearer token header for PAT-based authentication.
+type patTransport struct {
+	token string
+}
+
+func (t *patTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req2 := req.Clone(req.Context())
+	req2.Header.Set("Authorization", "Bearer "+t.token)
+	return http.DefaultTransport.RoundTrip(req2)
+}
 
 func main() {
 	flag.Parse()
@@ -36,23 +48,28 @@ func main() {
 
 	if flag.NArg() != 1 {
 		fmt.Fprintf(os.Stderr, "Usage: jira [flags] TICKET-ID\n\n")
-		fmt.Fprintf(os.Stderr, "Credentials may be set via flags or environment variables (JIRA_URL, JIRA_USER, JIRA_TOKEN).\n\n")
+		fmt.Fprintf(os.Stderr, "Credentials may be set via flags or environment variables (JIRA_URL, JIRA_USER, JIRA_TOKEN).\n")
+		fmt.Fprintf(os.Stderr, "Omit --user to authenticate with a PAT (Bearer token).\n\n")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
-	if url == "" || user == "" || token == "" {
-		fmt.Fprintf(os.Stderr, "error: --url, --user, and --token are required (or set JIRA_URL, JIRA_USER, JIRA_TOKEN)\n")
+	if url == "" || token == "" {
+		fmt.Fprintf(os.Stderr, "error: --url and --token are required (or set JIRA_URL, JIRA_TOKEN)\n")
 		os.Exit(1)
 	}
 
 	issueKey := flag.Arg(0)
 
-	tp := jira.BasicAuthTransport{
-		Username: user,
-		APIToken: token,
+	var httpClient *http.Client
+	if user != "" {
+		tp := jira.BasicAuthTransport{Username: user, APIToken: token}
+		httpClient = tp.Client()
+	} else {
+		httpClient = &http.Client{Transport: &patTransport{token: token}}
 	}
-	client, err := jira.NewClient(url, tp.Client())
+
+	client, err := jira.NewClient(url, httpClient)
 	if err != nil {
 		log.Fatalf("create client: %v", err)
 	}
