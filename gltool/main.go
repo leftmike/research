@@ -118,9 +118,20 @@ func cmdList(gl *gitlab.Client, project string, args []string) {
 	}
 	fs.Parse(args) //nolint:errcheck
 
-	members, _, err := gl.ProjectMembers.ListAllProjectMembers(project, nil)
-	if err != nil {
-		log.Fatalf("list members: %v", err)
+	var members []*gitlab.ProjectMember
+	opts := &gitlab.ListProjectMembersOptions{
+		ListOptions: gitlab.ListOptions{PerPage: 100},
+	}
+	for {
+		page, resp, err := gl.ProjectMembers.ListAllProjectMembers(project, opts)
+		if err != nil {
+			log.Fatalf("list members: %v", err)
+		}
+		members = append(members, page...)
+		if resp.NextPage == 0 {
+			break
+		}
+		opts.Page = resp.NextPage
 	}
 
 	if *jsonOut {
