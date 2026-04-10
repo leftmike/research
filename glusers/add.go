@@ -28,14 +28,13 @@ func resolveUserID(gl *gitlab.Client, username string) (int64, error) {
 	return users[0].ID, nil
 }
 
-func parseExpires(input string) (string, error) {
+func parseExpires(input string, now time.Time) (string, error) {
 	if input == "" {
 		return "", nil
 	}
-	lower := strings.ToLower(input)
-	last := lower[len(lower)-1]
+	last := input[len(input)-1]
 	if last == 'd' || last == 'w' {
-		n, err := strconv.Atoi(lower[:len(lower)-1])
+		n, err := strconv.Atoi(input[:len(input)-1])
 		if err != nil || n <= 0 {
 			return "", fmt.Errorf("invalid expires value %q: expected positive number with d or w suffix", input)
 		}
@@ -43,7 +42,7 @@ func parseExpires(input string) (string, error) {
 		if last == 'w' {
 			days = n * 7
 		}
-		t := time.Now().AddDate(0, 0, days)
+		t := now.AddDate(0, 0, days)
 		return t.Format("2006-01-02"), nil
 	}
 
@@ -132,7 +131,7 @@ func cmdAdd(args []string) {
 		AccessLevel: gitlab.Ptr(accessLevel),
 	}
 	if expires != "" {
-		parsedExpires, err := parseExpires(expires)
+		parsedExpires, err := parseExpires(expires, time.Now())
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			os.Exit(1)
