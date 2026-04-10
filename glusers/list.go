@@ -5,10 +5,21 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"text/tabwriter"
 
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
+
+func truncateUsername(s string, max int) string {
+	if max <= 0 || len(s) <= max {
+		return s
+	}
+	if max == 1 {
+		return "…"
+	}
+	return s[:max-1] + "…"
+}
 
 func cmdList(args []string) {
 	fs := flag.NewFlagSet("list", flag.ExitOnError)
@@ -61,13 +72,15 @@ func cmdList(args []string) {
 	}
 
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
-	fmt.Fprintln(w, "USERNAME\tID\tACCESS LEVEL\tEXPIRES")
+	fmt.Fprintln(w, "USERNAME\tACCESS LEVEL\tEXPIRES")
 	for _, m := range members {
-		expires := "-"
+		expires := ""
 		if m.ExpiresAt != nil {
 			expires = m.ExpiresAt.String()
 		}
-		fmt.Fprintf(w, "%s\t%d\t%s\t%s\n", m.Username, m.ID, accessLevelName(m.AccessLevel), expires)
+		username := strings.TrimSpace(m.Username)
+		username = truncateUsername(username, 20)
+		fmt.Fprintf(w, "%s\t%s\t%s\n", username, accessLevelName(m.AccessLevel), expires)
 	}
 	w.Flush()
 }
