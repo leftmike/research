@@ -237,6 +237,31 @@ func formatLocalTime(s string, tz *time.Location) string {
 	return t.Format("3:04 PM")
 }
 
+// locationsModel is a walk.ListModel backing the locations ComboBox.
+// It renders each geocodingResult as "Name, Country".
+type locationsModel struct {
+	walk.ListModelBase
+	items []geocodingResult
+}
+
+func newLocationsModel(items []geocodingResult) *locationsModel {
+	return &locationsModel{items: append([]geocodingResult(nil), items...)}
+}
+
+func (m *locationsModel) ItemCount() int {
+	return len(m.items)
+}
+
+func (m *locationsModel) Value(index int) interface{} {
+	l := m.items[index]
+	return fmt.Sprintf("%s, %s", l.Name, l.Country)
+}
+
+func (m *locationsModel) reset(items []geocodingResult) {
+	m.items = append([]geocodingResult(nil), items...)
+	m.PublishItemsReset()
+}
+
 // ForecastItem is one row in the forecast TableView.
 type ForecastItem struct {
 	Day       string
@@ -324,7 +349,7 @@ func (m *ForecastModel) Load(w *weatherResponse, tz *time.Location) {
 func main() {
 	var (
 		mw           *walk.MainWindow
-		cityEdit     *walk.LineEdit
+		locationCB   *walk.ComboBox
 		locLabel     *walk.Label
 		coordsLabel  *walk.Label
 		currentLabel *walk.Label
@@ -334,6 +359,12 @@ func main() {
 
 	state := loadState()
 	model := NewForecastModel()
+	locModel := newLocationsModel(state.Locations)
+
+	// suppressCombo is true while we are programmatically changing the
+	// ComboBox selection, so OnCurrentIndexChanged doesn't kick off a
+	// redundant search.
+	suppressCombo := false
 
 	// tickerStop lets us cancel the previous clock goroutine when the
 	// user searches for a new city.
@@ -365,7 +396,7 @@ func main() {
 		}(stop, tz)
 	}
 
-	// doSearch either geocodes the text in cityEdit (knownLoc == nil)
+	// doSearch either geocodes the text in locationCB (knownLoc == nil)
 	// or skips straight to fetching weather for an already-known
 	// location (knownLoc != nil), e.g. the one restored from state at
 	// startup.
@@ -374,7 +405,7 @@ func main() {
 		if knownLoc != nil {
 			query = knownLoc.Name
 		} else {
-			query = strings.TrimSpace(cityEdit.Text())
+			query = strings.TrimSpace(locationCB.Text())
 			if query == "" {
 				statusLabel.SetText("Please enter a city name.")
 				return
@@ -433,6 +464,11 @@ func main() {
 
 				state.addOrSetCurrent(*loc)
 				saveState(state)
+
+				suppressCombo = true
+				locModel.reset(state.Locations)
+				locationCB.SetCurrentIndex(state.Current)
+				suppressCombo = false
 			})
 			startClock(tz)
 		}()
@@ -453,9 +489,21 @@ func main() {
 			Composite{
 				Layout: HBox{MarginsZero: true},
 				Children: []Widget{
-					LineEdit{
-						AssignTo:  &cityEdit,
-						CueBanner: "Enter city (e.g. Tokyo)",
+					ComboBox{
+						AssignTo: &locationCB,
+						Editable: true,
+						Model:    locModel,
+						OnCurrentIndexChanged: func() {
+							if suppressCombo {
+								return
+							}
+							idx := locationCB.CurrentIndex()
+							if idx < 0 || idx >= len(state.Locations) {
+								return
+							}
+							loc := state.Locations[idx]
+							doSearch(&loc)
+						},
 						OnKeyDown: func(key walk.Key) {
 							if key == walk.KeyReturn {
 								searchFromEdit()
@@ -535,7 +583,9 @@ func main() {
 
 	// Restore the current location on startup, if one is saved.
 	if cur := state.currentLocation(); cur != nil {
-		cityEdit.SetText(cur.Name)
+		suppressCombo = true
+		locationCB.SetCurrentIndex(state.Current)
+		suppressCombo = false
 		loc := *cur
 		go mw.Synchronize(func() { doSearch(&loc) })
 	}
