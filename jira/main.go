@@ -35,11 +35,11 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "Commands:\n")
 	fmt.Fprintf(os.Stderr, "  get TICKET-ID\n")
 	fmt.Fprintf(os.Stderr, "      Fetch and display a single ticket.\n\n")
-	fmt.Fprintf(os.Stderr, "  created PROJECT SINCE\n")
+	fmt.Fprintf(os.Stderr, "  created PROJECT SINCE [FILTER] [FILTER]\n")
 	fmt.Fprintf(os.Stderr, "      List tickets in a project created since a duration ago. Examples: 24h, 7d, 2w.\n\n")
-	fmt.Fprintf(os.Stderr, "  updated PROJECT SINCE\n")
+	fmt.Fprintf(os.Stderr, "  updated PROJECT SINCE [FILTER] [FILTER]\n")
 	fmt.Fprintf(os.Stderr, "      List tickets in a project updated since a duration ago. Examples: 24h, 7d, 2w.\n\n")
-	fmt.Fprintf(os.Stderr, "  list -updated PROJECT SINCE\n")
+	fmt.Fprintf(os.Stderr, "  list -updated PROJECT SINCE [FILTER] [FILTER]\n")
 	fmt.Fprintf(os.Stderr, "      Alias for 'updated'.\n\n")
 	fmt.Fprintf(os.Stderr, "  help\n")
 	fmt.Fprintf(os.Stderr, "      Show this help.\n\n")
@@ -124,11 +124,11 @@ func cmdGet(client *jira.Client, args []string) {
 func cmdCreated(client *jira.Client, args []string) {
 	fs := flag.NewFlagSet("created", flag.ExitOnError)
 	fs.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: jira created PROJECT SINCE\n")
+		fmt.Fprintf(os.Stderr, "Usage: jira created PROJECT SINCE [FILTER] [FILTER]\n")
 	}
 	fs.Parse(args)
 
-	if fs.NArg() != 2 {
+	if fs.NArg() < 2 || fs.NArg() > 4 {
 		fs.Usage()
 		os.Exit(1)
 	}
@@ -145,6 +145,9 @@ func cmdCreated(client *jira.Client, args []string) {
 		log.Fatalf("search: %v", err)
 	}
 
+	filters := append([]string{}, fs.Args()[2:]...)
+	issues = filterIssues(issues, filters)
+
 	if len(issues) == 0 {
 		fmt.Println("No tickets found.")
 		return
@@ -155,11 +158,11 @@ func cmdCreated(client *jira.Client, args []string) {
 func cmdUpdated(client *jira.Client, args []string) {
 	fs := flag.NewFlagSet("updated", flag.ExitOnError)
 	fs.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: jira updated PROJECT SINCE\n")
+		fmt.Fprintf(os.Stderr, "Usage: jira updated PROJECT SINCE [FILTER] [FILTER]\n")
 	}
 	fs.Parse(args)
 
-	if fs.NArg() != 2 {
+	if fs.NArg() < 2 || fs.NArg() > 4 {
 		fs.Usage()
 		os.Exit(1)
 	}
@@ -176,6 +179,9 @@ func cmdUpdated(client *jira.Client, args []string) {
 		log.Fatalf("search: %v", err)
 	}
 
+	filters := append([]string{}, fs.Args()[2:]...)
+	issues = filterIssues(issues, filters)
+
 	if len(issues) == 0 {
 		fmt.Println("No tickets found.")
 		return
@@ -187,7 +193,7 @@ func cmdList(client *jira.Client, args []string) {
 	fs := flag.NewFlagSet("list", flag.ExitOnError)
 	updated := fs.Bool("updated", false, "list tickets updated since a duration ago (alias for 'updated')")
 	fs.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: jira list -updated PROJECT SINCE\n\n")
+		fmt.Fprintf(os.Stderr, "Usage: jira list -updated PROJECT SINCE [FILTER] [FILTER]\n\n")
 		fs.PrintDefaults()
 	}
 	fs.Parse(args)
@@ -198,6 +204,63 @@ func cmdList(client *jira.Client, args []string) {
 	}
 
 	cmdUpdated(client, fs.Args())
+}
+
+func filterIssues(issues []jira.Issue, filters []string) []jira.Issue {
+	if len(filters) == 0 {
+		return issues
+	}
+	if len(filters) > 2 {
+		return nil
+	}
+
+	norm := make([]string, 0, len(filters))
+	for _, f := range filters {
+		f = strings.ToLower(normalizeSpaces(f))
+		if f != "" {
+			norm = append(norm, f)
+		}
+	}
+	if len(norm) == 0 {
+		return issues
+	}
+
+	out := make([]jira.Issue, 0, len(issues))
+	for _, issue := range issues {
+		f := issue.Fields
+		if f == nil {
+			continue
+		}
+
+		status := ""
+		if f.Status != nil {
+			status = f.Status.Name
+		}
+		rawStatus := strings.ToLower(normalizeSpaces(status))
+		dispStatus := strings.ToLower(normalizeSpaces(formatIssueStatus(status)))
+
+		rawType := strings.ToLower(normalizeSpaces(f.Type.Name))
+		dispType := strings.ToLower(normalizeSpaces(formatIssueType(f.Type.Name)))
+
+		matchesAll := true
+		for _, tok := range norm {
+			if tok != rawStatus && tok != dispStatus && tok != rawType && tok != dispType {
+				matchesAll = false
+				break
+			}
+		}
+		if !matchesAll {
+			continue
+		}
+
+		out = append(out, issue)
+	}
+	return out
+}
+
+func formatIssueStatus(name string) string {
+	name = normalizeSpaces(name)
+	return truncateRunes(name, 12)
 }
 
 func searchAllIssues(ctx context.Context, client *jira.Client, jql string) ([]jira.Issue, error) {
@@ -318,9 +381,7 @@ func printIssueList(issues []jira.Issue, dateField string) {
 		if f.Status != nil {
 			status = f.Status.Name
 		}
-		if rs := []rune(status); len(rs) > 12 {
-			status = string(rs[:12])
-		}
+		status = formatIssueStatus(status)
 
 		dateValue := ""
 		switch dateField {
