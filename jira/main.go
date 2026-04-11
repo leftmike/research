@@ -37,6 +37,10 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "      Fetch and display a single ticket.\n\n")
 	fmt.Fprintf(os.Stderr, "  created PROJECT SINCE\n")
 	fmt.Fprintf(os.Stderr, "      List tickets in a project created since a duration ago. Examples: 24h, 7d, 2w.\n\n")
+	fmt.Fprintf(os.Stderr, "  updated PROJECT SINCE\n")
+	fmt.Fprintf(os.Stderr, "      List tickets in a project updated since a duration ago. Examples: 24h, 7d, 2w.\n\n")
+	fmt.Fprintf(os.Stderr, "  list -updated PROJECT SINCE\n")
+	fmt.Fprintf(os.Stderr, "      Alias for 'updated'.\n\n")
 	fmt.Fprintf(os.Stderr, "  help\n")
 	fmt.Fprintf(os.Stderr, "      Show this help.\n\n")
 	fmt.Fprintf(os.Stderr, "Global flags:\n")
@@ -86,6 +90,10 @@ func main() {
 		cmdGet(client, args[1:])
 	case "created":
 		cmdCreated(client, args[1:])
+	case "updated":
+		cmdUpdated(client, args[1:])
+	case "list":
+		cmdList(client, args[1:])
 	default:
 		// Bare ticket ID: treat as "get" for backward compatibility.
 		cmdGet(client, args)
@@ -141,7 +149,55 @@ func cmdCreated(client *jira.Client, args []string) {
 		fmt.Println("No tickets found.")
 		return
 	}
-	printIssueList(issues)
+	printIssueList(issues, "created")
+}
+
+func cmdUpdated(client *jira.Client, args []string) {
+	fs := flag.NewFlagSet("updated", flag.ExitOnError)
+	fs.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: jira updated PROJECT SINCE\n")
+	}
+	fs.Parse(args)
+
+	if fs.NArg() != 2 {
+		fs.Usage()
+		os.Exit(1)
+	}
+
+	project := fs.Arg(0)
+	since, err := parseDuration(fs.Arg(1))
+	if err != nil {
+		log.Fatalf("invalid since duration: %v", err)
+	}
+
+	jql := buildSinceJQL(project, "updated", since, true)
+	issues, _, err := client.Issue.Search(context.Background(), jql, &jira.SearchOptions{MaxResults: 50})
+	if err != nil {
+		log.Fatalf("search: %v", err)
+	}
+
+	if len(issues) == 0 {
+		fmt.Println("No tickets found.")
+		return
+	}
+	printIssueList(issues, "updated")
+}
+
+func cmdList(client *jira.Client, args []string) {
+	fs := flag.NewFlagSet("list", flag.ExitOnError)
+	updated := fs.Bool("updated", false, "list tickets updated since a duration ago (alias for 'updated')")
+	fs.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: jira list -updated PROJECT SINCE\n\n")
+		fs.PrintDefaults()
+	}
+	fs.Parse(args)
+
+	if !*updated {
+		fs.Usage()
+		os.Exit(1)
+	}
+
+	cmdUpdated(client, fs.Args())
 }
 
 func buildSinceJQL(project, field string, since time.Duration, ascending bool) string {
@@ -210,9 +266,23 @@ func printIssue(issue *jira.Issue) {
 	}
 }
 
-func printIssueList(issues []jira.Issue) {
-	fmt.Printf("%-11s  %-12s  %-10s  %s\n", "KEY", "STATUS", "CREATED", "TITLE")
-	fmt.Printf("%-11s  %-12s  %-10s  %s\n", strings.Repeat("-", 11), strings.Repeat("-", 12), strings.Repeat("-", 10), strings.Repeat("-", 40))
+func printIssueList(issues []jira.Issue, dateField string) {
+	const (
+		lineWidth   = 100
+		keyWidth    = 11
+		statusWidth = 12
+		dateWidth   = 10
+	)
+
+	dateHeader := strings.ToUpper(dateField)
+	fmt.Printf("%-*s  %-*s  %-*s  %s\n", keyWidth, "KEY", statusWidth, "STATUS", dateWidth, dateHeader, "TITLE")
+	fmt.Printf("%-*s  %-*s  %-*s  %s\n", keyWidth, strings.Repeat("-", keyWidth), statusWidth, strings.Repeat("-", statusWidth), dateWidth, strings.Repeat("-", dateWidth), strings.Repeat("-", 40))
+
+	titleWidth := lineWidth - (keyWidth + 2 + statusWidth + 2 + dateWidth + 2)
+	if titleWidth < 4 {
+		titleWidth = 4
+	}
+
 	for _, issue := range issues {
 		f := issue.Fields
 		status := ""
@@ -222,10 +292,37 @@ func printIssueList(issues []jira.Issue) {
 		if rs := []rune(status); len(rs) > 12 {
 			status = string(rs[:12])
 		}
-		created := ""
-		if c := time.Time(f.Created); !c.IsZero() {
-			created = c.UTC().Format("01-02-2006")
+
+		dateValue := ""
+		switch dateField {
+		case "created":
+			if t := time.Time(f.Created); !t.IsZero() {
+				dateValue = t.UTC().Format("01-02-2006")
+			}
+		case "updated":
+			if t := time.Time(f.Updated); !t.IsZero() {
+				dateValue = t.UTC().Format("01-02-2006")
+			}
+		default:
+			log.Fatalf("unknown date field %q", dateField)
 		}
-		fmt.Printf("%-11s  %-12s  %-10s  %s\n", issue.Key, status, created, f.Summary)
+
+		title := strings.Join(strings.Fields(f.Summary), " ")
+		title = truncateWithEllipsis(title, titleWidth)
+		fmt.Printf("%-*s  %-*s  %-*s  %s\n", keyWidth, issue.Key, statusWidth, status, dateWidth, dateValue, title)
 	}
+}
+
+func truncateWithEllipsis(s string, maxRunes int) string {
+	if maxRunes <= 0 {
+		return ""
+	}
+	rs := []rune(s)
+	if len(rs) <= maxRunes {
+		return s
+	}
+	if maxRunes <= 3 {
+		return string(rs[:maxRunes])
+	}
+	return string(rs[:maxRunes-3]) + "..."
 }
