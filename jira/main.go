@@ -12,13 +12,12 @@ import (
 	"strings"
 	"time"
 
-	jira "github.com/andygrunwald/go-jira/v2/cloud"
+	jira "github.com/andygrunwald/go-jira/v2/onpremise"
 )
 
 var (
-	jiraURL    = flag.String("url", "", "Jira base URL (e.g. https://mycompany.atlassian.net)")
-	jiraUser   = flag.String("user", "", "Jira username (email); omit to use PAT/Bearer auth")
-	jiraToken  = flag.String("token", "", "Jira API token (Basic Auth) or PAT (Bearer)")
+	jiraURL    = flag.String("url", "", "Jira base URL (e.g. https://jira.mycompany.com)")
+	jiraToken  = flag.String("token", "", "Jira personal access token (sent as Bearer)")
 	jsonOutput = flag.Bool("json", false, "Output as JSON")
 )
 
@@ -88,7 +87,7 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "      Print machine-readable JSON documentation (useful for agents).\n\n")
 	fmt.Fprintf(os.Stderr, "Global flags:\n")
 	flag.PrintDefaults()
-	fmt.Fprintf(os.Stderr, "\nCredentials may also be set via environment variables: JIRA_URL, JIRA_USER, JIRA_TOKEN\n")
+	fmt.Fprintf(os.Stderr, "\nCredentials may also be set via environment variables: JIRA_URL, JIRA_TOKEN\n")
 }
 
 func main() {
@@ -111,10 +110,6 @@ func main() {
 	if url == "" {
 		url = os.Getenv("JIRA_URL")
 	}
-	user := *jiraUser
-	if user == "" {
-		user = os.Getenv("JIRA_USER")
-	}
 	token := *jiraToken
 	if token == "" {
 		token = os.Getenv("JIRA_TOKEN")
@@ -125,13 +120,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	var httpClient *http.Client
-	if user != "" {
-		tp := jira.BasicAuthTransport{Username: user, APIToken: token}
-		httpClient = tp.Client()
-	} else {
-		httpClient = &http.Client{Transport: &patTransport{token: token}}
-	}
+	httpClient := &http.Client{Transport: &patTransport{token: token}}
 
 	client, err := jira.NewClient(url, httpClient)
 	if err != nil {
@@ -252,11 +241,10 @@ func cmdHelp() {
 
 	doc := helpDoc{
 		Tool:        "jira",
-		Description: "CLI for fetching and listing Jira tickets. Supports Basic Auth (email + API token) and PAT (Bearer) authentication.",
+		Description: "CLI for fetching and listing Jira tickets from Jira Data Center. Uses PAT authentication via a Bearer token.",
 		GlobalFlags: []flagDoc{
-			{Name: "--url", Type: "string", Description: "Jira base URL, e.g. https://mycompany.atlassian.net. Overrides JIRA_URL env var.", Required: true},
-			{Name: "--user", Type: "string", Description: "Jira username/email for Basic Auth. Omit to use PAT/Bearer auth. Overrides JIRA_USER env var."},
-			{Name: "--token", Type: "string", Description: "API token (with --user) or PAT (without --user). Overrides JIRA_TOKEN env var.", Required: true},
+			{Name: "--url", Type: "string", Description: "Jira base URL, e.g. https://jira.mycompany.com. Overrides JIRA_URL env var.", Required: true},
+			{Name: "--token", Type: "string", Description: "Personal access token sent as a Bearer token. Overrides JIRA_TOKEN env var.", Required: true},
 			{Name: "--json", Type: "bool", Description: "Emit JSON instead of human-readable text. Applies to get and list."},
 		},
 		Commands: []commandDoc{
@@ -288,8 +276,8 @@ func cmdHelp() {
 		},
 		Notes: []string{
 			"Duration format: h=hours, m=minutes, d=days, w=weeks. Examples: 1h, 24h, 7d, 2w.",
-			"Credentials precedence: flags override environment variables (JIRA_URL, JIRA_USER, JIRA_TOKEN).",
-			"With --user omitted, --token is sent as a Bearer header (PAT auth).",
+			"Credentials precedence: flags override environment variables (JIRA_URL, JIRA_TOKEN).",
+			"--token is sent as a Bearer header (PAT auth).",
 			"JSON output fields for get and list: key, summary, type, status, priority, assignee, reporter, created, updated, description.",
 		},
 	}
