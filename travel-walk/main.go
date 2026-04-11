@@ -27,6 +27,8 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -41,6 +43,75 @@ type geocodingResult struct {
 	Lat      float64 `json:"latitude"`
 	Lon      float64 `json:"longitude"`
 	Timezone string  `json:"timezone"`
+}
+
+// appState persists the user's known locations and which one is
+// currently selected. Current is an index into Locations, or -1 when
+// no location has been chosen yet.
+type appState struct {
+	Locations []geocodingResult `json:"locations"`
+	Current   int               `json:"current"`
+}
+
+// addOrSetCurrent appends loc to Locations if it's not already there
+// (matched by name/country/lat/lon) and points Current at it.
+func (s *appState) addOrSetCurrent(loc geocodingResult) {
+	for i, l := range s.Locations {
+		if l.Name == loc.Name && l.Country == loc.Country &&
+			l.Lat == loc.Lat && l.Lon == loc.Lon {
+			s.Current = i
+			return
+		}
+	}
+	s.Locations = append(s.Locations, loc)
+	s.Current = len(s.Locations) - 1
+}
+
+// currentLocation returns the current location, or nil if Current is
+// out of range.
+func (s *appState) currentLocation() *geocodingResult {
+	if s.Current < 0 || s.Current >= len(s.Locations) {
+		return nil
+	}
+	loc := s.Locations[s.Current]
+	return &loc
+}
+
+func stateFilePath() (string, error) {
+	dir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, "travel-walk", "state.json"), nil
+}
+
+func loadState() *appState {
+	s := &appState{Current: -1}
+	path, err := stateFilePath()
+	if err != nil {
+		return s
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return s
+	}
+	_ = json.Unmarshal(data, s)
+	return s
+}
+
+func saveState(s *appState) {
+	path, err := stateFilePath()
+	if err != nil {
+		return
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return
+	}
+	data, err := json.MarshalIndent(s, "", "  ")
+	if err != nil {
+		return
+	}
+	_ = os.WriteFile(path, data, 0o644)
 }
 
 // weatherResponse holds the Open-Meteo forecast response.
@@ -261,6 +332,7 @@ func main() {
 		statusLabel  *walk.Label
 	)
 
+	state := loadState()
 	model := NewForecastModel()
 
 	// tickerStop lets us cancel the previous clock goroutine when the
@@ -293,11 +365,20 @@ func main() {
 		}(stop, tz)
 	}
 
-	doSearch := func() {
-		city := strings.TrimSpace(cityEdit.Text())
-		if city == "" {
-			statusLabel.SetText("Please enter a city name.")
-			return
+	// doSearch either geocodes the text in cityEdit (knownLoc == nil)
+	// or skips straight to fetching weather for an already-known
+	// location (knownLoc != nil), e.g. the one restored from state at
+	// startup.
+	doSearch := func(knownLoc *geocodingResult) {
+		var query string
+		if knownLoc != nil {
+			query = knownLoc.Name
+		} else {
+			query = strings.TrimSpace(cityEdit.Text())
+			if query == "" {
+				statusLabel.SetText("Please enter a city name.")
+				return
+			}
 		}
 		statusLabel.SetText("Searching...")
 		locLabel.SetText("")
@@ -305,12 +386,18 @@ func main() {
 		currentLabel.SetText("")
 
 		go func() {
-			loc, err := geocode(city)
-			if err != nil {
-				mw.Synchronize(func() {
-					statusLabel.SetText(fmt.Sprintf("Error: %v", err))
-				})
-				return
+			var loc *geocodingResult
+			if knownLoc != nil {
+				loc = knownLoc
+			} else {
+				g, err := geocode(query)
+				if err != nil {
+					mw.Synchronize(func() {
+						statusLabel.SetText(fmt.Sprintf("Error: %v", err))
+					})
+					return
+				}
+				loc = g
 			}
 			weather, err := fetchWeather(loc.Lat, loc.Lon)
 			if err != nil {
@@ -343,12 +430,17 @@ func main() {
 					sunrise, sunset))
 				model.Load(weather, tz)
 				statusLabel.SetText("")
+
+				state.addOrSetCurrent(*loc)
+				saveState(state)
 			})
 			startClock(tz)
 		}()
 	}
 
-	if _, err := (MainWindow{
+	searchFromEdit := func() { doSearch(nil) }
+
+	if err := (MainWindow{
 		AssignTo: &mw,
 		Title:    "Travel Weather",
 		Size:     Size{Width: 646, Height: 400},
@@ -366,14 +458,14 @@ func main() {
 						CueBanner: "Enter city (e.g. Tokyo)",
 						OnKeyDown: func(key walk.Key) {
 							if key == walk.KeyReturn {
-								doSearch()
+								searchFromEdit()
 							}
 						},
 					},
 					PushButton{
 						Text:      "Search",
 						MinSize:   Size{Width: 90},
-						OnClicked: doSearch,
+						OnClicked: searchFromEdit,
 					},
 				},
 			},
@@ -437,7 +529,16 @@ func main() {
 				StretchFactor: 1,
 			},
 		},
-	}.Run()); err != nil {
+	}.Create()); err != nil {
 		log.Fatal(err)
 	}
+
+	// Restore the current location on startup, if one is saved.
+	if cur := state.currentLocation(); cur != nil {
+		cityEdit.SetText(cur.Name)
+		loc := *cur
+		go mw.Synchronize(func() { doSearch(&loc) })
+	}
+
+	mw.Run()
 }
