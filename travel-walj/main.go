@@ -1,0 +1,334 @@
+// travel-walj is a small Windows GUI app built with github.com/lxn/walk
+// that shows the local time and a 7-day weather forecast for a remote
+// city. Weather data is fetched from the free Open-Meteo APIs:
+//
+//	https://geocoding-api.open-meteo.com
+//	https://api.open-meteo.com
+//
+// Build (Windows):
+//
+//	go install github.com/akavel/rsrc@latest
+//	rsrc -manifest app.manifest -o rsrc.syso
+//	go build -ldflags="-H windowsgui"
+//
+// (The manifest is required by walk so the Common Controls 6.0 library
+// is loaded; without it the program will exit at startup.)
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"net/url"
+	"strings"
+	"time"
+
+	"github.com/lxn/walk"
+	. "github.com/lxn/walk/declarative"
+)
+
+// geocodingResult holds a location from the Open-Meteo geocoding API.
+type geocodingResult struct {
+	Name     string  `json:"name"`
+	Country  string  `json:"country"`
+	Lat      float64 `json:"latitude"`
+	Lon      float64 `json:"longitude"`
+	Timezone string  `json:"timezone"`
+}
+
+// weatherResponse holds the Open-Meteo forecast response.
+type weatherResponse struct {
+	Daily struct {
+		Time         []string  `json:"time"`
+		TempMax      []float64 `json:"temperature_2m_max"`
+		TempMin      []float64 `json:"temperature_2m_min"`
+		WeatherCode  []int     `json:"weather_code"`
+		PrecipProb   []int     `json:"precipitation_probability_max"`
+		WindSpeedMax []float64 `json:"wind_speed_10m_max"`
+	} `json:"daily"`
+}
+
+// wmoDescription maps a WMO weather code to a short description.
+func wmoDescription(code int) string {
+	switch {
+	case code == 0:
+		return "Clear sky"
+	case code <= 3:
+		return "Partly cloudy"
+	case code <= 49:
+		return "Fog"
+	case code <= 59:
+		return "Drizzle"
+	case code <= 69:
+		return "Rain"
+	case code <= 79:
+		return "Snow"
+	case code <= 84:
+		return "Rain showers"
+	case code <= 86:
+		return "Snow showers"
+	case code <= 99:
+		return "Thunderstorm"
+	}
+	return "Unknown"
+}
+
+func geocode(city string) (*geocodingResult, error) {
+	u := fmt.Sprintf(
+		"https://geocoding-api.open-meteo.com/v1/search?name=%s&count=1&language=en&format=json",
+		url.QueryEscape(city))
+	resp, err := http.Get(u)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+
+	var data struct {
+		Results []geocodingResult `json:"results"`
+	}
+	if err := json.Unmarshal(body, &data); err != nil {
+		return nil, err
+	}
+	if len(data.Results) == 0 {
+		return nil, fmt.Errorf("location not found: %s", city)
+	}
+	return &data.Results[0], nil
+}
+
+func fetchWeather(lat, lon float64) (*weatherResponse, error) {
+	u := fmt.Sprintf(
+		"https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f"+
+			"&daily=temperature_2m_max,temperature_2m_min,weather_code,"+
+			"precipitation_probability_max,wind_speed_10m_max"+
+			"&forecast_days=7&timezone=auto",
+		lat, lon)
+	resp, err := http.Get(u)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+
+	var w weatherResponse
+	if err := json.Unmarshal(body, &w); err != nil {
+		return nil, err
+	}
+	return &w, nil
+}
+
+// ForecastItem is one row in the forecast TableView.
+type ForecastItem struct {
+	Date      string
+	Condition string
+	High      string
+	Low       string
+	Precip    string
+	Wind      string
+}
+
+// ForecastModel implements walk.TableModel for the forecast TableView.
+type ForecastModel struct {
+	walk.TableModelBase
+	items []*ForecastItem
+}
+
+func NewForecastModel() *ForecastModel {
+	return &ForecastModel{}
+}
+
+func (m *ForecastModel) RowCount() int {
+	return len(m.items)
+}
+
+func (m *ForecastModel) Value(row, col int) interface{} {
+	it := m.items[row]
+	switch col {
+	case 0:
+		return it.Date
+	case 1:
+		return it.Condition
+	case 2:
+		return it.High
+	case 3:
+		return it.Low
+	case 4:
+		return it.Precip
+	case 5:
+		return it.Wind
+	}
+	return ""
+}
+
+func (m *ForecastModel) Load(w *weatherResponse) {
+	n := len(w.Daily.Time)
+	items := make([]*ForecastItem, n)
+	for i := 0; i < n; i++ {
+		it := &ForecastItem{
+			Date:      w.Daily.Time[i],
+			Condition: wmoDescription(w.Daily.WeatherCode[i]),
+			High:      fmt.Sprintf("%.1f °C", w.Daily.TempMax[i]),
+			Low:       fmt.Sprintf("%.1f °C", w.Daily.TempMin[i]),
+		}
+		if i < len(w.Daily.PrecipProb) {
+			it.Precip = fmt.Sprintf("%d%%", w.Daily.PrecipProb[i])
+		}
+		if i < len(w.Daily.WindSpeedMax) {
+			it.Wind = fmt.Sprintf("%.1f km/h", w.Daily.WindSpeedMax[i])
+		}
+		items[i] = it
+	}
+	m.items = items
+	m.PublishRowsReset()
+}
+
+func main() {
+	var (
+		mw          *walk.MainWindow
+		cityEdit    *walk.LineEdit
+		locLabel    *walk.Label
+		clockLabel  *walk.Label
+		statusLabel *walk.Label
+	)
+
+	model := NewForecastModel()
+
+	// tickerStop lets us cancel the previous clock goroutine when the
+	// user searches for a new city.
+	var tickerStop chan struct{}
+
+	startClock := func(timezone string) {
+		if tickerStop != nil {
+			close(tickerStop)
+		}
+		tz, err := time.LoadLocation(timezone)
+		if err != nil {
+			tz = time.UTC
+		}
+		stop := make(chan struct{})
+		tickerStop = stop
+		go func(stop chan struct{}, tz *time.Location) {
+			update := func() {
+				text := time.Now().In(tz).Format(
+					"Monday, 02 Jan 2006  15:04:05 MST")
+				mw.Synchronize(func() { clockLabel.SetText(text) })
+			}
+			update()
+			ticker := time.NewTicker(time.Second)
+			defer ticker.Stop()
+			for {
+				select {
+				case <-stop:
+					return
+				case <-ticker.C:
+					update()
+				}
+			}
+		}(stop, tz)
+	}
+
+	doSearch := func() {
+		city := strings.TrimSpace(cityEdit.Text())
+		if city == "" {
+			statusLabel.SetText("Please enter a city name.")
+			return
+		}
+		statusLabel.SetText("Searching...")
+		locLabel.SetText("")
+
+		go func() {
+			loc, err := geocode(city)
+			if err != nil {
+				mw.Synchronize(func() {
+					statusLabel.SetText(fmt.Sprintf("Error: %v", err))
+				})
+				return
+			}
+			weather, err := fetchWeather(loc.Lat, loc.Lon)
+			if err != nil {
+				mw.Synchronize(func() {
+					statusLabel.SetText(fmt.Sprintf("Error: %v", err))
+				})
+				return
+			}
+			mw.Synchronize(func() {
+				locLabel.SetText(fmt.Sprintf(
+					"%s, %s  (%.2f°, %.2f°)",
+					loc.Name, loc.Country, loc.Lat, loc.Lon))
+				model.Load(weather)
+				statusLabel.SetText(fmt.Sprintf(
+					"7-day forecast for %s", loc.Name))
+			})
+			startClock(loc.Timezone)
+		}()
+	}
+
+	if _, err := (MainWindow{
+		AssignTo: &mw,
+		Title:    "Travel Weather",
+		Size:     Size{Width: 760, Height: 520},
+		Layout:   VBox{},
+		Children: []Widget{
+			Composite{
+				Layout: HBox{MarginsZero: true},
+				Children: []Widget{
+					LineEdit{
+						AssignTo:  &cityEdit,
+						CueBanner: "Enter city (e.g. Tokyo)",
+						OnKeyDown: func(key walk.Key) {
+							if key == walk.KeyReturn {
+								doSearch()
+							}
+						},
+					},
+					PushButton{
+						Text:      "Search",
+						MinSize:   Size{Width: 90},
+						OnClicked: doSearch,
+					},
+				},
+			},
+			Label{
+				AssignTo:      &locLabel,
+				TextAlignment: AlignCenter,
+				Font: Font{
+					Family:    "Segoe UI",
+					PointSize: 11,
+					Bold:      true,
+				},
+			},
+			Label{
+				AssignTo:      &clockLabel,
+				TextAlignment: AlignCenter,
+				Font: Font{
+					Family:    "Consolas",
+					PointSize: 12,
+				},
+			},
+			Label{
+				AssignTo:      &statusLabel,
+				Text:          "Enter a city and press Search",
+				TextAlignment: AlignCenter,
+			},
+			TableView{
+				AlternatingRowBG:    true,
+				ColumnsOrderable:    false,
+				LastColumnStretched: true,
+				Columns: []TableViewColumn{
+					{Title: "Date", Width: 110},
+					{Title: "Condition", Width: 140},
+					{Title: "High", Width: 80},
+					{Title: "Low", Width: 80},
+					{Title: "Precip", Width: 80},
+					{Title: "Wind", Width: 110},
+				},
+				Model:         model,
+				StretchFactor: 1,
+			},
+		},
+	}.Run()); err != nil {
+		log.Fatal(err)
+	}
+}
