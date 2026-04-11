@@ -113,6 +113,7 @@ func fetchWeather(lat, lon float64) (*weatherResponse, error) {
 			"&daily=temperature_2m_max,temperature_2m_min,weather_code,"+
 			"precipitation_probability_max,wind_speed_10m_max"+
 			"&temperature_unit=fahrenheit"+
+			"&wind_speed_unit=mph"+
 			"&forecast_days=7&timezone=auto",
 		lat, lon)
 	resp, err := http.Get(u)
@@ -205,7 +206,7 @@ func (m *ForecastModel) Load(w *weatherResponse, tz *time.Location) {
 			it.Precip = fmt.Sprintf("%d%%", w.Daily.PrecipProb[i])
 		}
 		if i < len(w.Daily.WindSpeedMax) {
-			it.Wind = fmt.Sprintf("%.1f km/h", w.Daily.WindSpeedMax[i])
+			it.Wind = fmt.Sprintf("%.1f mph", w.Daily.WindSpeedMax[i])
 		}
 		items[i] = it
 	}
@@ -288,8 +289,7 @@ func main() {
 					loc.Name, loc.Country, loc.Lat, loc.Lon,
 					weather.Current.Temperature2m))
 				model.Load(weather, tz)
-				statusLabel.SetText(fmt.Sprintf(
-					"7-day forecast for %s", loc.Name))
+				statusLabel.SetText("")
 			})
 			startClock(tz)
 		}()
@@ -353,6 +353,7 @@ func main() {
 			TableView{
 				AlternatingRowBG:    true,
 				ColumnsOrderable:    false,
+				HeaderHidden:        true,
 				LastColumnStretched: true,
 				Columns: []TableViewColumn{
 					{Title: "Day", Width: 60},
