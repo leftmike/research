@@ -30,10 +30,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
+	"github.com/lxn/win"
 )
 
 // geocodingResult holds a location from the Open-Meteo geocoding API.
@@ -260,6 +262,38 @@ func (m *locationsModel) Value(index int) interface{} {
 func (m *locationsModel) reset(items []geocodingResult) {
 	m.items = append([]geocodingResult(nil), items...)
 	m.PublishItemsReset()
+}
+
+// Walk's ComboBox lives in a MainWindow (not a Dialog), so when the user
+// presses Enter in the edit child, the default EDIT wndproc receives the
+// WM_CHAR '\r' and plays MessageBeep. We subclass the edit hwnd with a
+// filter that swallows that one message and forwards everything else to
+// walk's existing chain.
+var (
+	origComboEditWndProc uintptr
+	comboEditFilterPtr   uintptr
+)
+
+func init() {
+	comboEditFilterPtr = syscall.NewCallback(comboEditFilter)
+}
+
+func comboEditFilter(hwnd win.HWND, msg uint32, wParam, lParam uintptr) uintptr {
+	if msg == win.WM_CHAR && wParam == win.VK_RETURN {
+		return 0
+	}
+	return win.CallWindowProc(origComboEditWndProc, hwnd, msg, wParam, lParam)
+}
+
+// silenceComboEnterBell subclasses the edit child of cb so that pressing
+// Enter no longer produces the Windows alert sound.
+func silenceComboEnterBell(cb *walk.ComboBox) {
+	editHwnd := win.GetWindow(cb.Handle(), win.GW_CHILD)
+	if editHwnd == 0 {
+		return
+	}
+	origComboEditWndProc = win.SetWindowLongPtr(
+		editHwnd, win.GWLP_WNDPROC, comboEditFilterPtr)
 }
 
 // ForecastItem is one row in the forecast TableView.
@@ -580,6 +614,8 @@ func main() {
 	}.Create()); err != nil {
 		log.Fatal(err)
 	}
+
+	silenceComboEnterBell(locationCB)
 
 	// Restore the current location on startup, if one is saved.
 	if cur := state.currentLocation(); cur != nil {
