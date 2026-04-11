@@ -7,12 +7,17 @@
 //
 // Build (Windows):
 //
-//	go install github.com/akavel/rsrc@latest
-//	rsrc -manifest app.manifest -o rsrc.syso
 //	go build -ldflags="-H windowsgui"
 //
-// (The manifest is required by walk so the Common Controls 6.0 library
-// is loaded; without it the program will exit at startup.)
+// The checked-in rsrc_windows_amd64.syso embeds app.manifest so the
+// Common Controls 6.0 library is loaded at startup; without it walk
+// crashes during widget init with "TTM_ADDTOOL failed". To regenerate
+// the syso after editing app.manifest:
+//
+//	go install github.com/akavel/rsrc@latest
+//	go generate ./...
+//
+//go:generate rsrc -manifest app.manifest -o rsrc_windows_amd64.syso
 package main
 
 import (
