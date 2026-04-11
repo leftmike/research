@@ -47,6 +47,8 @@ type geocodingResult struct {
 type weatherResponse struct {
 	Current struct {
 		Temperature2m float64 `json:"temperature_2m"`
+		WeatherCode   int     `json:"weather_code"`
+		WindSpeed10m  float64 `json:"wind_speed_10m"`
 	} `json:"current"`
 	Daily struct {
 		Time         []string  `json:"time"`
@@ -109,7 +111,7 @@ func geocode(city string) (*geocodingResult, error) {
 func fetchWeather(lat, lon float64) (*weatherResponse, error) {
 	u := fmt.Sprintf(
 		"https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f"+
-			"&current=temperature_2m"+
+			"&current=temperature_2m,weather_code,wind_speed_10m"+
 			"&daily=temperature_2m_max,temperature_2m_min,weather_code,"+
 			"precipitation_probability_max,wind_speed_10m_max"+
 			"&temperature_unit=fahrenheit"+
@@ -236,11 +238,13 @@ func (m *ForecastModel) Load(w *weatherResponse, tz *time.Location) {
 
 func main() {
 	var (
-		mw          *walk.MainWindow
-		cityEdit    *walk.LineEdit
-		locLabel    *walk.Label
-		clockLabel  *walk.Label
-		statusLabel *walk.Label
+		mw           *walk.MainWindow
+		cityEdit     *walk.LineEdit
+		locLabel     *walk.Label
+		coordsLabel  *walk.Label
+		currentLabel *walk.Label
+		clockLabel   *walk.Label
+		statusLabel  *walk.Label
 	)
 
 	model := NewForecastModel()
@@ -283,6 +287,8 @@ func main() {
 		}
 		statusLabel.SetText("Searching...")
 		locLabel.SetText("")
+		coordsLabel.SetText("")
+		currentLabel.SetText("")
 
 		go func() {
 			loc, err := geocode(city)
@@ -304,11 +310,15 @@ func main() {
 				tz = time.UTC
 			}
 			mw.Synchronize(func() {
-				locLabel.SetText(fmt.Sprintf(
-					"%s, %s  (lat %s, lon %s)   %.1f °F",
-					loc.Name, loc.Country,
-					formatLat(loc.Lat), formatLon(loc.Lon),
-					weather.Current.Temperature2m))
+				locLabel.SetText(fmt.Sprintf("%s, %s", loc.Name, loc.Country))
+				coordsLabel.SetText(fmt.Sprintf(
+					"Latitude %s, Longitude %s",
+					formatLat(loc.Lat), formatLon(loc.Lon)))
+				currentLabel.SetText(fmt.Sprintf(
+					"%.1f °F   %s   Wind %.1f mph",
+					weather.Current.Temperature2m,
+					wmoDescription(weather.Current.WeatherCode),
+					weather.Current.WindSpeed10m))
 				model.Load(weather, tz)
 				statusLabel.SetText("")
 			})
@@ -319,7 +329,7 @@ func main() {
 	if _, err := (MainWindow{
 		AssignTo: &mw,
 		Title:    "Travel Weather",
-		Size:     Size{Width: 646, Height: 340},
+		Size:     Size{Width: 646, Height: 400},
 		Layout:   VBox{},
 		Font: Font{
 			Family:    "Segoe UI",
@@ -351,6 +361,22 @@ func main() {
 				Font: Font{
 					Family:    "Segoe UI Semibold",
 					PointSize: 16,
+				},
+			},
+			Label{
+				AssignTo:      &coordsLabel,
+				TextAlignment: AlignCenter,
+				Font: Font{
+					Family:    "Segoe UI",
+					PointSize: 9,
+				},
+			},
+			Label{
+				AssignTo:      &currentLabel,
+				TextAlignment: AlignCenter,
+				Font: Font{
+					Family:    "Segoe UI",
+					PointSize: 12,
 				},
 			},
 			Label{
