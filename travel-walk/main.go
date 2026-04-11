@@ -172,12 +172,24 @@ func (m *ForecastModel) Value(row, col int) interface{} {
 	return ""
 }
 
-func (m *ForecastModel) Load(w *weatherResponse) {
+func (m *ForecastModel) Load(w *weatherResponse, tz *time.Location) {
+	todayYMD := time.Now().In(tz).Format("2006-01-02")
+
 	n := len(w.Daily.Time)
 	items := make([]*ForecastItem, n)
 	for i := 0; i < n; i++ {
+		raw := w.Daily.Time[i]
+		var date string
+		if t, err := time.ParseInLocation("2006-01-02", raw, tz); err != nil {
+			date = raw
+		} else if raw == todayYMD {
+			date = "Today " + t.Format("1/2")
+		} else {
+			date = t.Format("Mon 1/2")
+		}
+
 		it := &ForecastItem{
-			Date:      w.Daily.Time[i],
+			Date:      date,
 			Condition: wmoDescription(w.Daily.WeatherCode[i]),
 			High:      fmt.Sprintf("%.1f °F", w.Daily.TempMax[i]),
 			Low:       fmt.Sprintf("%.1f °F", w.Daily.TempMin[i]),
@@ -209,13 +221,9 @@ func main() {
 	// user searches for a new city.
 	var tickerStop chan struct{}
 
-	startClock := func(timezone string) {
+	startClock := func(tz *time.Location) {
 		if tickerStop != nil {
 			close(tickerStop)
-		}
-		tz, err := time.LoadLocation(timezone)
-		if err != nil {
-			tz = time.UTC
 		}
 		stop := make(chan struct{})
 		tickerStop = stop
@@ -263,16 +271,20 @@ func main() {
 				})
 				return
 			}
+			tz, err := time.LoadLocation(loc.Timezone)
+			if err != nil {
+				tz = time.UTC
+			}
 			mw.Synchronize(func() {
 				locLabel.SetText(fmt.Sprintf(
 					"%s, %s  (%.2f°, %.2f°)   %.1f °F",
 					loc.Name, loc.Country, loc.Lat, loc.Lon,
 					weather.Current.Temperature2m))
-				model.Load(weather)
+				model.Load(weather, tz)
 				statusLabel.SetText(fmt.Sprintf(
 					"7-day forecast for %s", loc.Name))
 			})
-			startClock(loc.Timezone)
+			startClock(tz)
 		}()
 	}
 
