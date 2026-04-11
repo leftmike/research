@@ -193,7 +193,8 @@ func main() {
 					return
 				case <-ticker.C:
 					now := time.Now().In(tz)
-					clockLabel.SetText(now.Format("Monday, 02 Jan 2006  15:04:05 MST"))
+					text := now.Format("Monday, 02 Jan 2006  15:04:05 MST")
+					fyne.Do(func() { clockLabel.SetText(text) })
 				}
 			}
 		}(tickerStop)
@@ -214,23 +215,25 @@ func main() {
 		go func() {
 			loc, err := geocode(city)
 			if err != nil {
-				statusLabel.SetText(fmt.Sprintf("Error: %v", err))
+				fyne.Do(func() { statusLabel.SetText(fmt.Sprintf("Error: %v", err)) })
 				return
 			}
 
 			weather, err := fetchWeather(loc.Lat, loc.Lon)
 			if err != nil {
-				statusLabel.SetText(fmt.Sprintf("Error: %v", err))
+				fyne.Do(func() { statusLabel.SetText(fmt.Sprintf("Error: %v", err)) })
 				return
 			}
 
-			locationLabel.SetText(fmt.Sprintf("%s, %s  (%.2f°, %.2f°)", loc.Name, loc.Country, loc.Lat, loc.Lon))
-			startClock(loc.Timezone)
+			fyne.Do(func() {
+				locationLabel.SetText(fmt.Sprintf("%s, %s  (%.2f°, %.2f°)", loc.Name, loc.Country, loc.Lat, loc.Lon))
+				startClock(loc.Timezone)
 
-			forecastData.Load(weather)
-			table.Show()
-			table.Refresh()
-			statusLabel.SetText(fmt.Sprintf("7-day forecast for %s", loc.Name))
+				forecastData.Load(weather)
+				table.Show()
+				table.Refresh()
+				statusLabel.SetText(fmt.Sprintf("7-day forecast for %s", loc.Name))
+			})
 		}()
 	}
 
