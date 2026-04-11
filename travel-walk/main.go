@@ -273,8 +273,12 @@ func main() {
 	if _, err := (MainWindow{
 		AssignTo: &mw,
 		Title:    "Travel Weather",
-		Size:     Size{Width: 760, Height: 520},
+		Size:     Size{Width: 760, Height: 560},
 		Layout:   VBox{},
+		Font: Font{
+			Family:    "Segoe UI",
+			PointSize: 10,
+		},
 		Children: []Widget{
 			Composite{
 				Layout: HBox{MarginsZero: true},
@@ -299,23 +303,27 @@ func main() {
 				AssignTo:      &locLabel,
 				TextAlignment: AlignCenter,
 				Font: Font{
-					Family:    "Segoe UI",
-					PointSize: 11,
-					Bold:      true,
+					Family:    "Segoe UI Semibold",
+					PointSize: 16,
 				},
 			},
 			Label{
 				AssignTo:      &clockLabel,
 				TextAlignment: AlignCenter,
 				Font: Font{
-					Family:    "Consolas",
-					PointSize: 12,
+					Family:    "Cascadia Mono",
+					PointSize: 18,
 				},
 			},
 			Label{
 				AssignTo:      &statusLabel,
 				Text:          "Enter a city and press Search",
 				TextAlignment: AlignCenter,
+				Font: Font{
+					Family:    "Segoe UI",
+					PointSize: 9,
+					Italic:    true,
+				},
 			},
 			TableView{
 				AlternatingRowBG:    true,
