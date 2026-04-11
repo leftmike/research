@@ -35,9 +35,9 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "Commands:\n")
 	fmt.Fprintf(os.Stderr, "  get TICKET-ID\n")
 	fmt.Fprintf(os.Stderr, "      Fetch and display a single ticket.\n\n")
-	fmt.Fprintf(os.Stderr, "  created PROJECT SINCE [FILTER] [FILTER]\n")
+	fmt.Fprintf(os.Stderr, "  created PROJECT SINCE [FILTER...]\n")
 	fmt.Fprintf(os.Stderr, "      List tickets in a project created since a duration ago. Examples: 24h, 7d, 2w.\n\n")
-	fmt.Fprintf(os.Stderr, "  updated PROJECT SINCE [FILTER] [FILTER]\n")
+	fmt.Fprintf(os.Stderr, "  updated PROJECT SINCE [FILTER...]\n")
 	fmt.Fprintf(os.Stderr, "      List tickets in a project updated since a duration ago. Examples: 24h, 7d, 2w.\n\n")
 	fmt.Fprintf(os.Stderr, "  help\n")
 	fmt.Fprintf(os.Stderr, "      Show this help.\n\n")
@@ -120,11 +120,11 @@ func cmdGet(client *jira.Client, args []string) {
 func cmdCreated(client *jira.Client, args []string) {
 	fs := flag.NewFlagSet("created", flag.ExitOnError)
 	fs.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: jira created PROJECT SINCE [FILTER] [FILTER]\n")
+		fmt.Fprintf(os.Stderr, "Usage: jira created PROJECT SINCE [FILTER...]\n")
 	}
 	fs.Parse(args)
 
-	if fs.NArg() < 2 || fs.NArg() > 4 {
+	if fs.NArg() < 2 {
 		fs.Usage()
 		os.Exit(1)
 	}
@@ -142,7 +142,10 @@ func cmdCreated(client *jira.Client, args []string) {
 	}
 
 	filters := append([]string{}, fs.Args()[2:]...)
-	issues = filterIssues(issues, filters)
+	issues, err = filterIssues(issues, filters)
+	if err != nil {
+		log.Fatalf("invalid filters: %v", err)
+	}
 
 	if len(issues) == 0 {
 		fmt.Println("No tickets found.")
@@ -154,11 +157,11 @@ func cmdCreated(client *jira.Client, args []string) {
 func cmdUpdated(client *jira.Client, args []string) {
 	fs := flag.NewFlagSet("updated", flag.ExitOnError)
 	fs.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: jira updated PROJECT SINCE [FILTER] [FILTER]\n")
+		fmt.Fprintf(os.Stderr, "Usage: jira updated PROJECT SINCE [FILTER...]\n")
 	}
 	fs.Parse(args)
 
-	if fs.NArg() < 2 || fs.NArg() > 4 {
+	if fs.NArg() < 2 {
 		fs.Usage()
 		os.Exit(1)
 	}
@@ -176,7 +179,10 @@ func cmdUpdated(client *jira.Client, args []string) {
 	}
 
 	filters := append([]string{}, fs.Args()[2:]...)
-	issues = filterIssues(issues, filters)
+	issues, err = filterIssues(issues, filters)
+	if err != nil {
+		log.Fatalf("invalid filters: %v", err)
+	}
 
 	if len(issues) == 0 {
 		fmt.Println("No tickets found.")
@@ -185,23 +191,34 @@ func cmdUpdated(client *jira.Client, args []string) {
 	printIssueList(issues, "updated")
 }
 
-func filterIssues(issues []jira.Issue, filters []string) []jira.Issue {
+type filterToken struct {
+	negated bool
+	value   string
+}
+
+func filterIssues(issues []jira.Issue, filters []string) ([]jira.Issue, error) {
 	if len(filters) == 0 {
-		return issues
-	}
-	if len(filters) > 2 {
-		return nil
+		return issues, nil
 	}
 
-	norm := make([]string, 0, len(filters))
-	for _, f := range filters {
-		f = strings.ToLower(normalizeSpaces(f))
-		if f != "" {
-			norm = append(norm, f)
+	tokens := make([]filterToken, 0, len(filters))
+	for _, raw := range filters {
+		raw = strings.TrimSpace(raw)
+		if raw == "" {
+			continue
 		}
+		negated := strings.HasPrefix(raw, "^")
+		if negated {
+			raw = strings.TrimSpace(strings.TrimPrefix(raw, "^"))
+		}
+		value := strings.ToLower(normalizeSpaces(raw))
+		if value == "" {
+			return nil, fmt.Errorf("empty filter")
+		}
+		tokens = append(tokens, filterToken{negated: negated, value: value})
 	}
-	if len(norm) == 0 {
-		return issues
+	if len(tokens) == 0 {
+		return issues, nil
 	}
 
 	out := make([]jira.Issue, 0, len(issues))
@@ -222,10 +239,18 @@ func filterIssues(issues []jira.Issue, filters []string) []jira.Issue {
 		dispType := strings.ToLower(normalizeSpaces(formatIssueType(f.Type.Name)))
 
 		matchesAll := true
-		for _, tok := range norm {
-			if tok != rawStatus && tok != dispStatus && tok != rawType && tok != dispType {
-				matchesAll = false
-				break
+		for _, tok := range tokens {
+			matchesToken := tok.value == rawStatus || tok.value == dispStatus || tok.value == rawType || tok.value == dispType
+			if tok.negated {
+				if matchesToken {
+					matchesAll = false
+					break
+				}
+			} else {
+				if !matchesToken {
+					matchesAll = false
+					break
+				}
 			}
 		}
 		if !matchesAll {
@@ -234,7 +259,7 @@ func filterIssues(issues []jira.Issue, filters []string) []jira.Issue {
 
 		out = append(out, issue)
 	}
-	return out
+	return out, nil
 }
 
 func formatIssueStatus(name string) string {
