@@ -82,7 +82,7 @@ func stateFilePath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(dir, "travel-walk", "state.json"), nil
+	return filepath.Join(dir, "travel", "state.json"), nil
 }
 
 func loadState() *appState {
