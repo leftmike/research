@@ -130,6 +130,26 @@ func fetchWeather(lat, lon float64) (*weatherResponse, error) {
 	return &w, nil
 }
 
+// formatLat renders a latitude with a N/S suffix, e.g. "51.51°N".
+func formatLat(lat float64) string {
+	dir := "N"
+	if lat < 0 {
+		dir = "S"
+		lat = -lat
+	}
+	return fmt.Sprintf("%.2f°%s", lat, dir)
+}
+
+// formatLon renders a longitude with an E/W suffix, e.g. "0.13°W".
+func formatLon(lon float64) string {
+	dir := "E"
+	if lon < 0 {
+		dir = "W"
+		lon = -lon
+	}
+	return fmt.Sprintf("%.2f°%s", lon, dir)
+}
+
 // ForecastItem is one row in the forecast TableView.
 type ForecastItem struct {
 	Day       string
@@ -285,8 +305,9 @@ func main() {
 			}
 			mw.Synchronize(func() {
 				locLabel.SetText(fmt.Sprintf(
-					"%s, %s  (%.2f°, %.2f°)   %.1f °F",
-					loc.Name, loc.Country, loc.Lat, loc.Lon,
+					"%s, %s  (lat %s, lon %s)   %.1f °F",
+					loc.Name, loc.Country,
+					formatLat(loc.Lat), formatLon(loc.Lon),
 					weather.Current.Temperature2m))
 				model.Load(weather, tz)
 				statusLabel.SetText("")
