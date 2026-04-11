@@ -286,11 +286,13 @@ func printIssueList(issues []jira.Issue, dateField string) {
 		keyWidth    = 10
 		statusWidth = 12
 		dateWidth   = 6
+		typeWidth   = 12
 	)
 
 	keyHeader := "KEY"
 	statusHeader := "STATUS"
 	titleHeader := "TITLE"
+	typeHeader := "TYPE"
 
 	dateHeader := ""
 	switch dateField {
@@ -301,18 +303,14 @@ func printIssueList(issues []jira.Issue, dateField string) {
 	default:
 		log.Fatalf("unknown date field %q", dateField)
 	}
-	fmt.Printf("%-*s %-*s %-*s %s\n", keyWidth, keyHeader, dateWidth, dateHeader, statusWidth, statusHeader, titleHeader)
-	fmt.Printf("%-*s %-*s %-*s %s\n",
+	fmt.Printf("%-*s %-*s %-*s %-*s %s\n", keyWidth, keyHeader, dateWidth, dateHeader, typeWidth, typeHeader, statusWidth, statusHeader, titleHeader)
+	fmt.Printf("%-*s %-*s %-*s %-*s %s\n",
 		keyWidth, strings.Repeat("-", len(keyHeader)),
 		dateWidth, strings.Repeat("-", len(dateHeader)),
+		typeWidth, strings.Repeat("-", len(typeHeader)),
 		statusWidth, strings.Repeat("-", len(statusHeader)),
 		strings.Repeat("-", len(titleHeader)),
 	)
-
-	titleWidth := lineWidth - (keyWidth + 1 + dateWidth + 1 + statusWidth + 1)
-	if titleWidth < 4 {
-		titleWidth = 4
-	}
 
 	for _, issue := range issues {
 		f := issue.Fields
@@ -338,9 +336,15 @@ func printIssueList(issues []jira.Issue, dateField string) {
 			log.Fatalf("unknown date field %q", dateField)
 		}
 
+		issueType := formatIssueType(f.Type.Name)
+
 		title := strings.Join(strings.Fields(f.Summary), " ")
+		titleWidth := lineWidth - (keyWidth + 1 + dateWidth + 1 + typeWidth + 1 + statusWidth + 1)
+		if titleWidth < 4 {
+			titleWidth = 4
+		}
 		title = truncateWithEllipsis(title, titleWidth)
-		fmt.Printf("%-*s %-*s %-*s %s\n", keyWidth, issue.Key, dateWidth, dateValue, statusWidth, status, title)
+		fmt.Printf("%-*s %-*s %-*s %-*s %s\n", keyWidth, issue.Key, dateWidth, dateValue, typeWidth, issueType, statusWidth, status, title)
 	}
 }
 
@@ -356,4 +360,37 @@ func truncateWithEllipsis(s string, maxRunes int) string {
 		return string(rs[:maxRunes])
 	}
 	return string(rs[:maxRunes-3]) + "..."
+}
+
+func normalizeSpaces(s string) string {
+	return strings.Join(strings.Fields(strings.TrimSpace(s)), " ")
+}
+
+func truncateRunes(s string, maxRunes int) string {
+	if maxRunes <= 0 {
+		return ""
+	}
+	rs := []rune(s)
+	if len(rs) <= maxRunes {
+		return s
+	}
+	return string(rs[:maxRunes])
+}
+
+func formatIssueType(name string) string {
+	name = normalizeSpaces(name)
+	switch name {
+	case "Technical Debt":
+		return "Tech Debt"
+	case "Hardware Checkout":
+		return "HW Checkout"
+	case "Enabler Story":
+		return "EnablerStory"
+	case "Unplanned Work":
+		return "Unplanned"
+	case "Service Issue":
+		return "ServiceIssue"
+	default:
+		return truncateRunes(name, 12)
+	}
 }
