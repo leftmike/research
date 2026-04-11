@@ -45,6 +45,9 @@ type geocodingResult struct {
 
 // weatherResponse holds the Open-Meteo forecast response.
 type weatherResponse struct {
+	Current struct {
+		Temperature2m float64 `json:"temperature_2m"`
+	} `json:"current"`
 	Daily struct {
 		Time         []string  `json:"time"`
 		TempMax      []float64 `json:"temperature_2m_max"`
@@ -106,6 +109,7 @@ func geocode(city string) (*geocodingResult, error) {
 func fetchWeather(lat, lon float64) (*weatherResponse, error) {
 	u := fmt.Sprintf(
 		"https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f"+
+			"&current=temperature_2m"+
 			"&daily=temperature_2m_max,temperature_2m_min,weather_code,"+
 			"precipitation_probability_max,wind_speed_10m_max"+
 			"&temperature_unit=fahrenheit"+
@@ -261,8 +265,9 @@ func main() {
 			}
 			mw.Synchronize(func() {
 				locLabel.SetText(fmt.Sprintf(
-					"%s, %s  (%.2f°, %.2f°)",
-					loc.Name, loc.Country, loc.Lat, loc.Lon))
+					"%s, %s  (%.2f°, %.2f°)   %.1f °F",
+					loc.Name, loc.Country, loc.Lat, loc.Lon,
+					weather.Current.Temperature2m))
 				model.Load(weather)
 				statusLabel.SetText(fmt.Sprintf(
 					"7-day forecast for %s", loc.Name))
