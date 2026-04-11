@@ -1,4 +1,4 @@
-module travel-walj
+module travel-walk
 
 go 1.24.7
 

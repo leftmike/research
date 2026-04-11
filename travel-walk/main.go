@@ -1,4 +1,4 @@
-// travel-walj is a small Windows GUI app built with github.com/lxn/walk
+// travel-walk is a small Windows GUI app built with github.com/lxn/walk
 // that shows the local time and a 7-day weather forecast for a remote
 // city. Weather data is fetched from the free Open-Meteo APIs:
 //
