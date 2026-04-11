@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	jiraURL    = flag.String("url", "", "Jira base URL (e.g. https://jira.mycompany.com)")
-	jiraToken  = flag.String("token", "", "Jira personal access token (sent as Bearer)")
+	jiraURL   = flag.String("url", "", "Jira base URL (e.g. https://jira.mycompany.com)")
+	jiraToken = flag.String("token", "", "Jira personal access token (sent as Bearer)")
 )
 
 // patTransport adds a Bearer token header for PAT-based authentication.
@@ -241,7 +241,7 @@ func parseDuration(s string) (time.Duration, error) {
 		if err != nil {
 			return 0, fmt.Errorf("invalid duration %q", s)
 		}
-		return time.Duration(n * float64(7 * 24 * time.Hour)), nil
+		return time.Duration(n * float64(7*24*time.Hour)), nil
 	default:
 		return time.ParseDuration(s)
 	}
@@ -285,14 +285,31 @@ func printIssueList(issues []jira.Issue, dateField string) {
 		lineWidth   = 100
 		keyWidth    = 10
 		statusWidth = 12
-		dateWidth   = 10
+		dateWidth   = 6
 	)
 
-	dateHeader := strings.ToUpper(dateField)
-	fmt.Printf("%-*s  %-*s  %-*s  %s\n", keyWidth, "KEY", statusWidth, "STATUS", dateWidth, dateHeader, "TITLE")
-	fmt.Printf("%-*s  %-*s  %-*s  %s\n", keyWidth, strings.Repeat("-", keyWidth), statusWidth, strings.Repeat("-", statusWidth), dateWidth, strings.Repeat("-", dateWidth), strings.Repeat("-", 40))
+	keyHeader := "KEY"
+	statusHeader := "STATUS"
+	titleHeader := "TITLE"
 
-	titleWidth := lineWidth - (keyWidth + 2 + statusWidth + 2 + dateWidth + 2)
+	dateHeader := ""
+	switch dateField {
+	case "created":
+		dateHeader = "CREATE"
+	case "updated":
+		dateHeader = "UPDATE"
+	default:
+		log.Fatalf("unknown date field %q", dateField)
+	}
+	fmt.Printf("%-*s %-*s %-*s %s\n", keyWidth, keyHeader, dateWidth, dateHeader, statusWidth, statusHeader, titleHeader)
+	fmt.Printf("%-*s %-*s %-*s %s\n",
+		keyWidth, strings.Repeat("-", len(keyHeader)),
+		dateWidth, strings.Repeat("-", len(dateHeader)),
+		statusWidth, strings.Repeat("-", len(statusHeader)),
+		strings.Repeat("-", len(titleHeader)),
+	)
+
+	titleWidth := lineWidth - (keyWidth + 1 + dateWidth + 1 + statusWidth + 1)
 	if titleWidth < 4 {
 		titleWidth = 4
 	}
@@ -311,11 +328,11 @@ func printIssueList(issues []jira.Issue, dateField string) {
 		switch dateField {
 		case "created":
 			if t := time.Time(f.Created); !t.IsZero() {
-				dateValue = t.UTC().Format("01-02-2006")
+				dateValue = t.UTC().Format("01/02")
 			}
 		case "updated":
 			if t := time.Time(f.Updated); !t.IsZero() {
-				dateValue = t.UTC().Format("01-02-2006")
+				dateValue = t.UTC().Format("01/02")
 			}
 		default:
 			log.Fatalf("unknown date field %q", dateField)
@@ -323,7 +340,7 @@ func printIssueList(issues []jira.Issue, dateField string) {
 
 		title := strings.Join(strings.Fields(f.Summary), " ")
 		title = truncateWithEllipsis(title, titleWidth)
-		fmt.Printf("%-*s  %-*s  %-*s  %s\n", keyWidth, issue.Key, statusWidth, status, dateWidth, dateValue, title)
+		fmt.Printf("%-*s %-*s %-*s %s\n", keyWidth, issue.Key, dateWidth, dateValue, statusWidth, status, title)
 	}
 }
 
