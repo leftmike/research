@@ -298,7 +298,7 @@ func main() {
 	if _, err := (MainWindow{
 		AssignTo: &mw,
 		Title:    "Travel Weather",
-		Size:     Size{Width: 760, Height: 400},
+		Size:     Size{Width: 608, Height: 320},
 		Layout:   VBox{},
 		Font: Font{
 			Family:    "Segoe UI",
