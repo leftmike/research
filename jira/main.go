@@ -283,7 +283,7 @@ func printIssue(issue *jira.Issue) {
 func printIssueList(issues []jira.Issue, dateField string) {
 	const (
 		lineWidth   = 100
-		keyWidth    = 11
+		keyWidth    = 10
 		statusWidth = 12
 		dateWidth   = 10
 	)
