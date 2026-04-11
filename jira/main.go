@@ -140,7 +140,7 @@ func cmdCreated(client *jira.Client, args []string) {
 	}
 
 	jql := buildSinceJQL(project, "created", since, true)
-	issues, _, err := client.Issue.Search(context.Background(), jql, &jira.SearchOptions{MaxResults: 50})
+	issues, err := searchAllIssues(context.Background(), client, jql)
 	if err != nil {
 		log.Fatalf("search: %v", err)
 	}
@@ -171,7 +171,7 @@ func cmdUpdated(client *jira.Client, args []string) {
 	}
 
 	jql := buildSinceJQL(project, "updated", since, true)
-	issues, _, err := client.Issue.Search(context.Background(), jql, &jira.SearchOptions{MaxResults: 50})
+	issues, err := searchAllIssues(context.Background(), client, jql)
 	if err != nil {
 		log.Fatalf("search: %v", err)
 	}
@@ -198,6 +198,20 @@ func cmdList(client *jira.Client, args []string) {
 	}
 
 	cmdUpdated(client, fs.Args())
+}
+
+func searchAllIssues(ctx context.Context, client *jira.Client, jql string) ([]jira.Issue, error) {
+	const pageSize = 200
+	opts := &jira.SearchOptions{StartAt: 0, MaxResults: pageSize}
+	issues := make([]jira.Issue, 0, pageSize)
+	err := client.Issue.SearchPages(ctx, jql, opts, func(issue jira.Issue) error {
+		issues = append(issues, issue)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return issues, nil
 }
 
 func buildSinceJQL(project, field string, since time.Duration, ascending bool) string {
