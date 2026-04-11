@@ -57,6 +57,8 @@ type weatherResponse struct {
 		WeatherCode  []int     `json:"weather_code"`
 		PrecipProb   []int     `json:"precipitation_probability_max"`
 		WindSpeedMax []float64 `json:"wind_speed_10m_max"`
+		Sunrise      []string  `json:"sunrise"`
+		Sunset       []string  `json:"sunset"`
 	} `json:"daily"`
 }
 
@@ -113,7 +115,8 @@ func fetchWeather(lat, lon float64) (*weatherResponse, error) {
 		"https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f"+
 			"&current=temperature_2m,weather_code,wind_speed_10m"+
 			"&daily=temperature_2m_max,temperature_2m_min,weather_code,"+
-			"precipitation_probability_max,wind_speed_10m_max"+
+			"precipitation_probability_max,wind_speed_10m_max,"+
+			"sunrise,sunset"+
 			"&temperature_unit=fahrenheit"+
 			"&wind_speed_unit=mph"+
 			"&forecast_days=7&timezone=auto",
@@ -150,6 +153,17 @@ func formatLon(lon float64) string {
 		lon = -lon
 	}
 	return fmt.Sprintf("%.2f°%s", lon, dir)
+}
+
+// formatLocalTime parses an Open-Meteo ISO8601 local-time string
+// ("2026-04-11T05:42") in tz and renders it as 12-hour wall time
+// ("5:42 AM"). Returns the original string if parsing fails.
+func formatLocalTime(s string, tz *time.Location) string {
+	t, err := time.ParseInLocation("2006-01-02T15:04", s, tz)
+	if err != nil {
+		return s
+	}
+	return t.Format("3:04 PM")
 }
 
 // ForecastItem is one row in the forecast TableView.
@@ -309,16 +323,24 @@ func main() {
 			if err != nil {
 				tz = time.UTC
 			}
+			sunrise, sunset := "", ""
+			if len(weather.Daily.Sunrise) > 0 {
+				sunrise = formatLocalTime(weather.Daily.Sunrise[0], tz)
+			}
+			if len(weather.Daily.Sunset) > 0 {
+				sunset = formatLocalTime(weather.Daily.Sunset[0], tz)
+			}
 			mw.Synchronize(func() {
 				locLabel.SetText(fmt.Sprintf("%s, %s", loc.Name, loc.Country))
 				coordsLabel.SetText(fmt.Sprintf(
 					"Latitude %s, Longitude %s",
 					formatLat(loc.Lat), formatLon(loc.Lon)))
 				currentLabel.SetText(fmt.Sprintf(
-					"%.1f °F   %s   Wind %.1f mph",
+					"%.1f °F   %s   Wind %.1f mph   Sunrise %s   Sunset %s",
 					weather.Current.Temperature2m,
 					wmoDescription(weather.Current.WeatherCode),
-					weather.Current.WindSpeed10m))
+					weather.Current.WindSpeed10m,
+					sunrise, sunset))
 				model.Load(weather, tz)
 				statusLabel.SetText("")
 			})
