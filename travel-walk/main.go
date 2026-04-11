@@ -108,6 +108,7 @@ func fetchWeather(lat, lon float64) (*weatherResponse, error) {
 		"https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f"+
 			"&daily=temperature_2m_max,temperature_2m_min,weather_code,"+
 			"precipitation_probability_max,wind_speed_10m_max"+
+			"&temperature_unit=fahrenheit"+
 			"&forecast_days=7&timezone=auto",
 		lat, lon)
 	resp, err := http.Get(u)
@@ -174,8 +175,8 @@ func (m *ForecastModel) Load(w *weatherResponse) {
 		it := &ForecastItem{
 			Date:      w.Daily.Time[i],
 			Condition: wmoDescription(w.Daily.WeatherCode[i]),
-			High:      fmt.Sprintf("%.1f °C", w.Daily.TempMax[i]),
-			Low:       fmt.Sprintf("%.1f °C", w.Daily.TempMin[i]),
+			High:      fmt.Sprintf("%.1f °F", w.Daily.TempMax[i]),
+			Low:       fmt.Sprintf("%.1f °F", w.Daily.TempMin[i]),
 		}
 		if i < len(w.Daily.PrecipProb) {
 			it.Precip = fmt.Sprintf("%d%%", w.Daily.PrecipProb[i])
@@ -217,7 +218,7 @@ func main() {
 		go func(stop chan struct{}, tz *time.Location) {
 			update := func() {
 				text := time.Now().In(tz).Format(
-					"Monday, 02 Jan 2006  15:04:05 MST")
+					"Monday 02 Jan 2006  3:04:05 PM MST")
 				mw.Synchronize(func() { clockLabel.SetText(text) })
 			}
 			update()
