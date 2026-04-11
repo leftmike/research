@@ -238,7 +238,7 @@ func main() {
 		go func(stop chan struct{}, tz *time.Location) {
 			update := func() {
 				text := time.Now().In(tz).Format(
-					"Monday 02 Jan 2006  3:04:05 PM MST")
+					"Monday 02 Jan 2006  3:04 PM MST")
 				mw.Synchronize(func() { clockLabel.SetText(text) })
 			}
 			update()
@@ -298,7 +298,7 @@ func main() {
 	if _, err := (MainWindow{
 		AssignTo: &mw,
 		Title:    "Travel Weather",
-		Size:     Size{Width: 760, Height: 560},
+		Size:     Size{Width: 760, Height: 400},
 		Layout:   VBox{},
 		Font: Font{
 			Family:    "Segoe UI",
