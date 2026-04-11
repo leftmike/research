@@ -131,6 +131,7 @@ func fetchWeather(lat, lon float64) (*weatherResponse, error) {
 
 // ForecastItem is one row in the forecast TableView.
 type ForecastItem struct {
+	Day       string
 	Date      string
 	Condition string
 	High      string
@@ -157,16 +158,18 @@ func (m *ForecastModel) Value(row, col int) interface{} {
 	it := m.items[row]
 	switch col {
 	case 0:
-		return it.Date
+		return it.Day
 	case 1:
-		return it.Condition
+		return it.Date
 	case 2:
-		return it.High
+		return it.Condition
 	case 3:
-		return it.Low
+		return it.High
 	case 4:
-		return it.Precip
+		return it.Low
 	case 5:
+		return it.Precip
+	case 6:
 		return it.Wind
 	}
 	return ""
@@ -179,16 +182,20 @@ func (m *ForecastModel) Load(w *weatherResponse, tz *time.Location) {
 	items := make([]*ForecastItem, n)
 	for i := 0; i < n; i++ {
 		raw := w.Daily.Time[i]
-		var date string
+		var day, date string
 		if t, err := time.ParseInLocation("2006-01-02", raw, tz); err != nil {
-			date = raw
-		} else if raw == todayYMD {
-			date = "Today " + t.Format("1/2")
+			day = raw
 		} else {
-			date = t.Format("Mon 1/2")
+			if raw == todayYMD {
+				day = "Today"
+			} else {
+				day = t.Format("Mon")
+			}
+			date = t.Format("1/2")
 		}
 
 		it := &ForecastItem{
+			Day:       day,
 			Date:      date,
 			Condition: wmoDescription(w.Daily.WeatherCode[i]),
 			High:      fmt.Sprintf("%.1f °F", w.Daily.TempMax[i]),
@@ -348,7 +355,8 @@ func main() {
 				ColumnsOrderable:    false,
 				LastColumnStretched: true,
 				Columns: []TableViewColumn{
-					{Title: "Date", Width: 110},
+					{Title: "Day", Width: 60},
+					{Title: "Date", Width: 55},
 					{Title: "Condition", Width: 140},
 					{Title: "High", Width: 80},
 					{Title: "Low", Width: 80},
