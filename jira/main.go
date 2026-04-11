@@ -39,8 +39,6 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "      List tickets in a project created since a duration ago. Examples: 24h, 7d, 2w.\n\n")
 	fmt.Fprintf(os.Stderr, "  updated PROJECT SINCE [FILTER] [FILTER]\n")
 	fmt.Fprintf(os.Stderr, "      List tickets in a project updated since a duration ago. Examples: 24h, 7d, 2w.\n\n")
-	fmt.Fprintf(os.Stderr, "  list -updated PROJECT SINCE [FILTER] [FILTER]\n")
-	fmt.Fprintf(os.Stderr, "      Alias for 'updated'.\n\n")
 	fmt.Fprintf(os.Stderr, "  help\n")
 	fmt.Fprintf(os.Stderr, "      Show this help.\n\n")
 	fmt.Fprintf(os.Stderr, "Global flags:\n")
@@ -92,8 +90,6 @@ func main() {
 		cmdCreated(client, args[1:])
 	case "updated":
 		cmdUpdated(client, args[1:])
-	case "list":
-		cmdList(client, args[1:])
 	default:
 		// Bare ticket ID: treat as "get" for backward compatibility.
 		cmdGet(client, args)
@@ -187,23 +183,6 @@ func cmdUpdated(client *jira.Client, args []string) {
 		return
 	}
 	printIssueList(issues, "updated")
-}
-
-func cmdList(client *jira.Client, args []string) {
-	fs := flag.NewFlagSet("list", flag.ExitOnError)
-	updated := fs.Bool("updated", false, "list tickets updated since a duration ago (alias for 'updated')")
-	fs.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: jira list -updated PROJECT SINCE [FILTER] [FILTER]\n\n")
-		fs.PrintDefaults()
-	}
-	fs.Parse(args)
-
-	if !*updated {
-		fs.Usage()
-		os.Exit(1)
-	}
-
-	cmdUpdated(client, fs.Args())
 }
 
 func filterIssues(issues []jira.Issue, filters []string) []jira.Issue {
