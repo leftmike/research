@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -18,7 +17,6 @@ import (
 var (
 	jiraURL    = flag.String("url", "", "Jira base URL (e.g. https://jira.mycompany.com)")
 	jiraToken  = flag.String("token", "", "Jira personal access token (sent as Bearer)")
-	jsonOutput = flag.Bool("json", false, "Output as JSON")
 )
 
 // patTransport adds a Bearer token header for PAT-based authentication.
@@ -32,49 +30,6 @@ func (t *patTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return http.DefaultTransport.RoundTrip(req2)
 }
 
-// IssueOutput is the JSON-serializable representation of a Jira issue.
-type IssueOutput struct {
-	Key         string `json:"key"`
-	Summary     string `json:"summary"`
-	Type        string `json:"type,omitempty"`
-	Status      string `json:"status,omitempty"`
-	Priority    string `json:"priority,omitempty"`
-	Assignee    string `json:"assignee,omitempty"`
-	Reporter    string `json:"reporter,omitempty"`
-	Created     string `json:"created,omitempty"`
-	Updated     string `json:"updated,omitempty"`
-	Description string `json:"description,omitempty"`
-}
-
-func issueToOutput(issue *jira.Issue) IssueOutput {
-	f := issue.Fields
-	out := IssueOutput{
-		Key:     issue.Key,
-		Summary: f.Summary,
-		Type:    f.Type.Name,
-	}
-	if f.Status != nil {
-		out.Status = f.Status.Name
-	}
-	if f.Priority != nil {
-		out.Priority = f.Priority.Name
-	}
-	if f.Assignee != nil {
-		out.Assignee = f.Assignee.DisplayName
-	}
-	if f.Reporter != nil {
-		out.Reporter = f.Reporter.DisplayName
-	}
-	if created := time.Time(f.Created); !created.IsZero() {
-		out.Created = created.UTC().Format("2006-01-02 15:04:05 UTC")
-	}
-	if updated := time.Time(f.Updated); !updated.IsZero() {
-		out.Updated = updated.UTC().Format("2006-01-02 15:04:05 UTC")
-	}
-	out.Description = f.Description
-	return out
-}
-
 func printUsage() {
 	fmt.Fprintf(os.Stderr, "Usage: jira [global flags] <command> [args]\n\n")
 	fmt.Fprintf(os.Stderr, "Commands:\n")
@@ -84,7 +39,7 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "      List tickets in a project by recency. DURATION examples: 24h, 7d, 2w.\n")
 	fmt.Fprintf(os.Stderr, "      --created and --updated may be combined (tickets matching either are shown).\n\n")
 	fmt.Fprintf(os.Stderr, "  help\n")
-	fmt.Fprintf(os.Stderr, "      Print machine-readable JSON documentation (useful for agents).\n\n")
+	fmt.Fprintf(os.Stderr, "      Show this help.\n\n")
 	fmt.Fprintf(os.Stderr, "Global flags:\n")
 	flag.PrintDefaults()
 	fmt.Fprintf(os.Stderr, "\nCredentials may also be set via environment variables: JIRA_URL, JIRA_TOKEN\n")
@@ -102,7 +57,7 @@ func main() {
 
 	// help requires no credentials.
 	if args[0] == "help" {
-		cmdHelp()
+		printUsage()
 		return
 	}
 
@@ -156,11 +111,7 @@ func cmdGet(client *jira.Client, args []string) {
 		log.Fatalf("get issue %s: %v", issueKey, err)
 	}
 
-	if *jsonOutput {
-		printJSON(issueToOutput(issue))
-	} else {
-		printIssue(issue)
-	}
+	printIssue(issue)
 }
 
 func cmdList(client *jira.Client, args []string) {
@@ -196,100 +147,11 @@ func cmdList(client *jira.Client, args []string) {
 		log.Fatalf("search: %v", err)
 	}
 
-	if *jsonOutput {
-		out := make([]IssueOutput, len(issues))
-		for i, issue := range issues {
-			out[i] = issueToOutput(&issue)
-		}
-		printJSON(out)
-	} else {
-		if len(issues) == 0 {
-			fmt.Println("No tickets found.")
-			return
-		}
-		printIssueList(issues)
+	if len(issues) == 0 {
+		fmt.Println("No tickets found.")
+		return
 	}
-}
-
-// cmdHelp prints machine-readable JSON documentation for use by agents.
-func cmdHelp() {
-	type flagDoc struct {
-		Name        string `json:"name"`
-		Type        string `json:"type"`
-		Description string `json:"description"`
-		Required    bool   `json:"required,omitempty"`
-	}
-	type argDoc struct {
-		Name        string `json:"name"`
-		Description string `json:"description"`
-		Required    bool   `json:"required"`
-	}
-	type commandDoc struct {
-		Name        string    `json:"name"`
-		Syntax      string    `json:"syntax"`
-		Description string    `json:"description"`
-		Args        []argDoc  `json:"args,omitempty"`
-		Flags       []flagDoc `json:"flags,omitempty"`
-	}
-	type helpDoc struct {
-		Tool        string       `json:"tool"`
-		Description string       `json:"description"`
-		GlobalFlags []flagDoc    `json:"global_flags"`
-		Commands    []commandDoc `json:"commands"`
-		Notes       []string     `json:"notes"`
-	}
-
-	doc := helpDoc{
-		Tool:        "jira",
-		Description: "CLI for fetching and listing Jira tickets from Jira Data Center. Uses PAT authentication via a Bearer token.",
-		GlobalFlags: []flagDoc{
-			{Name: "--url", Type: "string", Description: "Jira base URL, e.g. https://jira.mycompany.com. Overrides JIRA_URL env var.", Required: true},
-			{Name: "--token", Type: "string", Description: "Personal access token sent as a Bearer token. Overrides JIRA_TOKEN env var.", Required: true},
-			{Name: "--json", Type: "bool", Description: "Emit JSON instead of human-readable text. Applies to get and list."},
-		},
-		Commands: []commandDoc{
-			{
-				Name:        "get",
-				Syntax:      "jira [global-flags] get TICKET-ID",
-				Description: "Fetch a single Jira ticket and display its fields.",
-				Args: []argDoc{
-					{Name: "TICKET-ID", Description: "Jira issue key, e.g. PROJ-123.", Required: true},
-				},
-			},
-			{
-				Name:        "list",
-				Syntax:      "jira [global-flags] list PROJECT --created DURATION | --updated DURATION",
-				Description: "List up to 50 tickets in a project filtered by recency. At least one of --created or --updated is required. When both are given, tickets matching either condition are returned, ordered by updated descending.",
-				Args: []argDoc{
-					{Name: "PROJECT", Description: "Jira project key, e.g. PROJ.", Required: true},
-				},
-				Flags: []flagDoc{
-					{Name: "--created", Type: "duration", Description: "Include tickets created within this duration. Examples: 24h, 7d, 2w.", Required: false},
-					{Name: "--updated", Type: "duration", Description: "Include tickets updated within this duration. Examples: 24h, 7d, 2w.", Required: false},
-				},
-			},
-			{
-				Name:        "help",
-				Syntax:      "jira help",
-				Description: "Print this machine-readable JSON documentation. No credentials required.",
-			},
-		},
-		Notes: []string{
-			"Duration format: h=hours, m=minutes, d=days, w=weeks. Examples: 1h, 24h, 7d, 2w.",
-			"Credentials precedence: flags override environment variables (JIRA_URL, JIRA_TOKEN).",
-			"--token is sent as a Bearer header (PAT auth).",
-			"JSON output fields for get and list: key, summary, type, status, priority, assignee, reporter, created, updated, description.",
-		},
-	}
-	printJSON(doc)
-}
-
-func printJSON(v any) {
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
-	if err := enc.Encode(v); err != nil {
-		log.Fatalf("json encode: %v", err)
-	}
+	printIssueList(issues)
 }
 
 // buildListJQL constructs a JQL query for the list command.
