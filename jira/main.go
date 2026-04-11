@@ -35,9 +35,8 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "Commands:\n")
 	fmt.Fprintf(os.Stderr, "  get TICKET-ID\n")
 	fmt.Fprintf(os.Stderr, "      Fetch and display a single ticket.\n\n")
-	fmt.Fprintf(os.Stderr, "  list PROJECT --created DURATION | --updated DURATION\n")
-	fmt.Fprintf(os.Stderr, "      List tickets in a project by recency. DURATION examples: 24h, 7d, 2w.\n")
-	fmt.Fprintf(os.Stderr, "      --created and --updated may be combined (tickets matching either are shown).\n\n")
+	fmt.Fprintf(os.Stderr, "  created PROJECT SINCE\n")
+	fmt.Fprintf(os.Stderr, "      List tickets in a project created since a duration ago. Examples: 24h, 7d, 2w.\n\n")
 	fmt.Fprintf(os.Stderr, "  help\n")
 	fmt.Fprintf(os.Stderr, "      Show this help.\n\n")
 	fmt.Fprintf(os.Stderr, "Global flags:\n")
@@ -85,8 +84,8 @@ func main() {
 	switch args[0] {
 	case "get":
 		cmdGet(client, args[1:])
-	case "list":
-		cmdList(client, args[1:])
+	case "created":
+		cmdCreated(client, args[1:])
 	default:
 		// Bare ticket ID: treat as "get" for backward compatibility.
 		cmdGet(client, args)
@@ -114,35 +113,26 @@ func cmdGet(client *jira.Client, args []string) {
 	printIssue(issue)
 }
 
-func cmdList(client *jira.Client, args []string) {
-	fs := flag.NewFlagSet("list", flag.ExitOnError)
-	created := fs.String("created", "", "show tickets created within this duration (e.g. 24h, 7d, 2w)")
-	updated := fs.String("updated", "", "show tickets updated within this duration (e.g. 24h, 7d, 2w)")
+func cmdCreated(client *jira.Client, args []string) {
+	fs := flag.NewFlagSet("created", flag.ExitOnError)
 	fs.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: jira list PROJECT [--created DURATION] [--updated DURATION]\n\n")
-		fs.PrintDefaults()
+		fmt.Fprintf(os.Stderr, "Usage: jira created PROJECT SINCE\n")
 	}
 	fs.Parse(args)
 
-	if fs.NArg() != 1 {
-		fs.Usage()
-		os.Exit(1)
-	}
-	if *created == "" && *updated == "" {
-		fmt.Fprintf(os.Stderr, "error: at least one of --created or --updated is required\n")
+	if fs.NArg() != 2 {
 		fs.Usage()
 		os.Exit(1)
 	}
 
 	project := fs.Arg(0)
-	jql, err := buildListJQL(project, *created, *updated)
+	since, err := parseDuration(fs.Arg(1))
 	if err != nil {
-		log.Fatalf("invalid duration: %v", err)
+		log.Fatalf("invalid since duration: %v", err)
 	}
 
-	issues, _, err := client.Issue.Search(context.Background(), jql, &jira.SearchOptions{
-		MaxResults: 50,
-	})
+	jql := buildSinceJQL(project, "created", since, true)
+	issues, _, err := client.Issue.Search(context.Background(), jql, &jira.SearchOptions{MaxResults: 50})
 	if err != nil {
 		log.Fatalf("search: %v", err)
 	}
@@ -154,36 +144,16 @@ func cmdList(client *jira.Client, args []string) {
 	printIssueList(issues)
 }
 
-// buildListJQL constructs a JQL query for the list command.
-// If both created and updated are given, tickets matching either are returned.
-func buildListJQL(project, created, updated string) (string, error) {
+func buildSinceJQL(project, field string, since time.Duration, ascending bool) string {
 	jql := fmt.Sprintf("project = %q", project)
-
-	var conditions []string
-	if created != "" {
-		d, err := parseDuration(created)
-		if err != nil {
-			return "", fmt.Errorf("--created: %w", err)
-		}
-		since := time.Now().Add(-d).UTC().Format("2006-01-02 15:04")
-		conditions = append(conditions, fmt.Sprintf(`created >= "%s"`, since))
+	sinceTS := time.Now().Add(-since).UTC().Format("2006-01-02 15:04")
+	jql += fmt.Sprintf(` AND %s >= "%s"`, field, sinceTS)
+	order := "DESC"
+	if ascending {
+		order = "ASC"
 	}
-	if updated != "" {
-		d, err := parseDuration(updated)
-		if err != nil {
-			return "", fmt.Errorf("--updated: %w", err)
-		}
-		since := time.Now().Add(-d).UTC().Format("2006-01-02 15:04")
-		conditions = append(conditions, fmt.Sprintf(`updated >= "%s"`, since))
-	}
-
-	if len(conditions) == 1 {
-		jql += " AND " + conditions[0]
-	} else {
-		jql += " AND (" + strings.Join(conditions, " OR ") + ")"
-	}
-	jql += " ORDER BY updated DESC"
-	return jql, nil
+	jql += fmt.Sprintf(" ORDER BY %s %s", field, order)
+	return jql
 }
 
 // parseDuration extends time.ParseDuration with support for d (days) and w (weeks).
@@ -227,10 +197,10 @@ func printIssue(issue *jira.Issue) {
 		fmt.Printf("Reporter:  %s\n", f.Reporter.DisplayName)
 	}
 	if created := time.Time(f.Created); !created.IsZero() {
-		fmt.Printf("Created:   %s\n", created.UTC().Format("2006-01-02 15:04:05 UTC"))
+		fmt.Printf("Created:   %s\n", created.UTC().Format("01-02-2006"))
 	}
 	if updated := time.Time(f.Updated); !updated.IsZero() {
-		fmt.Printf("Updated:   %s\n", updated.UTC().Format("2006-01-02 15:04:05 UTC"))
+		fmt.Printf("Updated:   %s\n", updated.UTC().Format("01-02-2006"))
 	}
 	if f.Description != "" {
 		fmt.Printf("\nDescription:\n")
@@ -241,18 +211,21 @@ func printIssue(issue *jira.Issue) {
 }
 
 func printIssueList(issues []jira.Issue) {
-	fmt.Printf("%-14s  %-20s  %-10s  %s\n", "KEY", "STATUS", "UPDATED", "TITLE")
-	fmt.Printf("%-14s  %-20s  %-10s  %s\n", strings.Repeat("-", 14), strings.Repeat("-", 20), strings.Repeat("-", 10), strings.Repeat("-", 40))
+	fmt.Printf("%-11s  %-12s  %-10s  %s\n", "KEY", "STATUS", "CREATED", "TITLE")
+	fmt.Printf("%-11s  %-12s  %-10s  %s\n", strings.Repeat("-", 11), strings.Repeat("-", 12), strings.Repeat("-", 10), strings.Repeat("-", 40))
 	for _, issue := range issues {
 		f := issue.Fields
 		status := ""
 		if f.Status != nil {
 			status = f.Status.Name
 		}
-		updated := ""
-		if u := time.Time(f.Updated); !u.IsZero() {
-			updated = u.UTC().Format("2006-01-02")
+		if rs := []rune(status); len(rs) > 12 {
+			status = string(rs[:12])
 		}
-		fmt.Printf("%-14s  %-20s  %-10s  %s\n", issue.Key, status, updated, f.Summary)
+		created := ""
+		if c := time.Time(f.Created); !c.IsZero() {
+			created = c.UTC().Format("01-02-2006")
+		}
+		fmt.Printf("%-11s  %-12s  %-10s  %s\n", issue.Key, status, created, f.Summary)
 	}
 }
