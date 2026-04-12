@@ -403,6 +403,7 @@ func main() {
 	// tickerStop lets us cancel the previous clock goroutine when the
 	// user searches for a new city.
 	var tickerStop chan struct{}
+	var doSearch func(*geocodingResult)
 
 	startClock := func(tz *time.Location) {
 		if tickerStop != nil {
@@ -411,10 +412,22 @@ func main() {
 		stop := make(chan struct{})
 		tickerStop = stop
 		go func(stop chan struct{}, tz *time.Location) {
+			lastDate := time.Now().In(tz).Format("2006-01-02")
 			update := func() {
-				text := time.Now().In(tz).Format(
+				now := time.Now().In(tz)
+				text := now.Format(
 					"Monday 02 Jan 2006  3:04 PM MST")
 				mw.Synchronize(func() { clockLabel.SetText(text) })
+
+				today := now.Format("2006-01-02")
+				if today != lastDate {
+					lastDate = today
+					mw.Synchronize(func() {
+						if loc := state.currentLocation(); loc != nil {
+							doSearch(loc)
+						}
+					})
+				}
 			}
 			update()
 			ticker := time.NewTicker(time.Second)
@@ -434,7 +447,7 @@ func main() {
 	// or skips straight to fetching weather for an already-known
 	// location (knownLoc != nil), e.g. the one restored from state at
 	// startup.
-	doSearch := func(knownLoc *geocodingResult) {
+	doSearch = func(knownLoc *geocodingResult) {
 		var query string
 		if knownLoc != nil {
 			query = knownLoc.Name
@@ -596,7 +609,7 @@ func main() {
 			TableView{
 				AlternatingRowBG:    true,
 				ColumnsOrderable:    false,
-				HeaderHidden:        true,
+				HeaderHidden:        false,
 				LastColumnStretched: true,
 				Columns: []TableViewColumn{
 					{Title: "Day", Width: 60},
