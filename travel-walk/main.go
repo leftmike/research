@@ -609,7 +609,7 @@ func main() {
 			TableView{
 				AlternatingRowBG:    true,
 				ColumnsOrderable:    false,
-				HeaderHidden:        true,
+				HeaderHidden:        false,
 				LastColumnStretched: true,
 				Columns: []TableViewColumn{
 					{Title: "Day", Width: 60},
