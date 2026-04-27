@@ -1,0 +1,23 @@
+{{ define "main" }}
+<section class="hero">
+  <h1>{{ .Site.Title }}</h1>
+  <p>{{ .Site.Params.description }}</p>
+</section>
+
+{{ .Content }}
+
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ if $posts }}
+<section>
+  <h2>Recent Posts</h2>
+  <ul>
+    {{ range first 5 $posts.ByDate.Reverse }}
+    <li>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      &mdash; <time datetime="{{ .Date }}">{{ dateFormat "January 2, 2006" .Date }}</time>
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
+{{ end }}
