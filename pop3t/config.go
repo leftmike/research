@@ -1,9 +1,9 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"runtime"
 	"strings"
@@ -60,15 +60,15 @@ func loadConfig() (*config, []string) {
 		var err error
 		cfg, err = readConfig([]string{configFile})
 		if err != nil {
-			log.Fatal(err)
+			fatal(err)
 		} else if cfg == nil {
-			log.Fatalf("config file not found: %s", configFile)
+			fatal(fmt.Errorf("config file not found: %s", configFile))
 		}
 	} else {
 		var err error
 		cfg, err = readConfig(configFilenames())
 		if err != nil {
-			log.Fatal(err)
+			fatal(err)
 		} else if cfg == nil {
 			cfg = &config{}
 		}
@@ -94,7 +94,7 @@ func loadConfig() (*config, []string) {
 	}
 
 	if cfg.Host == "" || cfg.User == "" || cfg.Password == "" {
-		log.Fatal("host, user, and password are required via config or flag")
+		fatal(errors.New("host, user, and password are required via config or flag"))
 	}
 
 	fmt.Printf("%s:%d %s tls:%v\n", cfg.Host, cfg.Port, cfg.User, !cfg.NoTLS)
@@ -108,7 +108,7 @@ func (cfg *config) newConn() *pop3.Conn {
 		TLSEnabled: !cfg.NoTLS,
 	}).NewConn()
 	if err != nil {
-		log.Fatal(err)
+		fatal(err)
 	}
 
 	err = conn.Auth(cfg.User, cfg.Password)
@@ -116,7 +116,7 @@ func (cfg *config) newConn() *pop3.Conn {
 		err = conn.Auth(fmt.Sprintf("%s@%s", cfg.User, cfg.Host), cfg.Password)
 	}
 	if err != nil {
-		log.Fatal(err)
+		fatal(err)
 	}
 
 	return conn

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"mime"
 
 	"github.com/pemistahl/lingua-go"
@@ -19,7 +18,7 @@ func list(cfg *config, args []string) {
 
 	msgs, err := conn.List(0)
 	if err != nil {
-		log.Fatal(err)
+		fatal(err)
 	}
 	fmt.Printf("Found %d messages\n", len(msgs))
 
@@ -27,7 +26,7 @@ func list(cfg *config, args []string) {
 	for _, m := range msgs {
 		msg, err := conn.Retr(m.ID)
 		if err != nil {
-			log.Printf("skipping message %d: %v", m.ID, err)
+			fmt.Printf("skipping message %d: %v", m.ID, err)
 			continue
 		}
 		body, _ := io.ReadAll(msg.Body)

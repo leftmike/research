@@ -72,6 +72,11 @@ func detectLang(detector lingua.LanguageDetector, subject, contentType, transfer
 	return vals[0].Language(), vals[0].Value(), true
 }
 
+func fatal(err error) {
+	fmt.Fprintf(os.Stderr, "%s: %s\n", os.Args[0], err)
+	os.Exit(1)
+}
+
 func usage() {
 	fmt.Fprintf(os.Stderr, "usage: %s <cmd> [flags] [args]\n", os.Args[0])
 	for name, cmd := range cmds {

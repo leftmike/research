@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"mime"
 
 	"github.com/pemistahl/lingua-go"
@@ -21,7 +20,7 @@ func filter(cfg *config, args []string) {
 
 	msgs, err := conn.List(0)
 	if err != nil {
-		log.Fatal(err)
+		fatal(err)
 	}
 	fmt.Printf("Found %d messages\n", len(msgs))
 
@@ -29,7 +28,7 @@ func filter(cfg *config, args []string) {
 	for _, m := range msgs {
 		msg, err := conn.Retr(m.ID)
 		if err != nil {
-			log.Printf("skipping message %d: %v", m.ID, err)
+			fmt.Printf("skipping message %d: %v", m.ID, err)
 			continue
 		}
 
@@ -44,7 +43,7 @@ func filter(cfg *config, args []string) {
 
 		if delete {
 			if err := conn.Dele(m.ID); err != nil {
-				log.Printf("failed to delete message %d: %v", m.ID, err)
+				fmt.Printf("failed to delete message %d: %v", m.ID, err)
 				continue
 			}
 		}
