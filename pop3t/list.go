@@ -2,36 +2,35 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"mime"
 
 	"github.com/pemistahl/lingua-go"
 )
 
 func list(cfg *config, args []string) {
-	detector := lingua.NewLanguageDetectorBuilder().
-		FromAllLanguages().
-		Build()
-
 	conn := cfg.newConn()
 	defer conn.Quit()
 
-	msgs, err := conn.List(0)
+	mids, err := conn.List(0)
 	if err != nil {
 		fatal(err)
 	}
-	fmt.Printf("Found %d messages\n", len(msgs))
+	fmt.Printf("found %d messages\n", len(mids))
 
-	dec := mime.WordDecoder{}
-	for _, m := range msgs {
-		msg, err := conn.Retr(m.ID)
+	ld := lingua.NewLanguageDetectorBuilder().FromAllLanguages().Build()
+	for _, mid := range mids {
+		entity, err := conn.Retr(mid.ID)
 		if err != nil {
-			fmt.Printf("skipping message %d: %v", m.ID, err)
+			fmt.Printf("skipping: retr(%d): %s", mid.ID, err)
 			continue
 		}
-		body, _ := io.ReadAll(msg.Body)
-		subject, _ := dec.DecodeHeader(msg.Header.Get("Subject"))
-		lang, conf, _ := detectLang(detector, subject, msg.Header.Get("Content-Type"), msg.Header.Get("Content-Transfer-Encoding"), body)
-		fmt.Printf("%3d  [%s %.0f%%] %s\n", m.ID, lang, conf*100, subject)
+
+		msg, err := messageFromEntity(entity)
+		if err != nil {
+			fmt.Printf("skipping: entity(%d): %s", mid.ID, err)
+			continue
+		}
+
+		lang, conf, _ := msg.detectLanguage(ld)
+		fmt.Printf("%3d  [%s %.0f%%] %s\n", mid.ID, lang, conf*100, msg.subject)
 	}
 }
