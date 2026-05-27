@@ -25,6 +25,7 @@ type cmd struct {
 var (
 	cmds = map[string]cmd{
 		"filter": {fn: filter, help: ""},
+		"get":    {fn: get, help: "fetch and display a single message by id"},
 		"help":   {help: ""},
 		"list":   {fn: list, help: ""},
 	}

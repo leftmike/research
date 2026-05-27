@@ -97,7 +97,8 @@ func loadConfig() (*config, []string) {
 		fatal(errors.New("host, user, and password are required via config or flag"))
 	}
 
-	fmt.Printf("%s:%d %s tls:%v\n", cfg.Host, cfg.Port, cfg.User, !cfg.NoTLS)
+	// XXX: if verbose
+	// fmt.Printf("%s:%d %s tls:%v\n", cfg.Host, cfg.Port, cfg.User, !cfg.NoTLS)
 	return cfg, fs.Args()
 }
 
