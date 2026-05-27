@@ -74,49 +74,54 @@ func get(cfg *config, args []string) {
 			os.Exit(1)
 		}
 
-		entity, err := conn.Retr(id)
-		if err != nil {
-			fatal(err)
-		}
-
 		if i > 0 {
 			fmt.Println(
 				"--------------------------------------------------------------------------------")
 		}
 
-		msg, err := messageFromEntity(entity)
-		if err != nil {
-			fatal(err)
-		}
-
-		switch format {
-		case "brief":
-		// XXX
-
-		case "normal":
-			for _, field := range []string{"Date", "From", "To"} {
-				raw := msg.header.Get(field)
-				if decoded, err := (&mime.WordDecoder{}).DecodeHeader(raw); err == nil {
-					raw = decoded
-				}
-				if raw != "" {
-					fmt.Printf("%s: %s\n", field, raw)
-				}
+		if format == "raw" {
+			buf, err := conn.Cmd("RETR", true, id)
+			if err != nil {
+				fatal(err)
 			}
-			fmt.Printf("Subject: %s\n", msg.subject)
-			fmt.Printf("Content-Type: %s\n", msg.header.Get("Content-Type"))
-			if cte := msg.header.Get("Content-Transfer-Encoding"); cte != "" {
-				fmt.Printf("Content-Transfer-Encoding: %s\n", cte)
+			os.Stdout.Write(buf.Bytes())
+		} else {
+			entity, err := conn.Retr(id)
+			if err != nil {
+				fatal(err)
 			}
-			fmt.Println()
-			fmt.Println(displayBody(msg.header.Get("Content-Type"),
-				msg.header.Get("Content-Transfer-Encoding"), msg.body))
 
-		case "full":
+			msg, err := messageFromEntity(entity)
+			if err != nil {
+				fatal(err)
+			}
+
+			switch format {
+			case "brief":
 			// XXX
 
-		case "raw":
-			// XXX
+			case "normal":
+				for _, field := range []string{"Date", "From", "To"} {
+					raw := msg.header.Get(field)
+					if decoded, err := (&mime.WordDecoder{}).DecodeHeader(raw); err == nil {
+						raw = decoded
+					}
+					if raw != "" {
+						fmt.Printf("%s: %s\n", field, raw)
+					}
+				}
+				fmt.Printf("Subject: %s\n", msg.subject)
+				fmt.Printf("Content-Type: %s\n", msg.header.Get("Content-Type"))
+				if cte := msg.header.Get("Content-Transfer-Encoding"); cte != "" {
+					fmt.Printf("Content-Transfer-Encoding: %s\n", cte)
+				}
+				fmt.Println()
+				fmt.Println(displayBody(msg.header.Get("Content-Type"),
+					msg.header.Get("Content-Transfer-Encoding"), msg.body))
+
+			case "full":
+				// XXX
+			}
 		}
 	}
 }
