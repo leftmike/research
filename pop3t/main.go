@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 )
@@ -18,16 +19,17 @@ func usage() {
 }
 
 type cmd struct {
-	fn   func(cfg *config, args []string)
-	help string
+	flags func(fs *flag.FlagSet)
+	run   func(cfg *config, args []string)
+	help  string
 }
 
 var (
 	cmds = map[string]cmd{
-		"filter": {fn: filter, help: ""},
-		"get":    {fn: get, help: "fetch and display a single message by id"},
+		"filter": {run: filter, help: ""},
+		"get":    {run: get, help: "fetch and display a single message by id"},
 		"help":   {help: ""},
-		"list":   {fn: list, help: ""},
+		"list":   {run: list, help: ""},
 	}
 )
 
@@ -40,8 +42,13 @@ func main() {
 				return
 			}
 
-			cfg, args := loadConfig()
-			cmd.fn(cfg, args)
+			fs := flag.NewFlagSet(fmt.Sprintf("%s %s", os.Args[0], os.Args[1]), flag.ExitOnError)
+			if cmd.flags != nil {
+				cmd.flags(fs)
+			}
+			cfg, args := loadConfig(fs, os.Args[2:])
+
+			cmd.run(cfg, args)
 			return
 		}
 	}

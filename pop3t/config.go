@@ -41,19 +41,18 @@ func readConfig(filenames []string) (*config, error) {
 	return nil, nil
 }
 
-func loadConfig() (*config, []string) {
+func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 	var configFile, host, user, password string
 	var port int
 	var noTLS bool
 
-	fs := flag.NewFlagSet(fmt.Sprintf("%s %s", os.Args[0], os.Args[1]), flag.ExitOnError)
 	fs.StringVar(&configFile, "config", "", "HCL config file")
 	fs.StringVar(&host, "host", "", "POP3 server host")
 	fs.IntVar(&port, "port", 0, "POP3 server port")
 	fs.StringVar(&user, "user", "", "username")
 	fs.StringVar(&password, "password", "", "password")
 	fs.BoolVar(&noTLS, "no-tls", false, "disable TLS")
-	fs.Parse(os.Args[2:])
+	fs.Parse(args)
 
 	var cfg *config
 	if configFile != "" {
