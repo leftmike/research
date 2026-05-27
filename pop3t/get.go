@@ -48,40 +48,47 @@ func get(cfg *config, args []string) {
 		fmt.Fprintf(os.Stderr, "usage: get <id>\n")
 		os.Exit(1)
 	}
-	id, err := strconv.Atoi(args[0])
-	if err != nil || id < 1 {
-		fmt.Fprintf(os.Stderr, "get: invalid message id: %s\n", args[0])
-		os.Exit(1)
-	}
 
 	conn := cfg.newConn()
 	defer conn.Quit()
 
-	entity, err := conn.Retr(id)
-	if err != nil {
-		fatal(err)
-	}
-
-	msg, err := messageFromEntity(entity)
-	if err != nil {
-		fatal(err)
-	}
-
-	for _, field := range []string{"Date", "From", "To"} {
-		raw := msg.header.Get(field)
-		if decoded, err := (&mime.WordDecoder{}).DecodeHeader(raw); err == nil {
-			raw = decoded
+	for i, arg := range args {
+		id, err := strconv.Atoi(arg)
+		if err != nil || id < 1 {
+			fmt.Fprintf(os.Stderr, "get: invalid message id: %s\n", arg)
+			os.Exit(1)
 		}
-		if raw != "" {
-			fmt.Printf("%s: %s\n", field, raw)
+
+		entity, err := conn.Retr(id)
+		if err != nil {
+			fatal(err)
 		}
+
+		if i > 0 {
+			fmt.Println()
+		}
+
+		msg, err := messageFromEntity(entity)
+		if err != nil {
+			fatal(err)
+		}
+
+		for _, field := range []string{"Date", "From", "To"} {
+			raw := msg.header.Get(field)
+			if decoded, err := (&mime.WordDecoder{}).DecodeHeader(raw); err == nil {
+				raw = decoded
+			}
+			if raw != "" {
+				fmt.Printf("%s: %s\n", field, raw)
+			}
+		}
+		fmt.Printf("Subject: %s\n", msg.subject)
+		fmt.Printf("Content-Type: %s\n", msg.header.Get("Content-Type"))
+		if cte := msg.header.Get("Content-Transfer-Encoding"); cte != "" {
+			fmt.Printf("Content-Transfer-Encoding: %s\n", cte)
+		}
+		fmt.Println()
+		fmt.Println(displayBody(msg.header.Get("Content-Type"),
+			msg.header.Get("Content-Transfer-Encoding"), msg.body))
 	}
-	fmt.Printf("Subject: %s\n", msg.subject)
-	fmt.Printf("Content-Type: %s\n", msg.header.Get("Content-Type"))
-	if cte := msg.header.Get("Content-Transfer-Encoding"); cte != "" {
-		fmt.Printf("Content-Transfer-Encoding: %s\n", cte)
-	}
-	fmt.Println()
-	fmt.Println(displayBody(msg.header.Get("Content-Type"),
-		msg.header.Get("Content-Transfer-Encoding"), msg.body))
 }
