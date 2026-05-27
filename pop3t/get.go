@@ -11,57 +11,56 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 func isBase64(cte string) bool {
 	return strings.EqualFold(strings.TrimSpace(cte), "base64")
 }
 
-func displayBody(contentType, transferEnc string, body []byte) string {
-	if isBase64(transferEnc) {
-		return fmt.Sprintf("[%s]", contentType)
-	}
-	mediaType, params, err := mime.ParseMediaType(contentType)
-	if err != nil || !strings.HasPrefix(mediaType, "multipart/") {
-		return extractPlainText(contentType, transferEnc, body)
-	}
-	mr := multipart.NewReader(bytes.NewReader(body), params["boundary"])
-	var parts []string
-	for {
-		part, err := mr.NextPart()
-		if err != nil {
+func truncate(s string, n int) string {
+	var buf strings.Builder
+	pr := rune('\n')
+	for _, r := range s {
+		if r == '\n' || r == '\r' || r == '\v' || r == '\f' || r == '\u0085' || r == '\u2028' ||
+			r == '\u2029' {
+
+			if pr != '\n' {
+				buf.WriteRune('\n')
+			}
+			pr = '\n'
+		} else if unicode.IsSpace(r) || !unicode.IsPrint(r) {
+			if pr != '\n' {
+				pr = ' '
+			}
+		} else {
+			if pr == ' ' {
+				buf.WriteRune(' ')
+			}
+			buf.WriteRune(r)
+			pr = r
+		}
+
+		if buf.Len() >= n {
+			buf.WriteString("...")
 			break
 		}
-		pt, _, _ := mime.ParseMediaType(part.Header.Get("Content-Type"))
-		if pt != "text/plain" {
-			continue
-		}
-		cte := part.Header.Get("Content-Transfer-Encoding")
-		if isBase64(cte) {
-			parts = append(parts, fmt.Sprintf("[%s]", part.Header.Get("Content-Type")))
-		} else {
-			parts = append(parts, decodeBody(cte, part))
-		}
 	}
-	return strings.Join(parts, "\n")
+
+	return strings.TrimSpace(buf.String())
 }
 
-func truncate(s string, n int) string {
-	s = strings.Join(strings.Fields(s), " ")
-	r := []rune(s)
-	if len(r) <= n {
-		return s
-	}
-	return string(r[:n]) + "…"
-}
-
-func briefBody(contentType, transferEnc string, body []byte) string {
+func formatBody(contentType, transferEnc string, body []byte, summarize bool) string {
 	if isBase64(transferEnc) {
-		return fmt.Sprintf("[%s]", contentType)
+		return fmt.Sprintf("[%s, %s, %d bytes]", contentType, transferEnc, len(body))
 	}
 	mediaType, params, err := mime.ParseMediaType(contentType)
 	if err != nil || !strings.HasPrefix(mediaType, "multipart/") {
-		return truncate(decodeBody(transferEnc, bytes.NewReader(body)), 200)
+		text := decodeBody(transferEnc, bytes.NewReader(body))
+		if summarize {
+			return truncate(text, 90)
+		}
+		return text
 	}
 
 	mr := multipart.NewReader(bytes.NewReader(body), params["boundary"])
@@ -79,10 +78,24 @@ func briefBody(contentType, transferEnc string, body []byte) string {
 		}
 		if strings.HasPrefix(pt, "text/plain") && !isBase64(cte) {
 			text := decodeBody(cte, part)
-			parts = append(parts, "[text/plain] "+truncate(text, 120))
+			if summarize {
+				var header string
+				if cte != "" {
+					header = fmt.Sprintf("[%s, %s, %d bytes]\n", ct, cte, len(text))
+				} else {
+					header = fmt.Sprintf("[%s, %d bytes]\n", ct, len(text))
+				}
+				parts = append(parts, header+truncate(text, 90))
+			} else {
+				parts = append(parts, text)
+			}
 		} else {
 			b, _ := io.ReadAll(part)
-			parts = append(parts, fmt.Sprintf("[%s %d bytes]", pt, len(b)))
+			if cte != "" {
+				parts = append(parts, fmt.Sprintf("[%s, %s, %d bytes]", ct, cte, len(b)))
+			} else {
+				parts = append(parts, fmt.Sprintf("[%s, %d bytes]", ct, len(b)))
+			}
 		}
 	}
 	return strings.Join(parts, "\n")
@@ -152,8 +165,8 @@ func get(cfg *config, args []string) {
 				}
 				fmt.Printf("Subject: %s\n", msg.subject)
 				fmt.Println()
-				fmt.Println(briefBody(msg.header.Get("Content-Type"),
-					msg.header.Get("Content-Transfer-Encoding"), msg.body))
+				fmt.Println(formatBody(msg.header.Get("Content-Type"),
+					msg.header.Get("Content-Transfer-Encoding"), msg.body, true))
 
 			case "normal":
 				for _, field := range []string{"Date", "From", "To"} {
@@ -171,8 +184,8 @@ func get(cfg *config, args []string) {
 					fmt.Printf("Content-Transfer-Encoding: %s\n", cte)
 				}
 				fmt.Println()
-				fmt.Println(displayBody(msg.header.Get("Content-Type"),
-					msg.header.Get("Content-Transfer-Encoding"), msg.body))
+				fmt.Println(formatBody(msg.header.Get("Content-Type"),
+					msg.header.Get("Content-Transfer-Encoding"), msg.body, false))
 
 			case "full":
 				// XXX
