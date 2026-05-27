@@ -2,10 +2,12 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"mime"
 	"mime/multipart"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -43,9 +45,22 @@ func displayBody(contentType, transferEnc string, body []byte) string {
 	return strings.Join(parts, "\n")
 }
 
+var (
+	format = "normal"
+)
+
+func getFlags(fs *flag.FlagSet) {
+	fs.StringVar(&format, "format", "normal", "brief|normal|full|raw")
+}
+
 func get(cfg *config, args []string) {
 	if len(args) == 0 {
-		fmt.Fprintf(os.Stderr, "usage: get <id>\n")
+		fmt.Fprintf(os.Stderr, "usage: %s %s <id>...\n", os.Args[0], os.Args[1])
+		os.Exit(1)
+	}
+	if !slices.Contains([]string{"brief", "normal", "full", "raw"}, format) {
+		fmt.Fprintf(os.Stderr, "usage: %s %s: expected brief, normal, full, or raw for format\n",
+			os.Args[0], os.Args[1])
 		os.Exit(1)
 	}
 
@@ -65,7 +80,8 @@ func get(cfg *config, args []string) {
 		}
 
 		if i > 0 {
-			fmt.Println()
+			fmt.Println(
+				"--------------------------------------------------------------------------------")
 		}
 
 		msg, err := messageFromEntity(entity)
@@ -73,22 +89,34 @@ func get(cfg *config, args []string) {
 			fatal(err)
 		}
 
-		for _, field := range []string{"Date", "From", "To"} {
-			raw := msg.header.Get(field)
-			if decoded, err := (&mime.WordDecoder{}).DecodeHeader(raw); err == nil {
-				raw = decoded
+		switch format {
+		case "brief":
+		// XXX
+
+		case "normal":
+			for _, field := range []string{"Date", "From", "To"} {
+				raw := msg.header.Get(field)
+				if decoded, err := (&mime.WordDecoder{}).DecodeHeader(raw); err == nil {
+					raw = decoded
+				}
+				if raw != "" {
+					fmt.Printf("%s: %s\n", field, raw)
+				}
 			}
-			if raw != "" {
-				fmt.Printf("%s: %s\n", field, raw)
+			fmt.Printf("Subject: %s\n", msg.subject)
+			fmt.Printf("Content-Type: %s\n", msg.header.Get("Content-Type"))
+			if cte := msg.header.Get("Content-Transfer-Encoding"); cte != "" {
+				fmt.Printf("Content-Transfer-Encoding: %s\n", cte)
 			}
+			fmt.Println()
+			fmt.Println(displayBody(msg.header.Get("Content-Type"),
+				msg.header.Get("Content-Transfer-Encoding"), msg.body))
+
+		case "full":
+			// XXX
+
+		case "raw":
+			// XXX
 		}
-		fmt.Printf("Subject: %s\n", msg.subject)
-		fmt.Printf("Content-Type: %s\n", msg.header.Get("Content-Type"))
-		if cte := msg.header.Get("Content-Transfer-Encoding"); cte != "" {
-			fmt.Printf("Content-Transfer-Encoding: %s\n", cte)
-		}
-		fmt.Println()
-		fmt.Println(displayBody(msg.header.Get("Content-Type"),
-			msg.header.Get("Content-Transfer-Encoding"), msg.body))
 	}
 }

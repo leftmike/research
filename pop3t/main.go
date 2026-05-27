@@ -7,7 +7,7 @@ import (
 )
 
 func fatal(err error) {
-	fmt.Fprintf(os.Stderr, "%s: %s\n", os.Args[0], err)
+	fmt.Fprintf(os.Stderr, "%s %s: %s\n", os.Args[0], os.Args[1], err)
 	os.Exit(1)
 }
 
@@ -27,7 +27,7 @@ type cmd struct {
 var (
 	cmds = map[string]cmd{
 		"filter": {run: filter, help: ""},
-		"get":    {run: get, help: "fetch and display a single message by id"},
+		"get":    {flags: getFlags, run: get, help: "fetch and display a single message by id"},
 		"help":   {help: ""},
 		"list":   {run: list, help: ""},
 	}
