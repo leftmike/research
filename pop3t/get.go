@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"io"
 	"mime"
 	"mime/multipart"
 	"os"
@@ -40,6 +41,48 @@ func displayBody(contentType, transferEnc string, body []byte) string {
 			parts = append(parts, fmt.Sprintf("[%s]", part.Header.Get("Content-Type")))
 		} else {
 			parts = append(parts, decodeBody(cte, part))
+		}
+	}
+	return strings.Join(parts, "\n")
+}
+
+func truncate(s string, n int) string {
+	s = strings.Join(strings.Fields(s), " ")
+	r := []rune(s)
+	if len(r) <= n {
+		return s
+	}
+	return string(r[:n]) + "…"
+}
+
+func briefBody(contentType, transferEnc string, body []byte) string {
+	if isBase64(transferEnc) {
+		return fmt.Sprintf("[%s]", contentType)
+	}
+	mediaType, params, err := mime.ParseMediaType(contentType)
+	if err != nil || !strings.HasPrefix(mediaType, "multipart/") {
+		return truncate(decodeBody(transferEnc, bytes.NewReader(body)), 200)
+	}
+
+	mr := multipart.NewReader(bytes.NewReader(body), params["boundary"])
+	var parts []string
+	for {
+		part, err := mr.NextPart()
+		if err != nil {
+			break
+		}
+		ct := part.Header.Get("Content-Type")
+		cte := part.Header.Get("Content-Transfer-Encoding")
+		pt, _, _ := mime.ParseMediaType(ct)
+		if pt == "" {
+			pt = "text/plain"
+		}
+		if strings.HasPrefix(pt, "text/plain") && !isBase64(cte) {
+			text := decodeBody(cte, part)
+			parts = append(parts, "[text/plain] "+truncate(text, 120))
+		} else {
+			b, _ := io.ReadAll(part)
+			parts = append(parts, fmt.Sprintf("[%s %d bytes]", pt, len(b)))
 		}
 	}
 	return strings.Join(parts, "\n")
@@ -98,7 +141,19 @@ func get(cfg *config, args []string) {
 
 			switch format {
 			case "brief":
-			// XXX
+				for _, field := range []string{"Date", "From"} {
+					raw := msg.header.Get(field)
+					if decoded, err := (&mime.WordDecoder{}).DecodeHeader(raw); err == nil {
+						raw = decoded
+					}
+					if raw != "" {
+						fmt.Printf("%s: %s\n", field, raw)
+					}
+				}
+				fmt.Printf("Subject: %s\n", msg.subject)
+				fmt.Println()
+				fmt.Println(briefBody(msg.header.Get("Content-Type"),
+					msg.header.Get("Content-Transfer-Encoding"), msg.body))
 
 			case "normal":
 				for _, field := range []string{"Date", "From", "To"} {
