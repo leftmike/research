@@ -30,12 +30,13 @@ type smtpConfig struct {
 }
 
 type config struct {
-	Host     string     `hcl:"host,optional"`
-	Port     int        `hcl:"port,optional"`
-	User     string     `hcl:"user,optional"`
-	Password string     `hcl:"password,optional"`
-	POP3     pop3Config `hcl:"pop3,optional"`
-	SMTP     smtpConfig `hcl:"smtp,optional"`
+	Host      string     `hcl:"host,optional"`
+	Port      int        `hcl:"port,optional"`
+	User      string     `hcl:"user,optional"`
+	Password  string     `hcl:"password,optional"`
+	Archive   string     `hcl:"archive,optional"`
+	POP3      pop3Config `hcl:"pop3,optional"`
+	SMTP      smtpConfig `hcl:"smtp,optional"`
 }
 
 func (cfg *config) pop3Host() string {
@@ -117,6 +118,7 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 	var configFile string
 
 	fs.StringVar(&configFile, "config", "", "HCL config file")
+	fs.String("archive", "", "directory to save deleted emails")
 	fs.String("pop3-host", "", "POP3 server host")
 	fs.Int("pop3-port", 0, "POP3 server port")
 	fs.String("pop3-user", "", "POP3 username")
@@ -170,6 +172,8 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 			cfg.SMTP.Password = f.Value.String()
 		case "smtp-no-tls":
 			cfg.SMTP.NoTLS = (f.Value.String() == "true")
+		case "archive":
+			cfg.Archive = f.Value.String()
 		}
 	})
 

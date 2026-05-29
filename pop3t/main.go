@@ -4,7 +4,6 @@ To Do:
 - clean up filter and list to make code more common
 - filter: specific the language(s) as english !russian
 - filter: actions: delete, forward, etc
-- option to save all messages that are deleted in raw format
 */
 package main
 

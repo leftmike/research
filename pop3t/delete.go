@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -26,10 +27,34 @@ func delete(cfg *config, args []string) {
 	conn := cfg.newConn()
 	defer conn.Quit()
 
-	err := conn.Dele(ids...)
-	if err != nil {
-		fatal(err)
+	if cfg.Archive != "" {
+		if _, err := os.Stat(cfg.Archive); err != nil {
+			fatal(fmt.Errorf("archive directory does not exist: %s", cfg.Archive))
+		}
+		for _, id := range ids {
+			uidls, err := conn.Uidl(id)
+			if err != nil {
+				fatal(err)
+			}
+			uid := uidls[0].UID
+			buf, err := conn.Cmd("RETR", true, id)
+			if err != nil {
+				fatal(err)
+			}
+			path := filepath.Join(cfg.Archive, uid+".eml")
+			if err := os.WriteFile(path, buf.Bytes(), 0644); err != nil {
+				fatal(err)
+			}
+			if err := conn.Dele(id); err != nil {
+				fatal(err)
+			}
+			fmt.Printf("deleted %d (saved to %s)\n", id, path)
+		}
+		return
 	}
 
+	if err := conn.Dele(ids...); err != nil {
+		fatal(err)
+	}
 	fmt.Println("deleted", strings.Join(args, ", "))
 }
