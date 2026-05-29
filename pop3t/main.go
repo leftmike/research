@@ -34,6 +34,7 @@ type cmd struct {
 
 var (
 	cmds = map[string]cmd{
+		"delete": {run: delete, help: "delete one or more messages by id"},
 		"filter": {run: filter, help: ""},
 		"get":    {flags: getFlags, run: get, help: "fetch and display a single message by id"},
 		"help":   {help: ""},
