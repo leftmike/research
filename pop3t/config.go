@@ -64,6 +64,34 @@ func (cfg *config) pop3Password() string {
 	return cfg.Password
 }
 
+func (cfg *config) smtpHost() string {
+	if cfg.SMTP.Host != "" {
+		return cfg.SMTP.Host
+	}
+	return cfg.Host
+}
+
+func (cfg *config) smtpPort() int {
+	if cfg.SMTP.Port != 0 {
+		return cfg.SMTP.Port
+	}
+	return cfg.Port
+}
+
+func (cfg *config) smtpUser() string {
+	if cfg.SMTP.User != "" {
+		return cfg.SMTP.User
+	}
+	return cfg.User
+}
+
+func (cfg *config) smtpPassword() string {
+	if cfg.SMTP.Password != "" {
+		return cfg.SMTP.Password
+	}
+	return cfg.Password
+}
+
 func configFilenames() []string {
 	if runtime.GOOS == "windows" {
 		return []string{"~/pop3t/pop3t.hcl", "~/pop3t.hcl", "./pop3t.hcl"}
@@ -94,6 +122,11 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 	fs.String("pop3-user", "", "POP3 username")
 	fs.String("pop3-password", "", "POP3 password")
 	fs.Bool("pop3-no-tls", false, "POP3 disable TLS")
+	fs.String("smtp-host", "", "SMTP server host")
+	fs.Int("smtp-port", 0, "SMTP server port")
+	fs.String("smtp-user", "", "SMTP username")
+	fs.String("smtp-password", "", "SMTP password")
+	fs.Bool("smtp-no-tls", false, "SMTP disable TLS")
 	fs.Parse(args)
 
 	var cfg *config
@@ -127,6 +160,16 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 			cfg.POP3.Password = f.Value.String()
 		case "pop3-no-tls":
 			cfg.POP3.NoTLS = (f.Value.String() == "true")
+		case "smtp-host":
+			cfg.SMTP.Host = f.Value.String()
+		case "smtp-port":
+			cfg.SMTP.Port, _ = strconv.Atoi(f.Value.String())
+		case "smtp-user":
+			cfg.SMTP.User = f.Value.String()
+		case "smtp-password":
+			cfg.SMTP.Password = f.Value.String()
+		case "smtp-no-tls":
+			cfg.SMTP.NoTLS = (f.Value.String() == "true")
 		}
 	})
 
