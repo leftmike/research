@@ -34,11 +34,12 @@ type cmd struct {
 
 var (
 	cmds = map[string]cmd{
-		"delete": {run: delete, help: "delete one or more messages by id"},
-		"filter": {run: filter, help: ""},
-		"get":    {flags: getFlags, run: get, help: "fetch and display a single message by id"},
-		"help":   {help: ""},
-		"list":   {run: list, help: ""},
+		"delete":  {run: delete, help: "delete one or more messages by id"},
+		"filter":  {run: filter, help: "list non-English messages; pass 'delete' to remove them"},
+		"forward": {run: forward, help: "forward one or more messages by id to an email address"},
+		"get":     {flags: getFlags, run: get, help: "fetch and display a single message by id"},
+		"help":    {help: "show this help"},
+		"list":    {run: list, help: "list all messages with id, language, and subject"},
 	}
 )
 
