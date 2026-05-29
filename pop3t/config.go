@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	msgformat "github.com/emersion/go-message"
 	"github.com/hashicorp/hcl/v2/hclsimple"
 	"github.com/knadh/go-pop3"
 )
@@ -180,6 +181,30 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 	// XXX: if verbose
 	// fmt.Printf("%s:%d %s tls:%v\n", cfg.Host, cfg.Port, cfg.User, !cfg.NoTLS)
 	return cfg, fs.Args()
+}
+
+// list connects, fetches all messages, and calls fn for each one with its
+// raw entity. Returns the total message count.
+func (cfg *config) list(fn func(*pop3.Conn, int, *msgformat.Entity)) int {
+	conn := cfg.newConn()
+	defer conn.Quit()
+
+	mids, err := conn.List(0)
+	if err != nil {
+		fatal(err)
+	}
+
+	fmt.Printf("found %d messages\n", len(mids))
+
+	for _, mid := range mids {
+		entity, err := conn.Retr(mid.ID)
+		if err != nil {
+			fmt.Printf("skipping: retr(%d): %s", mid.ID, err)
+			continue
+		}
+		fn(conn, mid.ID, entity)
+	}
+	return len(mids)
 }
 
 func (cfg *config) newConn() *pop3.Conn {

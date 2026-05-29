@@ -175,6 +175,7 @@ func (msg *message) formatBody(summarize bool) string {
 	return strings.Join(parts, "\n")
 }
 
+
 func (msg *message) detectLanguage(ld lingua.LanguageDetector) (lingua.Language, float64, bool) {
 	detectText := msg.subject + "\n"
 	if len(msg.subject) == utf8.RuneCountInString(msg.subject) {

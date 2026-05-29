@@ -1,9 +1,9 @@
 /*
 To Do:
 - verbose (including -v) flag
-- clean up filter and list to make code more common
 - filter: specific the language(s) as english !russian
 - filter: actions: delete, forward, etc
+- support ranges of ids as 3-5
 */
 package main
 

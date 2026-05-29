@@ -3,34 +3,20 @@ package main
 import (
 	"fmt"
 
+	msgformat "github.com/emersion/go-message"
+	"github.com/knadh/go-pop3"
 	"github.com/pemistahl/lingua-go"
 )
 
 func list(cfg *config, args []string) {
-	conn := cfg.newConn()
-	defer conn.Quit()
-
-	mids, err := conn.List(0)
-	if err != nil {
-		fatal(err)
-	}
-	fmt.Printf("found %d messages\n", len(mids))
-
 	ld := lingua.NewLanguageDetectorBuilder().FromAllLanguages().Build()
-	for _, mid := range mids {
-		entity, err := conn.Retr(mid.ID)
-		if err != nil {
-			fmt.Printf("skipping: retr(%d): %s", mid.ID, err)
-			continue
-		}
-
+	cfg.list(func(_ *pop3.Conn, id int, entity *msgformat.Entity) {
 		msg, err := messageFromEntity(entity)
 		if err != nil {
-			fmt.Printf("skipping: entity(%d): %s", mid.ID, err)
-			continue
+			fmt.Printf("skipping: entity(%d): %s", id, err)
+			return
 		}
-
 		lang, conf, _ := msg.detectLanguage(ld)
-		fmt.Printf("%3d  [%s %.0f%%] %s\n", mid.ID, lang, conf*100, msg.subject)
-	}
+		fmt.Printf("%3d  [%s %.0f%%] %s\n", id, lang, conf*100, msg.subject)
+	})
 }
