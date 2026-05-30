@@ -31,13 +31,13 @@ type smtpConfig struct {
 }
 
 type config struct {
-	Host      string     `hcl:"host,optional"`
-	Port      int        `hcl:"port,optional"`
-	User      string     `hcl:"user,optional"`
-	Password  string     `hcl:"password,optional"`
-	Archive   string     `hcl:"archive,optional"`
-	POP3      pop3Config `hcl:"pop3,optional"`
-	SMTP      smtpConfig `hcl:"smtp,optional"`
+	Host     string     `hcl:"host,optional"`
+	Port     int        `hcl:"port,optional"`
+	User     string     `hcl:"user,optional"`
+	Password string     `hcl:"password,optional"`
+	Archive  string     `hcl:"archive,optional"`
+	POP3     pop3Config `hcl:"pop3,optional"`
+	SMTP     smtpConfig `hcl:"smtp,optional"`
 }
 
 func (cfg *config) pop3Host() string {
@@ -183,28 +183,32 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 	return cfg, fs.Args()
 }
 
-// list connects, fetches all messages, and calls fn for each one with its
-// raw entity. Returns the total message count.
-func (cfg *config) list(fn func(*pop3.Conn, int, *msgformat.Entity)) int {
+func (cfg *config) list(fn func(conn *pop3.Conn, id int, entity *msgformat.Entity) error) (int,
+	error) {
+
 	conn := cfg.newConn()
 	defer conn.Quit()
 
 	mids, err := conn.List(0)
 	if err != nil {
-		fatal(err)
+		conn.Rset()
+		return 0, err
 	}
-
-	fmt.Printf("found %d messages\n", len(mids))
 
 	for _, mid := range mids {
 		entity, err := conn.Retr(mid.ID)
 		if err != nil {
-			fmt.Printf("skipping: retr(%d): %s", mid.ID, err)
-			continue
+			fmt.Printf("skipping: retr(%d): %s\n", mid.ID, err)
+			continue // XX
 		}
-		fn(conn, mid.ID, entity)
+		err = fn(conn, mid.ID, entity)
+		if err != nil {
+			conn.Rset()
+			return 0, err
+		}
 	}
-	return len(mids)
+
+	return len(mids), nil
 }
 
 func (cfg *config) newConn() *pop3.Conn {

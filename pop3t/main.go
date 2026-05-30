@@ -4,6 +4,8 @@ To Do:
 - filter: specific the language(s) as english !russian
 - filter: actions: delete, forward, etc
 - support ranges of ids as 3-5
+- remove port from generic config; only have for pop3 and smtp
+- send command
 */
 package main
 

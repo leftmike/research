@@ -10,13 +10,18 @@ import (
 
 func list(cfg *config, args []string) {
 	ld := lingua.NewLanguageDetectorBuilder().FromAllLanguages().Build()
-	cfg.list(func(_ *pop3.Conn, id int, entity *msgformat.Entity) {
+	tot, err := cfg.list(func(conn *pop3.Conn, id int, entity *msgformat.Entity) error {
 		msg, err := messageFromEntity(entity)
 		if err != nil {
-			fmt.Printf("skipping: entity(%d): %s", id, err)
-			return
+			fmt.Printf("skipping: entity(%d): %s\n", id, err)
+			return nil
 		}
 		lang, conf, _ := msg.detectLanguage(ld)
 		fmt.Printf("%3d  [%s %.0f%%] %s\n", id, lang, conf*100, msg.subject)
+		return nil
 	})
+	if err != nil {
+		fatal(err)
+	}
+	fmt.Printf("%d messages\n", tot)
 }
