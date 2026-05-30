@@ -35,6 +35,10 @@ func forward(cfg *config, args []string) {
 	conn := cfg.newConn()
 	defer conn.Quit()
 
+	if verbose {
+		fmt.Printf("smtp: %s:%d user:%s tls:%v\n", host, port, user, !cfg.SMTP.NoTLS)
+	}
+
 	auth := smtp.PlainAuth("", user, password, host)
 	addr := fmt.Sprintf("%s:%d", host, port)
 

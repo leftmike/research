@@ -105,6 +105,8 @@ func readConfig(filenames []string) (*config, error) {
 func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 	var configFile string
 
+	fs.BoolVar(&verbose, "verbose", false, "enable verbose output")
+	fs.BoolVar(&verbose, "v", false, "enable verbose output")
 	fs.StringVar(&configFile, "config", "", "HCL config file")
 	fs.String("archive", "", "directory to save deleted emails")
 	fs.String("pop3-host", "", "POP3 server host")
@@ -165,8 +167,6 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 		}
 	})
 
-	// XXX: if verbose
-	// fmt.Printf("%s:%d %s tls:%v\n", cfg.Host, cfg.Port, cfg.User, !cfg.NoTLS)
 	return cfg, fs.Args()
 }
 
@@ -213,6 +213,10 @@ func (cfg *config) newConn() *pop3.Conn {
 		} else {
 			port = 995
 		}
+	}
+
+	if verbose {
+		fmt.Printf("pop3: %s:%d user:%s tls:%v\n", host, port, user, !cfg.POP3.NoTLS)
 	}
 
 	conn, err := pop3.New(pop3.Opt{

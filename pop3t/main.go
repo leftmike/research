@@ -1,6 +1,5 @@
 /*
 To Do:
-- verbose (including -v) flag
 - filter: specific the language(s) as english !russian
 - filter: actions: delete, forward, etc
 - send command
@@ -32,6 +31,8 @@ type cmd struct {
 }
 
 var (
+	verbose bool
+
 	cmds = map[string]cmd{
 		"delete":  {run: delete, help: "delete one or more messages by id"},
 		"filter":  {run: filter, help: "list non-English messages; pass 'delete' to remove them"},
