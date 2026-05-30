@@ -25,10 +25,15 @@ func filter(cfg *config, args []string) {
 		}
 		fmt.Printf("%3d [%s %.0f%%] %s\n", id, lang, conf*100, msg.subject)
 		if doDelete {
-			if err := conn.Dele(id); err != nil {
-				fmt.Printf("failed to delete message %d: %s\n", id, err)
-				return nil
+			path, err := deleteId(cfg, conn, id)
+			if err != nil {
+				return err
 			}
+			fmt.Printf("deleted %d", id)
+			if path != "" {
+				fmt.Printf(" (saved to %s)", path)
+			}
+			fmt.Println()
 		}
 		cnt += 1
 		return nil
@@ -37,9 +42,5 @@ func filter(cfg *config, args []string) {
 		fatal(err)
 	}
 
-	action := "would delete"
-	if doDelete {
-		action = "deleted"
-	}
-	fmt.Printf("done: %s %d of %d messages\n", action, cnt, tot)
+	fmt.Printf("%d of %d messages\n", cnt, tot)
 }

@@ -5,8 +5,41 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
+
+	"github.com/knadh/go-pop3"
 )
+
+func deleteId(cfg *config, conn *pop3.Conn, id int) (string, error) {
+	if cfg.Archive != "" {
+		if _, err := os.Stat(cfg.Archive); err != nil {
+			return "", fmt.Errorf("archive directory does not exist: %s", cfg.Archive)
+		}
+
+		uidls, err := conn.Uidl(id)
+		if err != nil {
+			return "", err
+		}
+
+		buf, err := conn.Cmd("RETR", true, id)
+		if err != nil {
+			return "", err
+		}
+
+		path := filepath.Join(cfg.Archive, uidls[0].UID+".eml")
+		err = os.WriteFile(path, buf.Bytes(), 0644)
+		if err != nil {
+			return "", err
+		}
+		err = conn.Dele(id)
+		if err != nil {
+			return "", err
+		}
+
+		return path, nil
+	}
+
+	return "", conn.Dele(id)
+}
 
 func delete(cfg *config, args []string) {
 	if len(args) == 0 {
@@ -14,47 +47,25 @@ func delete(cfg *config, args []string) {
 		os.Exit(1)
 	}
 
-	var ids []int
+	conn := cfg.newConn()
+	defer conn.Quit()
+
 	for _, arg := range args {
 		id, err := strconv.Atoi(arg)
 		if err != nil || id < 1 {
 			fmt.Fprintf(os.Stderr, "delete: invalid message id: %s\n", arg)
 			os.Exit(1)
 		}
-		ids = append(ids, id)
-	}
 
-	conn := cfg.newConn()
-	defer conn.Quit()
-
-	if cfg.Archive != "" {
-		if _, err := os.Stat(cfg.Archive); err != nil {
-			fatal(fmt.Errorf("archive directory does not exist: %s", cfg.Archive))
+		path, err := deleteId(cfg, conn, id)
+		if err != nil {
+			fatal(err)
 		}
-		for _, id := range ids {
-			uidls, err := conn.Uidl(id)
-			if err != nil {
-				fatal(err)
-			}
-			uid := uidls[0].UID
-			buf, err := conn.Cmd("RETR", true, id)
-			if err != nil {
-				fatal(err)
-			}
-			path := filepath.Join(cfg.Archive, uid+".eml")
-			if err := os.WriteFile(path, buf.Bytes(), 0644); err != nil {
-				fatal(err)
-			}
-			if err := conn.Dele(id); err != nil {
-				fatal(err)
-			}
-			fmt.Printf("deleted %d (saved to %s)\n", id, path)
-		}
-		return
-	}
 
-	if err := conn.Dele(ids...); err != nil {
-		fatal(err)
+		fmt.Printf("deleted %d", id)
+		if path != "" {
+			fmt.Printf(" (saved to %s)", path)
+		}
+		fmt.Println()
 	}
-	fmt.Println("deleted", strings.Join(args, ", "))
 }
