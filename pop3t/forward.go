@@ -18,29 +18,16 @@ func forward(cfg *config, args []string) {
 	if err != nil {
 		fatal(err)
 	}
-
-	host := cfg.smtpHost()
-	user := cfg.smtpUser()
-	password := cfg.smtpPassword()
-
-	port := cfg.SMTP.Port
-	if port == 0 {
-		if cfg.SMTP.NoTLS {
-			port = 25
-		} else {
-			port = 587
-		}
+	addr, auth, err := cfg.newSend()
+	if err != nil {
+		fatal(err)
 	}
 
-	conn := cfg.newConn()
+	conn, err := cfg.newConn()
+	if err != nil {
+		fatal(err)
+	}
 	defer conn.Quit()
-
-	if verbose {
-		fmt.Printf("smtp: %s:%d user:%s tls:%v\n", host, port, user, !cfg.SMTP.NoTLS)
-	}
-
-	auth := smtp.PlainAuth("", user, password, host)
-	addr := fmt.Sprintf("%s:%d", host, port)
 
 	for _, id := range ids {
 		buf, err := conn.Cmd("RETR", true, id)
@@ -48,7 +35,8 @@ func forward(cfg *config, args []string) {
 			fatal(err)
 		}
 
-		if err := smtp.SendMail(addr, auth, user, []string{to}, buf.Bytes()); err != nil {
+		err = smtp.SendMail(addr, auth, cfg.smtpUser(), []string{to}, buf.Bytes())
+		if err != nil {
 			fatal(err)
 		}
 

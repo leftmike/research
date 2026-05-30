@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"net/smtp"
 	"os"
 	"runtime"
 	"strconv"
@@ -65,7 +66,6 @@ func (cfg *config) smtpHost() string {
 	}
 	return cfg.Host
 }
-
 
 func (cfg *config) smtpUser() string {
 	if cfg.SMTP.User != "" {
@@ -173,7 +173,10 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 func (cfg *config) list(fn func(conn *pop3.Conn, id int, entity *msgformat.Entity) error) (int,
 	error) {
 
-	conn := cfg.newConn()
+	conn, err := cfg.newConn()
+	if err != nil {
+		return 0, err
+	}
 	defer conn.Quit()
 
 	mids, err := conn.List(0)
@@ -198,12 +201,12 @@ func (cfg *config) list(fn func(conn *pop3.Conn, id int, entity *msgformat.Entit
 	return len(mids), nil
 }
 
-func (cfg *config) newConn() *pop3.Conn {
+func (cfg *config) newConn() (*pop3.Conn, error) {
 	host := cfg.pop3Host()
 	user := cfg.pop3User()
 	password := cfg.pop3Password()
 	if host == "" || user == "" || password == "" {
-		fatal(errors.New("host, user, and password are required via config or flag"))
+		return nil, errors.New("pop3 host, user, and password are required via config or flag")
 	}
 
 	port := cfg.POP3.Port
@@ -225,7 +228,7 @@ func (cfg *config) newConn() *pop3.Conn {
 		TLSEnabled: !cfg.POP3.NoTLS,
 	}).NewConn()
 	if err != nil {
-		fatal(err)
+		return nil, err
 	}
 
 	err = conn.Auth(user, password)
@@ -233,8 +236,34 @@ func (cfg *config) newConn() *pop3.Conn {
 		err = conn.Auth(fmt.Sprintf("%s@%s", user, host), password)
 	}
 	if err != nil {
-		fatal(err)
+		return nil, err
 	}
 
-	return conn
+	return conn, nil
+}
+
+func (cfg *config) newSend() (string, smtp.Auth, error) {
+	host := cfg.smtpHost()
+	user := cfg.smtpUser()
+	password := cfg.smtpPassword()
+	if host == "" || user == "" || password == "" {
+		return "", nil, errors.New("smtp host, user, and password are required via config or flag")
+	}
+
+	port := cfg.SMTP.Port
+	if port == 0 {
+		if cfg.SMTP.NoTLS {
+			port = 25
+		} else {
+			port = 587
+		}
+	}
+
+	smtpAddr := fmt.Sprintf("%s:%d", host, port)
+	smtpAuth := smtp.PlainAuth("", user, password, host)
+	if verbose {
+		fmt.Printf("smtp: %s user:%s tls:%v\n", smtpAddr, user, !cfg.SMTP.NoTLS)
+	}
+
+	return smtpAddr, smtpAuth, nil
 }

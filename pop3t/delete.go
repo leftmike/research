@@ -51,7 +51,10 @@ func delete(cfg *config, args []string) {
 		fatal(err)
 	}
 
-	conn := cfg.newConn()
+	conn, err := cfg.newConn()
+	if err != nil {
+		fatal(err)
+	}
 	defer conn.Quit()
 
 	for _, id := range ids {

@@ -1,8 +1,7 @@
 /*
 To Do:
-- filter: specific the language(s) as english !russian
-- filter: actions: delete, forward, etc
-- send command
+- In verbose mode, display how long language detection if over 250ms
+- get: format=full
 */
 package main
 
@@ -35,11 +34,12 @@ var (
 
 	cmds = map[string]cmd{
 		"delete":  {run: delete, help: "delete one or more messages by id"},
-		"filter":  {run: filter, help: "list non-English messages; pass 'delete' to remove them"},
+		"filter":  {run: filter, help: "filter messages: [^]<lang>... [delete] [forward=<addr>]"},
 		"forward": {run: forward, help: "forward one or more messages by id to an email address"},
 		"get":     {flags: getFlags, run: get, help: "fetch and display a single message by id"},
 		"help":    {help: "show this help"},
 		"list":    {run: list, help: "list all messages with id, language, and subject"},
+		"send":    {flags: sendFlags, run: send, help: "send an email via SMTP; reads body from stdin"},
 	}
 )
 
