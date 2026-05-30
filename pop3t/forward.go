@@ -20,7 +20,7 @@ func forward(cfg *config, args []string) {
 	user := cfg.smtpUser()
 	password := cfg.smtpPassword()
 
-	port := cfg.smtpPort()
+	port := cfg.SMTP.Port
 	if port == 0 {
 		if cfg.SMTP.NoTLS {
 			port = 25

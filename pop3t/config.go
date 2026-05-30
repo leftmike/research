@@ -32,7 +32,6 @@ type smtpConfig struct {
 
 type config struct {
 	Host     string     `hcl:"host,optional"`
-	Port     int        `hcl:"port,optional"`
 	User     string     `hcl:"user,optional"`
 	Password string     `hcl:"password,optional"`
 	Archive  string     `hcl:"archive,optional"`
@@ -47,12 +46,6 @@ func (cfg *config) pop3Host() string {
 	return cfg.Host
 }
 
-func (cfg *config) pop3Port() int {
-	if cfg.POP3.Port != 0 {
-		return cfg.POP3.Port
-	}
-	return cfg.Port
-}
 func (cfg *config) pop3User() string {
 	if cfg.POP3.User != "" {
 		return cfg.POP3.User
@@ -73,12 +66,6 @@ func (cfg *config) smtpHost() string {
 	return cfg.Host
 }
 
-func (cfg *config) smtpPort() int {
-	if cfg.SMTP.Port != 0 {
-		return cfg.SMTP.Port
-	}
-	return cfg.Port
-}
 
 func (cfg *config) smtpUser() string {
 	if cfg.SMTP.User != "" {
@@ -219,7 +206,7 @@ func (cfg *config) newConn() *pop3.Conn {
 		fatal(errors.New("host, user, and password are required via config or flag"))
 	}
 
-	port := cfg.pop3Port()
+	port := cfg.POP3.Port
 	if port == 0 {
 		if cfg.POP3.NoTLS {
 			port = 110
