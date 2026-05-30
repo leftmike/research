@@ -3,7 +3,6 @@ To Do:
 - verbose (including -v) flag
 - filter: specific the language(s) as english !russian
 - filter: actions: delete, forward, etc
-- support ranges of ids as 3-5
 - send command
 */
 package main

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 
 	"github.com/knadh/go-pop3"
 )
@@ -43,20 +42,19 @@ func deleteId(cfg *config, conn *pop3.Conn, id int) (string, error) {
 
 func delete(cfg *config, args []string) {
 	if len(args) == 0 {
-		fmt.Fprintf(os.Stderr, "usage: %s %s <id>...\n", os.Args[0], os.Args[1])
+		fmt.Fprintf(os.Stderr, "usage: %s %s <id|range>...\n", os.Args[0], os.Args[1])
 		os.Exit(1)
+	}
+
+	ids, err := parseIDs(args)
+	if err != nil {
+		fatal(err)
 	}
 
 	conn := cfg.newConn()
 	defer conn.Quit()
 
-	for _, arg := range args {
-		id, err := strconv.Atoi(arg)
-		if err != nil || id < 1 {
-			fmt.Fprintf(os.Stderr, "delete: invalid message id: %s\n", arg)
-			os.Exit(1)
-		}
-
+	for _, id := range ids {
 		path, err := deleteId(cfg, conn, id)
 		if err != nil {
 			fatal(err)

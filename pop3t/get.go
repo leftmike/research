@@ -6,7 +6,39 @@ import (
 	"os"
 	"slices"
 	"strconv"
+	"strings"
 )
+
+func parseIDs(args []string) ([]int, error) {
+	var ids []int
+	for _, arg := range args {
+		parts := strings.Split(arg, "-")
+		switch len(parts) {
+		case 1:
+			id, err := strconv.Atoi(parts[0])
+			if err != nil || id < 1 {
+				return nil, fmt.Errorf("invalid message id: %s", arg)
+			}
+			ids = append(ids, id)
+		case 2:
+			lo, err := strconv.Atoi(parts[0])
+			if err != nil || lo < 1 {
+				return nil, fmt.Errorf("invalid message id range: %s", arg)
+			}
+			hi, err := strconv.Atoi(parts[1])
+			if err != nil || hi < lo {
+				return nil, fmt.Errorf("invalid message id range: %s", arg)
+			}
+			for id := lo; id <= hi; id++ {
+				ids = append(ids, id)
+			}
+		default:
+			return nil, fmt.Errorf("invalid message id: %s", arg)
+		}
+	}
+
+	return ids, nil
+}
 
 var (
 	format = "normal"
@@ -18,7 +50,7 @@ func getFlags(fs *flag.FlagSet) {
 
 func get(cfg *config, args []string) {
 	if len(args) == 0 {
-		fmt.Fprintf(os.Stderr, "usage: %s %s <id>...\n", os.Args[0], os.Args[1])
+		fmt.Fprintf(os.Stderr, "usage: %s %s <id|range>...\n", os.Args[0], os.Args[1])
 		os.Exit(1)
 	}
 	if !slices.Contains([]string{"brief", "normal", "full", "raw"}, format) {
@@ -27,16 +59,15 @@ func get(cfg *config, args []string) {
 		os.Exit(1)
 	}
 
+	ids, err := parseIDs(args)
+	if err != nil {
+		fatal(err)
+	}
+
 	conn := cfg.newConn()
 	defer conn.Quit()
 
-	for i, arg := range args {
-		id, err := strconv.Atoi(arg)
-		if err != nil || id < 1 {
-			fmt.Fprintf(os.Stderr, "get: invalid message id: %s\n", arg)
-			os.Exit(1)
-		}
-
+	for i, id := range ids {
 		if i > 0 {
 			fmt.Println(
 				"--------------------------------------------------------------------------------")

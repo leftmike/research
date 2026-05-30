@@ -4,17 +4,20 @@ import (
 	"fmt"
 	"net/smtp"
 	"os"
-	"strconv"
 )
 
 func forward(cfg *config, args []string) {
 	if len(args) < 2 {
-		fmt.Fprintf(os.Stderr, "usage: %s %s <addr> <id>...\n", os.Args[0], os.Args[1])
+		fmt.Fprintf(os.Stderr, "usage: %s %s <addr> <id|range>...\n", os.Args[0], os.Args[1])
 		os.Exit(1)
 	}
 
 	to := args[0]
-	ids := args[1:]
+
+	ids, err := parseIDs(args[1:])
+	if err != nil {
+		fatal(err)
+	}
 
 	host := cfg.smtpHost()
 	user := cfg.smtpUser()
@@ -35,13 +38,7 @@ func forward(cfg *config, args []string) {
 	auth := smtp.PlainAuth("", user, password, host)
 	addr := fmt.Sprintf("%s:%d", host, port)
 
-	for _, arg := range ids {
-		id, err := strconv.Atoi(arg)
-		if err != nil || id < 1 {
-			fmt.Fprintf(os.Stderr, "forward: invalid message id: %s\n", arg)
-			os.Exit(1)
-		}
-
+	for _, id := range ids {
 		buf, err := conn.Cmd("RETR", true, id)
 		if err != nil {
 			fatal(err)
