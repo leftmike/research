@@ -1,8 +1,3 @@
-/*
-To Do:
-- In verbose mode, display how long language detection if over 250ms
-- get: format=full
-*/
 package main
 
 import (

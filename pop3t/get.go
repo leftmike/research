@@ -109,7 +109,16 @@ func get(cfg *config, args []string) {
 				fmt.Println(msg.formatBody(false))
 
 			case "full":
-				// XXX
+				fields := msg.header.Fields()
+				for fields.Next() {
+					text, err := fields.Text()
+					if err != nil {
+						text = fields.Value()
+					}
+					fmt.Printf("%s: %s\n", fields.Key(), text)
+				}
+				fmt.Println()
+				fmt.Println(msg.formatBody(false))
 			}
 		}
 	}
