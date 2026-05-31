@@ -14,6 +14,7 @@ import (
 
 	msgformat "github.com/emersion/go-message"
 	"github.com/pemistahl/lingua-go"
+	"golang.org/x/net/html"
 )
 
 func decodeBody(enc string, r io.Reader) string {
@@ -38,6 +39,21 @@ func decodeBody(enc string, r io.Reader) string {
 	}
 }
 
+func stripHTML(s string) string {
+	var buf strings.Builder
+	z := html.NewTokenizer(strings.NewReader(s))
+	for {
+		tt := z.Next()
+		if tt == html.ErrorToken {
+			break
+		}
+		if tt == html.TextToken {
+			buf.Write(z.Text())
+		}
+	}
+	return buf.String()
+}
+
 func extractPlainText(contentType, transferEnc string, body []byte) string {
 	if contentType == "" {
 		return decodeBody(transferEnc, bytes.NewReader(body))
@@ -47,22 +63,37 @@ func extractPlainText(contentType, transferEnc string, body []byte) string {
 		return decodeBody(transferEnc, bytes.NewReader(body))
 	}
 	if !strings.HasPrefix(mediaType, "multipart/") {
-		return decodeBody(transferEnc, bytes.NewReader(body))
+		text := decodeBody(transferEnc, bytes.NewReader(body))
+		if mediaType == "text/html" {
+			text = stripHTML(text)
+		}
+		return text
 	}
 
 	mr := multipart.NewReader(bytes.NewReader(body), params["boundary"])
-	var parts []string
+	var plainParts, htmlParts []string
 	for {
 		part, err := mr.NextPart()
 		if err != nil {
 			break
 		}
 		pt, _, _ := mime.ParseMediaType(part.Header.Get("Content-Type"))
-		if pt == "text/plain" {
-			parts = append(parts, decodeBody(part.Header.Get("Content-Transfer-Encoding"), part))
+		cte := part.Header.Get("Content-Transfer-Encoding")
+		switch pt {
+		case "text/plain":
+			plainParts = append(plainParts, decodeBody(cte, part))
+		case "text/html":
+			htmlParts = append(htmlParts, decodeBody(cte, part))
 		}
 	}
-	return strings.Join(parts, "\n")
+	if len(plainParts) > 0 {
+		return strings.Join(plainParts, "\n")
+	}
+	var stripped []string
+	for _, h := range htmlParts {
+		stripped = append(stripped, stripHTML(h))
+	}
+	return strings.Join(stripped, "\n")
 }
 
 type message struct {
@@ -230,11 +261,25 @@ func (msg *message) printContent() {
 	)
 }
 
+func stripURLs(s string) string {
+	var buf strings.Builder
+	for _, word := range strings.Fields(s) {
+		if strings.Contains(word, "://") {
+			continue
+		}
+		if buf.Len() > 0 {
+			buf.WriteByte(' ')
+		}
+		buf.WriteString(word)
+	}
+	return buf.String()
+}
+
 func (msg *message) detectLanguage(ld lingua.LanguageDetector) (lingua.Language, float64, bool) {
 	detectText := msg.subject + "\n"
 	if len(msg.subject) == utf8.RuneCountInString(msg.subject) {
-		detectText += extractPlainText(msg.header.Get("Content-Type"),
-			msg.header.Get("Content-Transfer-Encoding"), msg.body)
+		detectText += stripURLs(extractPlainText(msg.header.Get("Content-Type"),
+			msg.header.Get("Content-Transfer-Encoding"), msg.body))
 	}
 	vals := ld.ComputeLanguageConfidenceValues(detectText)
 	if len(vals) == 0 {
