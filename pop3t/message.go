@@ -188,6 +188,48 @@ func (msg *message) formatBody(summarize bool) string {
 	return strings.Join(parts, "\n")
 }
 
+func printPartContent(contentType, transferEnc string, body []byte, indent int) {
+	prefix := strings.Repeat("  ", indent)
+	mediaType, params, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		if contentType == "" {
+			mediaType = "text/plain"
+		} else {
+			mediaType = contentType
+		}
+	}
+	if transferEnc != "" {
+		fmt.Printf("%s%s [%s]\n", prefix, mediaType, strings.ToLower(strings.TrimSpace(transferEnc)))
+	} else {
+		fmt.Printf("%s%s\n", prefix, mediaType)
+	}
+	if strings.HasPrefix(mediaType, "multipart/") {
+		mr := multipart.NewReader(bytes.NewReader(body), params["boundary"])
+		for {
+			part, err := mr.NextPart()
+			if err != nil {
+				break
+			}
+			partBody, _ := io.ReadAll(part)
+			printPartContent(
+				part.Header.Get("Content-Type"),
+				part.Header.Get("Content-Transfer-Encoding"),
+				partBody,
+				indent+1,
+			)
+		}
+	}
+}
+
+func (msg *message) printContent() {
+	printPartContent(
+		msg.header.Get("Content-Type"),
+		msg.header.Get("Content-Transfer-Encoding"),
+		msg.body,
+		0,
+	)
+}
+
 func (msg *message) detectLanguage(ld lingua.LanguageDetector) (lingua.Language, float64, bool) {
 	detectText := msg.subject + "\n"
 	if len(msg.subject) == utf8.RuneCountInString(msg.subject) {

@@ -53,8 +53,8 @@ func get(cfg *config, args []string) {
 		fmt.Fprintf(os.Stderr, "usage: %s %s <id|range>...\n", os.Args[0], os.Args[1])
 		os.Exit(1)
 	}
-	if !slices.Contains([]string{"brief", "normal", "full", "raw"}, format) {
-		fmt.Fprintf(os.Stderr, "usage: %s %s: expected brief, normal, full, or raw for format\n",
+	if !slices.Contains([]string{"brief", "normal", "full", "raw", "parts"}, format) {
+		fmt.Fprintf(os.Stderr, "usage: %s %s: expected brief, normal, full, raw, or parts for format\n",
 			os.Args[0], os.Args[1])
 		os.Exit(1)
 	}
@@ -120,6 +120,9 @@ func get(cfg *config, args []string) {
 				}
 				fmt.Println()
 				fmt.Println(msg.formatBody(false))
+
+			case "parts":
+				msg.printContent()
 			}
 		}
 	}
