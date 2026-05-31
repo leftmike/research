@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	_ "github.com/emersion/go-message/charset"
 )
 
 func fatal(err error) {

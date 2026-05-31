@@ -65,7 +65,8 @@ func messageFromEntity(entity *msgformat.Entity) (*message, error) {
 		return nil, err
 	}
 
-	subject, err := (&mime.WordDecoder{}).DecodeHeader(entity.Header.Get("Subject"))
+	wd := &mime.WordDecoder{CharsetReader: msgformat.CharsetReader}
+	subject, err := wd.DecodeHeader(entity.Header.Get("Subject"))
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +113,10 @@ func truncate(s string, n int) string {
 func (msg *message) printHeaders(fields []string) {
 	for _, field := range fields {
 		raw := msg.header.Get(field)
-		if decoded, err := (&mime.WordDecoder{}).DecodeHeader(raw); err == nil {
+		decoded, err := (&mime.WordDecoder{
+			CharsetReader: msgformat.CharsetReader,
+		}).DecodeHeader(raw)
+		if err == nil {
 			raw = decoded
 		}
 		if raw != "" {
@@ -174,7 +178,6 @@ func (msg *message) formatBody(summarize bool) string {
 	}
 	return strings.Join(parts, "\n")
 }
-
 
 func (msg *message) detectLanguage(ld lingua.LanguageDetector) (lingua.Language, float64, bool) {
 	detectText := msg.subject + "\n"
