@@ -170,6 +170,20 @@ func loadConfig(fs *flag.FlagSet, args []string) (*config, []string) {
 	return cfg, fs.Args()
 }
 
+/*
+func retrMessage(conn *pop3.Conn, id int) (*msgformat.Entity, error) {
+	b, err := conn.Cmd("RETR", true, id)
+	if err != nil {
+		return nil, err
+	}
+	m, err := msgformat.Read(b)
+	if err != nil && !msgformat.IsUnknownCharset(err) && !msgformat.IsUnknownEncoding(err) {
+		return nil, err
+	}
+	return m, nil
+}
+*/
+
 func (cfg *config) list(fn func(conn *pop3.Conn, id int, entity *msgformat.Entity) error) (int,
 	error) {
 
@@ -186,6 +200,7 @@ func (cfg *config) list(fn func(conn *pop3.Conn, id int, entity *msgformat.Entit
 	}
 
 	for _, mid := range mids {
+		// entity, err := retrMessage(conn, mid.ID)
 		entity, err := conn.Retr(mid.ID)
 		if err != nil {
 			fmt.Printf("skipping: retr(%d): %s\n", mid.ID, err)

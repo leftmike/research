@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"mime"
@@ -20,6 +21,17 @@ func decodeBody(enc string, r io.Reader) string {
 	case "quoted-printable":
 		b, _ := io.ReadAll(quotedprintable.NewReader(r))
 		return string(b)
+	case "base64":
+		raw, _ := io.ReadAll(r)
+		var filtered []byte
+		for _, c := range raw {
+			if c != '\r' && c != '\n' && c != ' ' && c != '\t' {
+				filtered = append(filtered, c)
+			}
+		}
+		dec := make([]byte, base64.StdEncoding.DecodedLen(len(filtered)))
+		n, _ := base64.StdEncoding.Decode(dec, filtered)
+		return string(dec[:n])
 	default:
 		b, _ := io.ReadAll(r)
 		return string(b)
@@ -129,9 +141,6 @@ func (msg *message) printHeaders(fields []string) {
 func (msg *message) formatBody(summarize bool) string {
 	contentType := msg.header.Get("Content-Type")
 	transferEnc := msg.header.Get("Content-Transfer-Encoding")
-	if strings.EqualFold(strings.TrimSpace(transferEnc), "base64") {
-		return fmt.Sprintf("[%s, %s, %d bytes]", contentType, transferEnc, len(msg.body))
-	}
 	mediaType, params, err := mime.ParseMediaType(contentType)
 	if err != nil || !strings.HasPrefix(mediaType, "multipart/") {
 		text := decodeBody(transferEnc, bytes.NewReader(msg.body))
@@ -154,7 +163,7 @@ func (msg *message) formatBody(summarize bool) string {
 		if pt == "" {
 			pt = "text/plain"
 		}
-		if strings.HasPrefix(pt, "text/plain") && !strings.EqualFold(strings.TrimSpace(cte), "base64") {
+		if strings.HasPrefix(pt, "text/plain") {
 			text := decodeBody(cte, part)
 			if summarize {
 				var header string

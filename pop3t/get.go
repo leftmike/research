@@ -70,10 +70,10 @@ func get(cfg *config, args []string) {
 	}
 	defer conn.Quit()
 
-	for i, id := range ids {
-		if i > 0 {
-			fmt.Println(
-				"--------------------------------------------------------------------------------")
+	for _, id := range ids {
+		if len(ids) > 1 {
+			fmt.Printf("--------------------------------[%d]--------------------------------\n",
+				id)
 		}
 
 		if format == "raw" {
@@ -83,6 +83,7 @@ func get(cfg *config, args []string) {
 			}
 			os.Stdout.Write(buf.Bytes())
 		} else {
+			// entity, err := retrMessage(conn, id)
 			entity, err := conn.Retr(id)
 			if err != nil {
 				fatal(err)
