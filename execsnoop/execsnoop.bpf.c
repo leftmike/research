@@ -8,6 +8,16 @@
  * to the ring buffer with the resolved command line, return value, and comm.
  * A sched_process_fork tracepoint maintains a pid→ppid map so each event
  * can include the parent PID without requiring vmlinux BTF.
+ *
+ * Inode resolution
+ * ----------------
+ * Go userspace loads kernel BTF at startup and, if available, discovers the
+ * byte offsets of task_struct.mm, mm_struct.exe_file, file.f_inode, and
+ * inode.i_ino.  Those four values are written into the four const-volatile
+ * variables below before the program is loaded.  handle_exit() then walks
+ * the chain with bpf_probe_read_kernel().  When BTF is absent the variables
+ * stay 0 and the inode field in the event is left 0; Go falls back to
+ * userspace stat(2).
  */
 
 #include <linux/bpf.h>
@@ -22,8 +32,14 @@ typedef unsigned long long __u64;
 #define ARGSIZE       128
 #define MAXARGS       20
 
-/* Matches struct event in main.go exactly. */
+/*
+ * Matches struct event in main.go exactly.
+ * inode is first so __u64 sits at offset 0 with no padding.
+ * Layout: inode(8)+pid(4)+ppid(4)+uid(4)+ret(4)+args_count(4)+
+ *         comm(16)+filename(256)+args(2560) = 2860 bytes.
+ */
 struct event {
+	__u64 inode;
 	__u32 pid;
 	__u32 ppid;
 	__u32 uid;
@@ -65,6 +81,21 @@ struct {
 /* Configurable filters; 0 / 0xFFFFFFFF means "all". */
 const volatile __u32 target_pid = 0;
 const volatile __u32 target_uid = 0xFFFFFFFF;
+
+/*
+ * Byte offsets into kernel structs for the inode walk:
+ *   task_struct  → mm       (off_task_mm)
+ *   mm_struct    → exe_file (off_mm_exefile)
+ *   file         → f_inode  (off_file_inode)
+ *   inode        → i_ino    (off_inode_ino)
+ *
+ * Set by Go userspace from kernel BTF before the program is loaded.
+ * A value of 0 means BTF was unavailable; the inode walk is skipped.
+ */
+const volatile __u32 off_task_mm    = 0;
+const volatile __u32 off_mm_exefile = 0;
+const volatile __u32 off_file_inode = 0;
+const volatile __u32 off_inode_ino  = 0;
 
 /* Tracepoint raw-format structs (no vmlinux.h needed). */
 struct trace_entry {
@@ -169,6 +200,33 @@ handle_exit(long ret)
 		if (bpf_probe_read_user_str(e->args + i * ARGSIZE, ARGSIZE, argp) < 0)
 			break;
 		e->args_count = i + 1;
+	}
+
+	/*
+	 * Walk task_struct → mm_struct → file → inode using the byte offsets
+	 * discovered from kernel BTF at load time.  All four offsets must be
+	 * non-zero; if BTF was unavailable they stay 0 and Go falls back to
+	 * userspace stat(2).
+	 */
+	e->inode = 0;
+	if (off_task_mm && off_mm_exefile && off_file_inode && off_inode_ino) {
+		__u64 task = bpf_get_current_task();
+		__u64 mm   = 0;
+		if (!bpf_probe_read_kernel(&mm, sizeof(mm),
+					   (void *)(task + off_task_mm)) && mm) {
+			__u64 exefile = 0;
+			if (!bpf_probe_read_kernel(&exefile, sizeof(exefile),
+						   (void *)(mm + off_mm_exefile)) && exefile) {
+				__u64 finode = 0;
+				if (!bpf_probe_read_kernel(&finode, sizeof(finode),
+							   (void *)(exefile + off_file_inode)) && finode) {
+					__u64 ino = 0;
+					if (!bpf_probe_read_kernel(&ino, sizeof(ino),
+								   (void *)(finode + off_inode_ino)))
+						e->inode = ino;
+				}
+			}
+		}
 	}
 
 	bpf_ringbuf_submit(e, 0);

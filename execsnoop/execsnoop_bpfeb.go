@@ -82,8 +82,12 @@ type execsnoopMapSpecs struct {
 //
 // It can be passed ebpf.CollectionSpec.Assign.
 type execsnoopVariableSpecs struct {
-	TargetPid *ebpf.VariableSpec `ebpf:"target_pid"`
-	TargetUid *ebpf.VariableSpec `ebpf:"target_uid"`
+	OffFileInode *ebpf.VariableSpec `ebpf:"off_file_inode"`
+	OffInodeIno  *ebpf.VariableSpec `ebpf:"off_inode_ino"`
+	OffMmExefile *ebpf.VariableSpec `ebpf:"off_mm_exefile"`
+	OffTaskMm    *ebpf.VariableSpec `ebpf:"off_task_mm"`
+	TargetPid    *ebpf.VariableSpec `ebpf:"target_pid"`
+	TargetUid    *ebpf.VariableSpec `ebpf:"target_uid"`
 }
 
 // execsnoopObjects contains all objects after they have been loaded into the kernel.
@@ -123,8 +127,12 @@ func (m *execsnoopMaps) Close() error {
 //
 // It can be passed to loadExecsnoopObjects or ebpf.CollectionSpec.LoadAndAssign.
 type execsnoopVariables struct {
-	TargetPid *ebpf.Variable `ebpf:"target_pid"`
-	TargetUid *ebpf.Variable `ebpf:"target_uid"`
+	OffFileInode *ebpf.Variable `ebpf:"off_file_inode"`
+	OffInodeIno  *ebpf.Variable `ebpf:"off_inode_ino"`
+	OffMmExefile *ebpf.Variable `ebpf:"off_mm_exefile"`
+	OffTaskMm    *ebpf.Variable `ebpf:"off_task_mm"`
+	TargetPid    *ebpf.Variable `ebpf:"target_pid"`
+	TargetUid    *ebpf.Variable `ebpf:"target_uid"`
 }
 
 // execsnoopPrograms contains all programs after they have been loaded into the kernel.
