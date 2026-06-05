@@ -1,8 +1,14 @@
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang execsnoop ./execsnoop.bpf.c -- -I${GOPATH}/pkg/mod/github.com/cilium/ebpf@v0.21.0/examples/headers -I/usr/include/x86_64-linux-gnu -O2 -g -Wall -Werror
 
 // execsnoop traces execve(2) and execveat(2) system calls and prints the
-// command line, process name, PID, PPID, UID, and return value for every
-// exec attempt, modelled after the iovisor/bcc execsnoop tool.
+// command line, process name, PID, PPID, UID, inode, and return value for
+// every exec attempt, modelled after the iovisor/bcc execsnoop tool.
+//
+// The inode is resolved in userspace by stat-ing the filename carried in the
+// ring-buffer event.  Because the event arrives while the execed process is
+// still alive (or the file still exists for failed execs), the stat races only
+// in the uncommon case where the executable is deleted between exec and event
+// delivery.
 //
 // Requirements:
 //   - Linux 5.8+ (BPF ring buffer support)
@@ -56,6 +62,17 @@ func nullStr(b []byte) string {
 		return string(b[:i])
 	}
 	return string(b)
+}
+
+// exeInode returns the inode number of the file at path, or 0 on error.
+// It is called after the ring-buffer event is received, so the file is
+// generally still present (the process is alive or the path still exists).
+func exeInode(path string) uint64 {
+	var st syscall.Stat_t
+	if err := syscall.Stat(path, &st); err != nil {
+		return 0
+	}
+	return st.Ino
 }
 
 // parseArgs reconstructs the command line from the fixed-size argv slots.
@@ -154,9 +171,11 @@ func main() {
 			continue
 		}
 
+		filename := nullStr(e.Filename[:])
+		inode := exeInode(filename)
 		comm := nullStr(e.Comm[:])
 		args := parseArgs(e.Args[:], e.ArgsCount)
-		printEvent(*showTS, e.Pid, e.Ppid, e.Uid, e.Ret, comm, args)
+		printEvent(*showTS, e.Pid, e.Ppid, e.Uid, e.Ret, inode, comm, args)
 	}
 }
 
@@ -164,16 +183,20 @@ func printHeader(showTS bool) {
 	if showTS {
 		fmt.Printf("%-20s ", "TIME")
 	}
-	fmt.Printf("%-16s %-7s %-7s %-6s %-4s %s\n",
-		"PCOMM", "PID", "PPID", "UID", "RET", "ARGS")
+	fmt.Printf("%-16s %-7s %-7s %-6s %-4s %-11s %s\n",
+		"PCOMM", "PID", "PPID", "UID", "RET", "INODE", "ARGS")
 }
 
-func printEvent(showTS bool, pid, ppid, uid uint32, ret int32, comm, args string) {
+func printEvent(showTS bool, pid, ppid, uid uint32, ret int32, inode uint64, comm, args string) {
 	if showTS {
 		fmt.Printf("%-20s ", time.Now().Format("15:04:05.000000000"))
 	}
-	fmt.Printf("%-16s %-7d %-7d %-6d %-4d %s\n",
-		comm, pid, ppid, uid, ret, args)
+	inodeStr := "-"
+	if inode != 0 {
+		inodeStr = fmt.Sprintf("%d", inode)
+	}
+	fmt.Printf("%-16s %-7d %-7d %-6d %-4d %-11s %s\n",
+		comm, pid, ppid, uid, ret, inodeStr, args)
 }
 
 // attachAll links every execsnoop program to its tracepoint.
