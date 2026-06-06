@@ -35,9 +35,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"regexp"
 	"strings"
 	"syscall"
 	"time"
@@ -56,11 +59,12 @@ const (
 
 // event mirrors struct event in execsnoop.bpf.c exactly.
 // inode is first so the __u64 sits at offset 0 with no padding.
-// Layout: inode(8)+dev(4)+pid(4)+ppid(4)+uid(4)+ret(4)+args_count(4)+
+// Layout: inode(8)+cgroup_id(8)+dev(4)+pid(4)+ppid(4)+uid(4)+ret(4)+args_count(4)+
 //
-//	comm(16)+filename(256)+args(2560) = 2864 bytes.
+//	comm(16)+filename(256)+args(2560) = 2872 bytes.
 type event struct {
 	Inode     uint64
+	CgroupId  uint64
 	Dev       uint32
 	Pid       uint32
 	Ppid      uint32
@@ -88,6 +92,50 @@ func exeStat(path string) (inode uint64, dev uint32) {
 		return 0, 0
 	}
 	return st.Ino, uint32(st.Dev)
+}
+
+// reContainerID matches a 64-hex-char Docker/OCI container ID in a cgroup path.
+var reContainerID = regexp.MustCompile(`[0-9a-f]{64}`)
+
+// cgroupCache maps cgroup inode ID → short container ID (or "-").
+// The cgroup outlives all its processes, so this lookup is reliable even for
+// processes that have already exited.
+var cgroupCache = map[uint64]string{}
+
+// resolveContainer returns the 12-char container short ID for the given BPF
+// cgroup ID, or "-" for host processes.  Results are cached by cgroup ID so
+// the /sys/fs/cgroup walk happens at most once per container.
+func resolveContainer(cgroupId uint64) string {
+	if id, ok := cgroupCache[cgroupId]; ok {
+		return id
+	}
+	id := findContainerByCgroupId(cgroupId)
+	cgroupCache[cgroupId] = id
+	return id
+}
+
+// findContainerByCgroupId walks /sys/fs/cgroup looking for a directory whose
+// inode equals cgroupId, then extracts the Docker container ID from its path.
+func findContainerByCgroupId(cgroupId uint64) string {
+	var found string
+	filepath.WalkDir("/sys/fs/cgroup", func(path string, d fs.DirEntry, err error) error {
+		if err != nil || !d.IsDir() {
+			return nil
+		}
+		info, err := d.Info()
+		if err != nil {
+			return nil
+		}
+		if stat, ok := info.Sys().(*syscall.Stat_t); ok && stat.Ino == cgroupId {
+			found = path
+			return filepath.SkipAll
+		}
+		return nil
+	})
+	if m := reContainerID.FindString(found); m != "" {
+		return m[:12]
+	}
+	return "-"
 }
 
 // parseArgs reconstructs the command line from the fixed-size argv slots.
@@ -159,6 +207,7 @@ func main() {
 	duration := flag.Duration("d", 0, "stop after `duration` (e.g. 10s)")
 	failOnly := flag.Bool("x", false, "only print failed execs")
 	showTS := flag.Bool("T", false, "include absolute HH:MM:SS.nsec timestamp")
+	containerOnly := flag.Bool("c", false, "only print execs from containers")
 	flag.Parse()
 
 	if err := rlimit.RemoveMemlock(); err != nil {
@@ -241,6 +290,12 @@ func main() {
 			continue
 		}
 
+		container := resolveContainer(e.CgroupId)
+
+		if *containerOnly && container == "-" {
+			continue
+		}
+
 		filename := nullStr(e.Filename[:])
 
 		// Use BPF-resolved inode/dev when available (kernel has BTF);
@@ -252,7 +307,7 @@ func main() {
 
 		comm := nullStr(e.Comm[:])
 		args := parseArgs(e.Args[:], e.ArgsCount)
-		printEvent(*showTS, e.Pid, e.Ppid, e.Uid, e.Ret, inode, dev, comm, args)
+		printEvent(*showTS, e.Pid, e.Ppid, e.Uid, e.Ret, inode, dev, container, comm, args)
 	}
 }
 
@@ -260,11 +315,11 @@ func printHeader(showTS bool) {
 	if showTS {
 		fmt.Printf("%-20s ", "TIME")
 	}
-	fmt.Printf("%-16s %-7s %-7s %-6s %-4s %-11s %-7s %s\n",
-		"PCOMM", "PID", "PPID", "UID", "RET", "INODE", "DEV", "ARGS")
+	fmt.Printf("%-16s %-7s %-7s %-6s %-4s %-11s %-7s %-14s %s\n",
+		"PCOMM", "PID", "PPID", "UID", "RET", "INODE", "DEV", "CONTAINER", "ARGS")
 }
 
-func printEvent(showTS bool, pid, ppid, uid uint32, ret int32, inode uint64, dev uint32, comm, args string) {
+func printEvent(showTS bool, pid, ppid, uid uint32, ret int32, inode uint64, dev uint32, container, comm, args string) {
 	if showTS {
 		fmt.Printf("%-20s ", time.Now().Format("15:04:05.000000000"))
 	}
@@ -276,8 +331,8 @@ func printEvent(showTS bool, pid, ppid, uid uint32, ret int32, inode uint64, dev
 	if dev != 0 {
 		devStr = fmt.Sprintf("%d", dev)
 	}
-	fmt.Printf("%-16s %-7d %-7d %-6d %-4d %-11s %-7s %s\n",
-		comm, pid, ppid, uid, ret, inodeStr, devStr, args)
+	fmt.Printf("%-16s %-7d %-7d %-6d %-4d %-11s %-7s %-14s %s\n",
+		comm, pid, ppid, uid, ret, inodeStr, devStr, container, args)
 }
 
 // attachAll links every execsnoop program to its tracepoint.

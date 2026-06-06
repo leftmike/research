@@ -43,6 +43,7 @@ typedef unsigned long long __u64;
  */
 struct event {
 	__u64 inode;
+	__u64 cgroup_id;
 	__u32 dev;
 	__u32 pid;
 	__u32 ppid;
@@ -238,6 +239,7 @@ handle_exit(long ret)
 	 * non-zero; if BTF was unavailable they stay 0 and Go falls back to
 	 * userspace stat(2).
 	 */
+	e->cgroup_id = bpf_get_current_cgroup_id();
 	e->inode = 0;
 	e->dev   = 0;
 	if (off_task_mm && off_mm_exefile && off_file_inode) {
