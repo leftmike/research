@@ -38,11 +38,12 @@ typedef unsigned long long __u64;
 /*
  * Matches struct event in main.go exactly.
  * inode is first so __u64 sits at offset 0 with no padding.
- * Layout: inode(8)+pid(4)+ppid(4)+uid(4)+ret(4)+args_count(4)+
- *         comm(16)+filename(256)+args(2560) = 2860 bytes.
+ * Layout: inode(8)+dev(4)+pid(4)+ppid(4)+uid(4)+ret(4)+args_count(4)+
+ *         comm(16)+filename(256)+args(2560) = 2864 bytes.
  */
 struct event {
 	__u64 inode;
+	__u32 dev;
 	__u32 pid;
 	__u32 ppid;
 	__u32 uid;
@@ -113,6 +114,8 @@ const volatile __u32 off_task_mm    = 0;
 const volatile __u32 off_mm_exefile = 0;
 const volatile __u32 off_file_inode = 0;
 const volatile __u32 off_inode_ino  = 0;
+const volatile __u32 off_inode_sb   = 0;
+const volatile __u32 off_sb_dev     = 0;
 
 /* Tracepoint raw-format structs (no vmlinux.h needed). */
 struct trace_entry {
@@ -236,7 +239,8 @@ handle_exit(long ret)
 	 * userspace stat(2).
 	 */
 	e->inode = 0;
-	if (off_task_mm && off_mm_exefile && off_file_inode && off_inode_ino) {
+	e->dev   = 0;
+	if (off_task_mm && off_mm_exefile && off_file_inode) {
 		__u64 task = bpf_get_current_task();
 		__u64 mm   = 0;
 		if (!bpf_probe_read_kernel(&mm, sizeof(mm),
@@ -247,10 +251,22 @@ handle_exit(long ret)
 				__u64 finode = 0;
 				if (!bpf_probe_read_kernel(&finode, sizeof(finode),
 							   (void *)(exefile + off_file_inode)) && finode) {
-					__u64 ino = 0;
-					if (!bpf_probe_read_kernel(&ino, sizeof(ino),
-								   (void *)(finode + off_inode_ino)))
-						e->inode = ino;
+					if (off_inode_ino) {
+						__u64 ino = 0;
+						if (!bpf_probe_read_kernel(&ino, sizeof(ino),
+									   (void *)(finode + off_inode_ino)))
+							e->inode = ino;
+					}
+					if (off_inode_sb && off_sb_dev) {
+						__u64 sb = 0;
+						if (!bpf_probe_read_kernel(&sb, sizeof(sb),
+									   (void *)(finode + off_inode_sb)) && sb) {
+							__u32 dev = 0;
+							if (!bpf_probe_read_kernel(&dev, sizeof(dev),
+										   (void *)(sb + off_sb_dev)))
+								e->dev = dev;
+						}
+					}
 				}
 			}
 		}

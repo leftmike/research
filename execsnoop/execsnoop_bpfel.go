@@ -86,7 +86,9 @@ type execsnoopMapSpecs struct {
 type execsnoopVariableSpecs struct {
 	OffFileInode *ebpf.VariableSpec `ebpf:"off_file_inode"`
 	OffInodeIno  *ebpf.VariableSpec `ebpf:"off_inode_ino"`
+	OffInodeSb   *ebpf.VariableSpec `ebpf:"off_inode_sb"`
 	OffMmExefile *ebpf.VariableSpec `ebpf:"off_mm_exefile"`
+	OffSbDev     *ebpf.VariableSpec `ebpf:"off_sb_dev"`
 	OffTaskMm    *ebpf.VariableSpec `ebpf:"off_task_mm"`
 	TargetPid    *ebpf.VariableSpec `ebpf:"target_pid"`
 	TargetUid    *ebpf.VariableSpec `ebpf:"target_uid"`
@@ -133,7 +135,9 @@ func (m *execsnoopMaps) Close() error {
 type execsnoopVariables struct {
 	OffFileInode *ebpf.Variable `ebpf:"off_file_inode"`
 	OffInodeIno  *ebpf.Variable `ebpf:"off_inode_ino"`
+	OffInodeSb   *ebpf.Variable `ebpf:"off_inode_sb"`
 	OffMmExefile *ebpf.Variable `ebpf:"off_mm_exefile"`
+	OffSbDev     *ebpf.Variable `ebpf:"off_sb_dev"`
 	OffTaskMm    *ebpf.Variable `ebpf:"off_task_mm"`
 	TargetPid    *ebpf.Variable `ebpf:"target_pid"`
 	TargetUid    *ebpf.Variable `ebpf:"target_uid"`

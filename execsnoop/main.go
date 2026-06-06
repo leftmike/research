@@ -56,11 +56,12 @@ const (
 
 // event mirrors struct event in execsnoop.bpf.c exactly.
 // inode is first so the __u64 sits at offset 0 with no padding.
-// Layout: inode(8)+pid(4)+ppid(4)+uid(4)+ret(4)+args_count(4)+
+// Layout: inode(8)+dev(4)+pid(4)+ppid(4)+uid(4)+ret(4)+args_count(4)+
 //
-//	comm(16)+filename(256)+args(2560) = 2860 bytes.
+//	comm(16)+filename(256)+args(2560) = 2864 bytes.
 type event struct {
 	Inode     uint64
+	Dev       uint32
 	Pid       uint32
 	Ppid      uint32
 	Uid       uint32
@@ -78,15 +79,15 @@ func nullStr(b []byte) string {
 	return string(b)
 }
 
-// exeInode returns the inode number of the file at path via stat(2), or 0.
+// exeStat returns the inode number and device number of path via stat(2).
 // Used as a fallback when the kernel does not have BTF and the BPF program
-// cannot resolve the inode itself.
-func exeInode(path string) uint64 {
+// cannot resolve them itself.
+func exeStat(path string) (inode uint64, dev uint32) {
 	var st syscall.Stat_t
 	if err := syscall.Stat(path, &st); err != nil {
-		return 0
+		return 0, 0
 	}
-	return st.Ino
+	return st.Ino, uint32(st.Dev)
 }
 
 // parseArgs reconstructs the command line from the fixed-size argv slots.
@@ -122,6 +123,8 @@ func setInodeOffsets(spec *ebpf.CollectionSpec) {
 		{"mm_struct",   "exe_file", "off_mm_exefile"},
 		{"file",        "f_inode",  "off_file_inode"},
 		{"inode",       "i_ino",    "off_inode_ino"},
+		{"inode",       "i_sb",     "off_inode_sb"},
+		{"super_block", "s_dev",    "off_sb_dev"},
 	}
 
 	for _, l := range chain {
@@ -240,16 +243,16 @@ func main() {
 
 		filename := nullStr(e.Filename[:])
 
-		// Use BPF-resolved inode when available (kernel has BTF);
+		// Use BPF-resolved inode/dev when available (kernel has BTF);
 		// fall back to userspace stat when the BPF walk was skipped.
-		inode := e.Inode
+		inode, dev := e.Inode, e.Dev
 		if inode == 0 {
-			inode = exeInode(filename)
+			inode, dev = exeStat(filename)
 		}
 
 		comm := nullStr(e.Comm[:])
 		args := parseArgs(e.Args[:], e.ArgsCount)
-		printEvent(*showTS, e.Pid, e.Ppid, e.Uid, e.Ret, inode, comm, args)
+		printEvent(*showTS, e.Pid, e.Ppid, e.Uid, e.Ret, inode, dev, comm, args)
 	}
 }
 
@@ -257,11 +260,11 @@ func printHeader(showTS bool) {
 	if showTS {
 		fmt.Printf("%-20s ", "TIME")
 	}
-	fmt.Printf("%-16s %-7s %-7s %-6s %-4s %-11s %s\n",
-		"PCOMM", "PID", "PPID", "UID", "RET", "INODE", "ARGS")
+	fmt.Printf("%-16s %-7s %-7s %-6s %-4s %-11s %-7s %s\n",
+		"PCOMM", "PID", "PPID", "UID", "RET", "INODE", "DEV", "ARGS")
 }
 
-func printEvent(showTS bool, pid, ppid, uid uint32, ret int32, inode uint64, comm, args string) {
+func printEvent(showTS bool, pid, ppid, uid uint32, ret int32, inode uint64, dev uint32, comm, args string) {
 	if showTS {
 		fmt.Printf("%-20s ", time.Now().Format("15:04:05.000000000"))
 	}
@@ -269,8 +272,12 @@ func printEvent(showTS bool, pid, ppid, uid uint32, ret int32, inode uint64, com
 	if inode != 0 {
 		inodeStr = fmt.Sprintf("%d", inode)
 	}
-	fmt.Printf("%-16s %-7d %-7d %-6d %-4d %-11s %s\n",
-		comm, pid, ppid, uid, ret, inodeStr, args)
+	devStr := "-"
+	if dev != 0 {
+		devStr = fmt.Sprintf("%d", dev)
+	}
+	fmt.Printf("%-16s %-7d %-7d %-6d %-4d %-11s %-7s %s\n",
+		comm, pid, ppid, uid, ret, inodeStr, devStr, args)
 }
 
 // attachAll links every execsnoop program to its tracepoint.
