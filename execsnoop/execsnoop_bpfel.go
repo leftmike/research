@@ -14,9 +14,10 @@ import (
 )
 
 type execsnoopEnterArgs struct {
-	_     structs.HostLayout
-	Fname uint64
-	Argv  uint64
+	_         structs.HostLayout
+	ArgsCount uint32
+	Filename  [256]int8
+	Args      [2560]int8
 }
 
 // loadExecsnoop returns the embedded CollectionSpec for execsnoop.
@@ -75,6 +76,7 @@ type execsnoopProgramSpecs struct {
 type execsnoopMapSpecs struct {
 	ChildMap *ebpf.MapSpec `ebpf:"child_map"`
 	Events   *ebpf.MapSpec `ebpf:"events"`
+	Scratch  *ebpf.MapSpec `ebpf:"scratch"`
 	Starts   *ebpf.MapSpec `ebpf:"starts"`
 }
 
@@ -112,6 +114,7 @@ func (o *execsnoopObjects) Close() error {
 type execsnoopMaps struct {
 	ChildMap *ebpf.Map `ebpf:"child_map"`
 	Events   *ebpf.Map `ebpf:"events"`
+	Scratch  *ebpf.Map `ebpf:"scratch"`
 	Starts   *ebpf.Map `ebpf:"starts"`
 }
 
@@ -119,6 +122,7 @@ func (m *execsnoopMaps) Close() error {
 	return _ExecsnoopClose(
 		m.ChildMap,
 		m.Events,
+		m.Scratch,
 		m.Starts,
 	)
 }

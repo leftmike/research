@@ -4,8 +4,11 @@
  * execsnoop - trace execve/execveat syscalls.
  *
  * Attach to the syscalls/sys_{enter,exit}_{execve,execveat} tracepoints.
- * On enter we save the filename and argv pointers; on exit we emit an event
- * to the ring buffer with the resolved command line, return value, and comm.
+ * On enter we copy the filename and argv strings into a per-CPU scratch
+ * buffer (strings must be read while the caller's address space is still
+ * live — after a successful execve the original mappings are gone).  On
+ * exit we emit an event to the ring buffer with the saved command line,
+ * return value, and comm.
  * A sched_process_fork tracepoint maintains a pid→ppid map so each event
  * can include the parent PID without requiring vmlinux BTF.
  *
@@ -50,11 +53,25 @@ struct event {
 	char  args[ARGSIZE * MAXARGS];
 };
 
-/* Temporary per-thread state saved between enter and exit. */
+/*
+ * Temporary per-thread state saved between enter and exit.
+ * Strings are read at sys_enter while the caller's address space is still
+ * live; the struct is too large (~2.8 KB) for the 512-byte BPF stack, so
+ * it lives in a per-CPU scratch array.
+ */
 struct enter_args {
-	__u64 fname; /* user-space filename pointer as integer */
-	__u64 argv;  /* user-space argv pointer as integer */
+	__u32 args_count;
+	char  filename[NAME_MAX + 1];
+	char  args[ARGSIZE * MAXARGS];
 };
+
+/* Per-CPU scratch buffer for building enter_args without hitting the stack limit. */
+struct {
+	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+	__uint(max_entries, 1);
+	__type(key, __u32);
+	__type(value, struct enter_args);
+} scratch SEC(".maps");
 
 /* tid → enter_args */
 struct {
@@ -136,6 +153,14 @@ struct trace_event_raw_sched_process_template {
 
 /* ------------------------------------------------------------------ */
 
+/*
+ * Read filename and argv strings from user space into the per-CPU scratch
+ * buffer, then stash it in the starts map keyed by tid.
+ *
+ * Strings MUST be read here (sys_enter) because after a successful execve
+ * the caller's address space is replaced and bpf_probe_read_user would
+ * read from the new process's memory or fail entirely.
+ */
 static __always_inline int
 handle_enter(const char *filename, const char *const *argv)
 {
@@ -151,11 +176,28 @@ handle_enter(const char *filename, const char *const *argv)
 	if (target_uid != 0xFFFFFFFF && uid != target_uid)
 		return 0;
 
-	struct enter_args ea = {
-		.fname = (__u64)(unsigned long)filename,
-		.argv  = (__u64)(unsigned long)argv,
-	};
-	bpf_map_update_elem(&starts, &tid, &ea, BPF_ANY);
+	__u32 zero = 0;
+	struct enter_args *ea = bpf_map_lookup_elem(&scratch, &zero);
+	if (!ea)
+		return 0;
+
+	bpf_probe_read_user_str(ea->filename, sizeof(ea->filename), filename);
+
+	const char *argp;
+	ea->args_count = 0;
+
+#pragma unroll
+	for (int i = 0; i < MAXARGS; i++) {
+		if (bpf_probe_read_user(&argp, sizeof(argp), argv + i) < 0)
+			break;
+		if (!argp)
+			break;
+		if (bpf_probe_read_user_str(ea->args + i * ARGSIZE, ARGSIZE, argp) < 0)
+			break;
+		ea->args_count = i + 1;
+	}
+
+	bpf_map_update_elem(&starts, &tid, ea, BPF_ANY);
 	return 0;
 }
 
@@ -183,24 +225,9 @@ handle_exit(long ret)
 	e->ppid = ppidp ? *ppidp : 0;
 
 	bpf_get_current_comm(&e->comm, sizeof(e->comm));
-	bpf_probe_read_user_str(&e->filename, sizeof(e->filename),
-				(const char *)(unsigned long)ea->fname);
-
-	/* Read up to MAXARGS argv entries into fixed-size slots. */
-	const char *argp;
-	e->args_count = 0;
-
-#pragma unroll
-	for (int i = 0; i < MAXARGS; i++) {
-		if (bpf_probe_read_user(&argp, sizeof(argp),
-				(void *)(ea->argv + (__u64)i * sizeof(__u64))) < 0)
-			break;
-		if (!argp)
-			break;
-		if (bpf_probe_read_user_str(e->args + i * ARGSIZE, ARGSIZE, argp) < 0)
-			break;
-		e->args_count = i + 1;
-	}
+	bpf_probe_read_kernel(e->filename, sizeof(e->filename), ea->filename);
+	e->args_count = ea->args_count;
+	bpf_probe_read_kernel(e->args, sizeof(e->args), ea->args);
 
 	/*
 	 * Walk task_struct → mm_struct → file → inode using the byte offsets
