@@ -14,13 +14,12 @@
  *
  * Inode resolution
  * ----------------
- * Go userspace loads kernel BTF at startup and, if available, discovers the
- * byte offsets of task_struct.mm, mm_struct.exe_file, file.f_inode, and
- * inode.i_ino.  Those four values are written into the four const-volatile
+ * Go userspace loads kernel BTF at startup and discovers the byte offsets of
+ * task_struct.mm, mm_struct.exe_file, file.f_inode, inode.i_ino, inode.i_sb,
+ * and super_block.s_dev.  Those values are written into the const-volatile
  * variables below before the program is loaded.  handle_exit() then walks
- * the chain with bpf_probe_read_kernel().  When BTF is absent the variables
- * stay 0 and the inode field in the event is left 0; Go falls back to
- * userspace stat(2).
+ * the chain with bpf_probe_read_kernel().  Kernel BTF is required; if it is
+ * unavailable Go exits before loading this program.
  */
 
 #include <linux/bpf.h>
@@ -108,8 +107,8 @@ const volatile __u32 target_uid = 0xFFFFFFFF;
  *   file         → f_inode  (off_file_inode)
  *   inode        → i_ino    (off_inode_ino)
  *
- * Set by Go userspace from kernel BTF before the program is loaded.
- * A value of 0 means BTF was unavailable; the inode walk is skipped.
+ * Set by Go userspace from kernel BTF before the program is loaded; Go
+ * exits before this program is loaded if any offset cannot be resolved.
  */
 const volatile __u32 off_task_mm    = 0;
 const volatile __u32 off_mm_exefile = 0;
@@ -235,9 +234,7 @@ handle_exit(long ret)
 
 	/*
 	 * Walk task_struct → mm_struct → file → inode using the byte offsets
-	 * discovered from kernel BTF at load time.  All four offsets must be
-	 * non-zero; if BTF was unavailable they stay 0 and Go falls back to
-	 * userspace stat(2).
+	 * discovered from kernel BTF at load time.
 	 */
 	e->cgroup_id = bpf_get_current_cgroup_id();
 	e->inode = 0;

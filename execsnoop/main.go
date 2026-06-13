@@ -15,9 +15,9 @@
 // kernel-side handle_exit() then walks the pointer chain with
 // bpf_probe_read_kernel() and stores the result in the ring-buffer event.
 //
-// On kernels without BTF (CONFIG_DEBUG_INFO_BTF not set) the offsets stay 0,
-// the BPF walk is skipped (event.Inode == 0), and the userspace fallback
-// stat(2)s the filename from the event instead.
+// On kernels without BTF (CONFIG_DEBUG_INFO_BTF not set) the offsets cannot
+// be resolved and execsnoop exits with an error rather than running with
+// inode/dev fields silently unset.
 //
 // Requirements:
 //   - Linux 5.8+ (BPF ring buffer support)
@@ -83,17 +83,6 @@ func nullStr(b []byte) string {
 	return string(b)
 }
 
-// exeStat returns the inode number and device number of path via stat(2).
-// Used as a fallback when the kernel does not have BTF and the BPF program
-// cannot resolve them itself.
-func exeStat(path string) (inode uint64, dev uint32) {
-	var st syscall.Stat_t
-	if err := syscall.Stat(path, &st); err != nil {
-		return 0, 0
-	}
-	return st.Ino, uint32(st.Dev)
-}
-
 // reContainerID matches a 64-hex-char Docker/OCI container ID in a cgroup path.
 var reContainerID = regexp.MustCompile(`[0-9a-f]{64}`)
 
@@ -151,14 +140,15 @@ func parseArgs(args []byte, count uint32) string {
 	return strings.Join(parts, " ")
 }
 
-// setInodeOffsets loads the running kernel's BTF and injects the four byte
+// setInodeOffsets loads the running kernel's BTF and injects the byte
 // offsets needed to walk task_struct → mm_struct → file → inode → i_ino
-// into the BPF CollectionSpec.  Must be called before spec.LoadAndAssign.
-// On any error the offsets remain 0 and the BPF inode walk is silently skipped.
-func setInodeOffsets(spec *ebpf.CollectionSpec) {
+// (and inode → super_block → s_dev) into the BPF CollectionSpec.  Must be
+// called before spec.LoadAndAssign.  Returns an error if BTF is unavailable
+// or any required field cannot be resolved.
+func setInodeOffsets(spec *ebpf.CollectionSpec) error {
 	kspec, err := btf.LoadKernelSpec()
 	if err != nil {
-		return
+		return fmt.Errorf("load kernel BTF: %w", err)
 	}
 
 	type lookup struct {
@@ -178,24 +168,50 @@ func setInodeOffsets(spec *ebpf.CollectionSpec) {
 	for _, l := range chain {
 		off, ok := structFieldOffset(kspec, l.structName, l.fieldName)
 		if !ok {
-			return // partial chain is useless; leave all offsets at 0
+			return fmt.Errorf("resolve %s.%s from kernel BTF", l.structName, l.fieldName)
 		}
 		if err := spec.Variables[l.varName].Set(off); err != nil {
-			return
+			return fmt.Errorf("set %s: %w", l.varName, err)
 		}
 	}
+	return nil
 }
 
 // structFieldOffset returns the byte offset of fieldName within the named
-// struct type from the given BTF spec.
+// struct type from the given BTF spec, recursing into anonymous nested
+// struct/union members (kernels group related fields this way, e.g.
+// mm_struct wraps most of its members in an unnamed struct for layout
+// randomization).
 func structFieldOffset(kspec *btf.Spec, structName, fieldName string) (uint32, bool) {
 	var s *btf.Struct
 	if err := kspec.TypeByName(structName, &s); err != nil {
 		return 0, false
 	}
-	for _, m := range s.Members {
+	return memberOffset(s, fieldName, 0)
+}
+
+// memberOffset searches the members of a struct or union for fieldName,
+// recursing into anonymous nested structs/unions and accumulating their
+// base offset.
+func memberOffset(t btf.Type, fieldName string, base uint32) (uint32, bool) {
+	var members []btf.Member
+	switch v := t.(type) {
+	case *btf.Struct:
+		members = v.Members
+	case *btf.Union:
+		members = v.Members
+	default:
+		return 0, false
+	}
+	for _, m := range members {
+		off := base + m.Offset.Bytes()
 		if m.Name == fieldName {
-			return m.Offset.Bytes(), true
+			return off, true
+		}
+		if m.Name == "" {
+			if resolved, ok := memberOffset(m.Type, fieldName, off); ok {
+				return resolved, true
+			}
 		}
 	}
 	return 0, false
@@ -220,9 +236,14 @@ func main() {
 	}
 
 	// Inject kernel struct offsets from BTF so the BPF program can resolve
-	// the inode itself.  Silently falls back to userspace stat when BTF is
-	// unavailable (event.Inode will be 0 in that case).
-	setInodeOffsets(spec)
+	// the inode and device itself.  BTF is required; without it the
+	// program cannot resolve these fields, so fail rather than running
+	// with them silently unset.
+	if err := setInodeOffsets(spec); err != nil {
+		log.Fatalf("resolve inode offsets from kernel BTF: %v\n"+
+			"Hint: kernel must be built with CONFIG_DEBUG_INFO_BTF=y "+
+			"(check that /sys/kernel/btf/vmlinux exists).", err)
+	}
 
 	if *pid != 0 {
 		if err := spec.Variables["target_pid"].Set(uint32(*pid)); err != nil {
@@ -296,18 +317,9 @@ func main() {
 			continue
 		}
 
-		filename := nullStr(e.Filename[:])
-
-		// Use BPF-resolved inode/dev when available (kernel has BTF);
-		// fall back to userspace stat when the BPF walk was skipped.
-		inode, dev := e.Inode, e.Dev
-		if inode == 0 {
-			inode, dev = exeStat(filename)
-		}
-
 		comm := nullStr(e.Comm[:])
 		args := parseArgs(e.Args[:], e.ArgsCount)
-		printEvent(*showTS, e.Pid, e.Ppid, e.Uid, e.Ret, inode, dev, container, comm, args)
+		printEvent(*showTS, e.Pid, e.Ppid, e.Uid, e.Ret, e.Inode, e.Dev, container, comm, args)
 	}
 }
 
