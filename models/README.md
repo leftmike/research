@@ -36,6 +36,19 @@ models [global flags] <command> [args]
 | `models [SUBSTR]`    | List models (optionally filtered by substring).          |
 | `model <id>`         | Full detail for one model, merged across sources.        |
 
+If the first argument is not one of the commands above, it is matched against
+providers. When exactly one provider matches it is used, and an optional second
+argument selects a model within it:
+
+```
+models <provider>           # show the matching provider (like "provider")
+models <provider> <model>   # show a model within that provider
+```
+
+If the argument matches several providers (or the model specifier matches
+several models in the provider), the candidates are listed so you can narrow
+the query.
+
 ### Global flags
 
 - `-refresh` — ignore cached data and re-download from the sources.
@@ -54,6 +67,8 @@ models labs
 models lab Anthropic
 models models grok-4
 models model claude-opus-4-5
+models openai                  # provider shortcut
+models openai gpt-4o           # model within a provider
 ```
 
 A model's detail view merges every matching record across both sources and all

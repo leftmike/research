@@ -196,6 +196,16 @@ func (r *Registry) groups() []*ModelGroup {
 	return out
 }
 
+// groupByKey returns the merged model group with the given normalized key.
+func (r *Registry) groupByKey(key string) *ModelGroup {
+	for _, g := range r.groups() {
+		if g.Key == key {
+			return g
+		}
+	}
+	return nil
+}
+
 // fillGaps copies useful fields into the representative from sibling records
 // when the representative is missing them, so the merged view is complete.
 func fillGaps(g *ModelGroup) {

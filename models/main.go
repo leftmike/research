@@ -20,6 +20,13 @@ Commands:
   models    [SUBSTR]     List models (optionally filtered by substring).
   model     <id>         Show full detail for one model, merged across sources.
 
+If the first argument is not one of the commands above, it is matched against
+providers; when exactly one provider matches it is shown, and an optional
+second argument selects a model within it:
+
+  models <provider>            Show the matching provider (like "provider").
+  models <provider> <model>    Show a model within that provider.
+
 Global flags:
   -refresh   Ignore cached data and re-download from the sources.
   -no-cache  Do not read or write the on-disk cache.
@@ -74,8 +81,7 @@ func main() {
 	case "model":
 		cmdModel(reg, rest)
 	default:
-		fmt.Fprintf(os.Stderr, "error: unknown command %q\n", cmd)
-		usage()
-		os.Exit(1)
+		// No recognized command: treat the args as "<provider> [<model>]".
+		cmdDefault(reg, args)
 	}
 }

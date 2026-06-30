@@ -84,7 +84,11 @@ func cmdProvider(r *Registry, args []string) {
 		fmt.Fprintf(os.Stderr, "error: no provider %q (try \"models providers\")\n", id)
 		os.Exit(1)
 	}
+	printProvider(p)
+}
 
+// printProvider renders a provider's metadata and the models it serves.
+func printProvider(p *Provider) {
 	fmt.Printf("Provider:  %s\n", p.ID)
 	fmt.Printf("Name:      %s\n", p.Name)
 	fmt.Printf("Sources:   %s\n", sourcesString(p.Sources))
@@ -185,7 +189,12 @@ func cmdModel(r *Registry, args []string) {
 		fmt.Fprintf(os.Stderr, "error: no model matching %q (try \"models models %s\")\n", query, query)
 		os.Exit(1)
 	}
+	printGroupDetail(g)
+}
 
+// printGroupDetail renders the merged detail for one model group, including a
+// per-record breakdown across sources and providers.
+func printGroupDetail(g *ModelGroup) {
 	m := g.Rep
 	fmt.Printf("Name:        %s\n", m.Name)
 	fmt.Printf("ID:          %s\n", m.ID)
@@ -249,6 +258,103 @@ func cmdModel(r *Registry, args []string) {
 				rec.ID)
 		}
 	}
+}
+
+// cmdDefault handles invocations with no recognized command: the first argument
+// is matched against providers, and if exactly one matches it is used. An
+// optional second argument selects a model within that provider.
+func cmdDefault(r *Registry, args []string) {
+	query := args[0]
+	matches := matchProviders(r, query)
+	switch len(matches) {
+	case 0:
+		fmt.Fprintf(os.Stderr, "error: unknown command %q and no provider matches it\n", query)
+		usage()
+		os.Exit(1)
+	case 1:
+		// Exactly one provider matched: use it.
+	default:
+		fmt.Fprintf(os.Stderr, "error: %q matches %d providers; be more specific:\n", query, len(matches))
+		for _, p := range matches {
+			fmt.Fprintf(os.Stderr, "  %s\n", p.ID)
+		}
+		os.Exit(1)
+	}
+
+	p := matches[0]
+	if len(args) == 1 {
+		printProvider(p)
+		return
+	}
+	printProviderModel(r, p, strings.Join(args[1:], " "))
+}
+
+// printProviderModel shows the detail for a model within a provider. When the
+// specifier matches several distinct models, they are listed instead.
+func printProviderModel(r *Registry, p *Provider, query string) {
+	matches := matchProviderModels(p, query)
+	if len(matches) == 0 {
+		fmt.Fprintf(os.Stderr, "error: provider %q has no model matching %q\n", p.ID, query)
+		os.Exit(1)
+	}
+
+	keys := uniqueStrings(collect(matches, func(m *Model) string { return m.Key }))
+	if len(keys) > 1 {
+		fmt.Fprintf(os.Stderr, "%q matches %d models in provider %s; be more specific:\n\n", query, len(keys), p.ID)
+		models := representativeModels(matches)
+		sort.Slice(models, func(i, j int) bool { return models[i].Name < models[j].Name })
+		printModelTable(models)
+		os.Exit(1)
+	}
+
+	if g := r.groupByKey(keys[0]); g != nil {
+		printGroupDetail(g)
+	}
+}
+
+// matchProviders returns providers matching query, preferring an exact id/name
+// match over substring matches.
+func matchProviders(r *Registry, query string) []*Provider {
+	q := strings.ToLower(query)
+	var exact, substr []*Provider
+	for _, p := range r.sortedProviders() {
+		if strings.EqualFold(p.ID, query) || strings.EqualFold(p.Name, query) {
+			exact = append(exact, p)
+			continue
+		}
+		if strings.Contains(strings.ToLower(p.ID), q) || strings.Contains(strings.ToLower(p.Name), q) {
+			substr = append(substr, p)
+		}
+	}
+	if len(exact) > 0 {
+		return exact
+	}
+	return substr
+}
+
+// matchProviderModels returns a provider's model records matching query,
+// preferring an exact id match, then a normalized-key match, then substrings.
+func matchProviderModels(p *Provider, query string) []*Model {
+	key := normalizeID(query)
+	q := strings.ToLower(query)
+	var exact, byKey, substr []*Model
+	for _, m := range p.Models {
+		switch {
+		case m.ID == query:
+			exact = append(exact, m)
+		case m.Key == key:
+			byKey = append(byKey, m)
+		case strings.Contains(strings.ToLower(m.Name), q) || strings.Contains(strings.ToLower(m.ID), q):
+			substr = append(substr, m)
+		}
+	}
+	if len(exact) > 0 {
+		return exact
+	}
+	if len(byKey) > 0 {
+		return byKey
+	}
+	return substr
 }
 
 // ---- shared printing helpers ----
