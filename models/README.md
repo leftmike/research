@@ -12,6 +12,13 @@ Both sources describe the *provider* (the API serving a model) but not the
 family/keyword mapping (see `lab.go`); unrecognized long-tail models are
 reported as `Unknown`.
 
+## Layout
+
+The catalog logic — fetching, parsing, merging, id normalization, and lab
+inference — lives in a reusable `llmreg` package
+(`github.com/leftmike/research/models/llmreg`). The root `main` package is the
+CLI: flag parsing and terminal rendering on top of `llmreg`.
+
 ## Build
 
 ```

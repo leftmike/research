@@ -1,4 +1,4 @@
-package main
+package llmreg
 
 import (
 	"encoding/json"
@@ -57,14 +57,14 @@ func loadModelsDev(data []byte, r *Registry) error {
 	}
 
 	for pid, p := range providers {
-		r.upsertProvider(pid, p.Name, p.Doc, p.NPM, p.Env, sourceModelsDev)
+		r.upsertProvider(pid, p.Name, p.Doc, p.NPM, p.Env, SourceModelsDev)
 		for _, m := range p.Models {
 			r.addModel(&Model{
 				ID:          m.ID,
 				Name:        nonEmpty(m.Name, m.ID),
 				Family:      m.Family,
 				Provider:    pid,
-				Source:      sourceModelsDev,
+				Source:      SourceModelsDev,
 				InputModes:  m.Modalities.Input,
 				OutputModes: m.Modalities.Output,
 				Reasoning:   m.Reasoning,
@@ -124,7 +124,7 @@ func loadLiteLLM(data []byte, r *Registry) error {
 			continue
 		}
 		provider := nonEmpty(m.Provider, "unknown")
-		r.upsertProvider(provider, "", "", "", nil, sourceLiteLLM)
+		r.upsertProvider(provider, "", "", "", nil, SourceLiteLLM)
 
 		context := m.MaxInputTokens
 		if context == 0 {
@@ -138,7 +138,7 @@ func loadLiteLLM(data []byte, r *Registry) error {
 			ID:          id,
 			Name:        id,
 			Provider:    provider,
-			Source:      sourceLiteLLM,
+			Source:      SourceLiteLLM,
 			Mode:        m.Mode,
 			InputModes:  in,
 			OutputModes: out,
@@ -171,9 +171,9 @@ func nonEmpty(s, fallback string) string {
 	return s
 }
 
-// buildRegistry fetches the selected sources and merges them into a registry.
+// BuildRegistry fetches the selected sources and merges them into a registry.
 // Only the requested catalogs are downloaded.
-func buildRegistry(opts fetchOptions, useMD, useLL bool) (*Registry, error) {
+func BuildRegistry(opts FetchOptions, useMD, useLL bool) (*Registry, error) {
 	r := newRegistry()
 
 	if useMD {

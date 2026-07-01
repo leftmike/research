@@ -1,4 +1,4 @@
-package main
+package llmreg
 
 import (
 	"sort"
@@ -7,8 +7,8 @@ import (
 
 // Source identifiers.
 const (
-	sourceModelsDev = "models.dev"
-	sourceLiteLLM   = "litellm"
+	SourceModelsDev = "models.dev"
+	SourceLiteLLM   = "litellm"
 )
 
 // Cost holds token pricing in US dollars per million tokens.
@@ -31,7 +31,7 @@ type Model struct {
 	Family      string
 	Lab         string
 	Provider    string // provider id this record belongs to
-	Source      string // sourceModelsDev or sourceLiteLLM
+	Source      string // SourceModelsDev or SourceLiteLLM
 	Mode        string // litellm "mode" (chat, embedding, ...); empty for models.dev
 	InputModes  []string
 	OutputModes []string
@@ -84,7 +84,7 @@ func (r *Registry) addModel(m *Model) {
 		m.Lab = inferLab(m.Family, m.ID, m.Provider)
 	}
 	if m.Key == "" {
-		m.Key = normalizeID(m.ID)
+		m.Key = NormalizeID(m.ID)
 	}
 	r.Models = append(r.Models, m)
 
@@ -129,8 +129,8 @@ func (r *Registry) upsertProvider(id, name, doc, npm string, env []string, sourc
 	p.Sources[source] = true
 }
 
-// sortedProviders returns providers sorted by id.
-func (r *Registry) sortedProviders() []*Provider {
+// SortedProviders returns providers sorted by id.
+func (r *Registry) SortedProviders() []*Provider {
 	out := make([]*Provider, 0, len(r.Providers))
 	for _, p := range r.Providers {
 		out = append(out, p)
@@ -139,14 +139,14 @@ func (r *Registry) sortedProviders() []*Provider {
 	return out
 }
 
-// sortedLabs returns labs sorted by descending model count, then name.
-func (r *Registry) sortedLabs() []*Lab {
+// SortedLabs returns labs sorted by descending model count, then name.
+func (r *Registry) SortedLabs() []*Lab {
 	out := make([]*Lab, 0, len(r.Labs))
 	for _, l := range r.Labs {
 		out = append(out, l)
 	}
 	sort.Slice(out, func(i, j int) bool {
-		ci, cj := uniqueModelCount(out[i].Models), uniqueModelCount(out[j].Models)
+		ci, cj := UniqueModelCount(out[i].Models), UniqueModelCount(out[j].Models)
 		if ci != cj {
 			return ci > cj
 		}
@@ -155,7 +155,7 @@ func (r *Registry) sortedLabs() []*Lab {
 	return out
 }
 
-// uniqueModels collapses model records that share a normalized key into one
+// ModelGroup collapses model records that share a normalized key into one
 // representative entry, preferring a models.dev record when present, and merges
 // the set of providers and sources that offer it.
 type ModelGroup struct {
@@ -166,7 +166,8 @@ type ModelGroup struct {
 	Sources   []string
 }
 
-func (r *Registry) groups() []*ModelGroup {
+// Groups returns the merged model groups, one per normalized key.
+func (r *Registry) Groups() []*ModelGroup {
 	byKey := map[string]*ModelGroup{}
 	order := []string{}
 	for _, m := range r.Models {
@@ -178,7 +179,7 @@ func (r *Registry) groups() []*ModelGroup {
 		}
 		g.Records = append(g.Records, m)
 		// Prefer a richer models.dev record as the representative.
-		if g.Rep == nil || (m.Source == sourceModelsDev && g.Rep.Source != sourceModelsDev) {
+		if g.Rep == nil || (m.Source == SourceModelsDev && g.Rep.Source != SourceModelsDev) {
 			g.Rep = m
 		}
 	}
@@ -186,8 +187,8 @@ func (r *Registry) groups() []*ModelGroup {
 	out := make([]*ModelGroup, 0, len(order))
 	for _, k := range order {
 		g := byKey[k]
-		g.Providers = uniqueStrings(collect(g.Records, func(m *Model) string { return m.Provider }))
-		g.Sources = uniqueStrings(collect(g.Records, func(m *Model) string { return m.Source }))
+		g.Providers = UniqueStrings(Collect(g.Records, func(m *Model) string { return m.Provider }))
+		g.Sources = UniqueStrings(Collect(g.Records, func(m *Model) string { return m.Source }))
 		// Fill representative gaps (cost/limits/flags) from sibling records.
 		fillGaps(g)
 		out = append(out, g)
@@ -196,9 +197,9 @@ func (r *Registry) groups() []*ModelGroup {
 	return out
 }
 
-// groupByKey returns the merged model group with the given normalized key.
-func (r *Registry) groupByKey(key string) *ModelGroup {
-	for _, g := range r.groups() {
+// GroupByKey returns the merged model group with the given normalized key.
+func (r *Registry) GroupByKey(key string) *ModelGroup {
+	for _, g := range r.Groups() {
 		if g.Key == key {
 			return g
 		}
@@ -236,7 +237,8 @@ func fillGaps(g *ModelGroup) {
 	}
 }
 
-func collect(ms []*Model, f func(*Model) string) []string {
+// Collect maps f over ms and returns the results in order.
+func Collect(ms []*Model, f func(*Model) string) []string {
 	out := make([]string, 0, len(ms))
 	for _, m := range ms {
 		out = append(out, f(m))
@@ -244,7 +246,8 @@ func collect(ms []*Model, f func(*Model) string) []string {
 	return out
 }
 
-func uniqueStrings(in []string) []string {
+// UniqueStrings returns the distinct, non-empty values of in, sorted.
+func UniqueStrings(in []string) []string {
 	seen := map[string]bool{}
 	out := []string{}
 	for _, s := range in {
@@ -258,9 +261,40 @@ func uniqueStrings(in []string) []string {
 	return out
 }
 
-// normalizeID reduces a source-specific model id to a key that is comparable
+// UniqueModelCount counts distinct models (by normalized key) in a slice.
+func UniqueModelCount(ms []*Model) int {
+	seen := map[string]bool{}
+	for _, m := range ms {
+		seen[m.Key] = true
+	}
+	return len(seen)
+}
+
+// RepresentativeModels returns one record per unique key, preferring models.dev.
+func RepresentativeModels(ms []*Model) []*Model {
+	byKey := map[string]*Model{}
+	order := []string{}
+	for _, m := range ms {
+		cur, ok := byKey[m.Key]
+		if !ok {
+			byKey[m.Key] = m
+			order = append(order, m.Key)
+			continue
+		}
+		if m.Source == SourceModelsDev && cur.Source != SourceModelsDev {
+			byKey[m.Key] = m
+		}
+	}
+	out := make([]*Model, 0, len(order))
+	for _, k := range order {
+		out = append(out, byKey[k])
+	}
+	return out
+}
+
+// NormalizeID reduces a source-specific model id to a key that is comparable
 // across sources, stripping provider prefixes and version/date suffixes.
-func normalizeID(id string) string {
+func NormalizeID(id string) string {
 	s := strings.ToLower(strings.TrimSpace(id))
 
 	// Drop a path-style provider prefix: "bedrock/anthropic.claude" -> "anthropic.claude".

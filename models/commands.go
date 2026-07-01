@@ -6,36 +6,38 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/leftmike/research/models/llmreg"
 )
 
 // cmdSummary prints an overview of the merged catalog.
-func cmdSummary(r *Registry, args []string) {
+func cmdSummary(r *llmreg.Registry, args []string) {
 	parseNoArgs("summary", args)
 
-	groups := r.groups()
+	groups := r.Groups()
 
 	mdProviders, llProviders := 0, 0
 	for _, p := range r.Providers {
-		if p.Sources[sourceModelsDev] {
+		if p.Sources[llmreg.SourceModelsDev] {
 			mdProviders++
 		}
-		if p.Sources[sourceLiteLLM] {
+		if p.Sources[llmreg.SourceLiteLLM] {
 			llProviders++
 		}
 	}
 	mdModels, llModels := 0, 0
 	for _, m := range r.Models {
 		switch m.Source {
-		case sourceModelsDev:
+		case llmreg.SourceModelsDev:
 			mdModels++
-		case sourceLiteLLM:
+		case llmreg.SourceLiteLLM:
 			llModels++
 		}
 	}
 
 	fmt.Println("Sources:")
-	fmt.Printf("  %-12s %d providers, %d model records\n", sourceModelsDev, mdProviders, mdModels)
-	fmt.Printf("  %-12s %d providers, %d model records\n", sourceLiteLLM, llProviders, llModels)
+	fmt.Printf("  %-12s %d providers, %d model records\n", llmreg.SourceModelsDev, mdProviders, mdModels)
+	fmt.Printf("  %-12s %d providers, %d model records\n", llmreg.SourceLiteLLM, llProviders, llModels)
 	fmt.Println()
 	fmt.Println("Merged totals:")
 	fmt.Printf("  Providers: %d\n", len(r.Providers))
@@ -44,20 +46,20 @@ func cmdSummary(r *Registry, args []string) {
 	fmt.Println()
 
 	fmt.Println("Top labs by model count:")
-	labs := r.sortedLabs()
+	labs := r.SortedLabs()
 	for i, l := range labs {
 		if i >= 12 {
 			break
 		}
-		fmt.Printf("  %-20s %d\n", l.Name, uniqueModelCount(l.Models))
+		fmt.Printf("  %-20s %d\n", l.Name, llmreg.UniqueModelCount(l.Models))
 	}
 }
 
 // cmdProviders lists providers, optionally filtered by a substring.
-func cmdProviders(r *Registry, args []string) {
+func cmdProviders(r *llmreg.Registry, args []string) {
 	filter := parseFilter("providers", args)
 
-	providers := r.sortedProviders()
+	providers := r.SortedProviders()
 	const idW, nameW, srcW = 24, 26, 18
 	fmt.Printf("%-*s %-*s %-*s %s\n", idW, "ID", nameW, "NAME", srcW, "SOURCES", "MODELS")
 	fmt.Printf("%-*s %-*s %-*s %s\n", idW, dashes(2), nameW, dashes(4), srcW, dashes(7), dashes(6))
@@ -74,7 +76,7 @@ func cmdProviders(r *Registry, args []string) {
 }
 
 // cmdProvider shows one provider and the models it serves.
-func cmdProvider(r *Registry, args []string) {
+func cmdProvider(r *llmreg.Registry, args []string) {
 	id := parseSingle("provider", "<id>", args)
 	p := r.Providers[id]
 	if p == nil {
@@ -88,7 +90,7 @@ func cmdProvider(r *Registry, args []string) {
 }
 
 // printProvider renders a provider's metadata and the models it serves.
-func printProvider(p *Provider) {
+func printProvider(p *llmreg.Provider) {
 	fmt.Printf("Provider:  %s\n", p.ID)
 	fmt.Printf("Name:      %s\n", p.Name)
 	fmt.Printf("Sources:   %s\n", sourcesString(p.Sources))
@@ -103,16 +105,16 @@ func printProvider(p *Provider) {
 	}
 	fmt.Printf("Models:    %d\n\n", len(p.Models))
 
-	models := append([]*Model(nil), p.Models...)
+	models := append([]*llmreg.Model(nil), p.Models...)
 	sort.Slice(models, func(i, j int) bool { return models[i].Name < models[j].Name })
 	printModelTable(models)
 }
 
 // cmdLabs lists labs (model creators) and their model counts.
-func cmdLabs(r *Registry, args []string) {
+func cmdLabs(r *llmreg.Registry, args []string) {
 	filter := parseFilter("labs", args)
 
-	labs := r.sortedLabs()
+	labs := r.SortedLabs()
 	const nameW, mW, pW = 24, 10, 10
 	fmt.Printf("%-*s %-*s %-*s %s\n", nameW, "LAB", mW, "MODELS", pW, "PROVIDERS", "SOURCES")
 	fmt.Printf("%-*s %-*s %-*s %s\n", nameW, dashes(3), mW, dashes(6), pW, dashes(9), dashes(7))
@@ -120,18 +122,18 @@ func cmdLabs(r *Registry, args []string) {
 		if filter != "" && !matches(filter, l.Name) {
 			continue
 		}
-		provs := uniqueStrings(collect(l.Models, func(m *Model) string { return m.Provider }))
-		srcs := uniqueStrings(collect(l.Models, func(m *Model) string { return m.Source }))
+		provs := llmreg.UniqueStrings(llmreg.Collect(l.Models, func(m *llmreg.Model) string { return m.Provider }))
+		srcs := llmreg.UniqueStrings(llmreg.Collect(l.Models, func(m *llmreg.Model) string { return m.Source }))
 		fmt.Printf("%-*s %-*d %-*d %s\n",
 			nameW, truncate(l.Name, nameW-1),
-			mW, uniqueModelCount(l.Models),
+			mW, llmreg.UniqueModelCount(l.Models),
 			pW, len(provs),
 			strings.Join(srcs, ","))
 	}
 }
 
 // cmdLab shows one lab and the models attributed to it.
-func cmdLab(r *Registry, args []string) {
+func cmdLab(r *llmreg.Registry, args []string) {
 	name := parseSingle("lab", "<name>", args)
 	lab := r.Labs[name]
 	if lab == nil {
@@ -142,22 +144,22 @@ func cmdLab(r *Registry, args []string) {
 		os.Exit(1)
 	}
 
-	provs := uniqueStrings(collect(lab.Models, func(m *Model) string { return m.Provider }))
+	provs := llmreg.UniqueStrings(llmreg.Collect(lab.Models, func(m *llmreg.Model) string { return m.Provider }))
 	fmt.Printf("Lab:       %s\n", lab.Name)
-	fmt.Printf("Models:    %d unique (%d records)\n", uniqueModelCount(lab.Models), len(lab.Models))
+	fmt.Printf("Models:    %d unique (%d records)\n", llmreg.UniqueModelCount(lab.Models), len(lab.Models))
 	fmt.Printf("Providers: %s\n\n", strings.Join(provs, ", "))
 
 	// Show one row per unique model created by this lab.
-	models := representativeModels(lab.Models)
+	models := llmreg.RepresentativeModels(lab.Models)
 	sort.Slice(models, func(i, j int) bool { return models[i].Name < models[j].Name })
 	printModelTable(models)
 }
 
 // cmdModels lists models, optionally filtered by a substring.
-func cmdModels(r *Registry, args []string) {
+func cmdModels(r *llmreg.Registry, args []string) {
 	filter := parseFilter("models", args)
 
-	groups := r.groups()
+	groups := r.Groups()
 	const nameW, labW, ctxW, costW = 38, 18, 9, 16
 	fmt.Printf("%-*s %-*s %-*s %-*s %s\n", nameW, "NAME", labW, "LAB", ctxW, "CONTEXT", costW, "IN/OUT $/M", "PROVIDERS")
 	fmt.Printf("%-*s %-*s %-*s %-*s %s\n", nameW, dashes(4), labW, dashes(3), ctxW, dashes(7), costW, dashes(9), dashes(9))
@@ -181,7 +183,7 @@ func cmdModels(r *Registry, args []string) {
 }
 
 // cmdModel shows full detail for one model, merging all matching records.
-func cmdModel(r *Registry, args []string) {
+func cmdModel(r *llmreg.Registry, args []string) {
 	query := parseSingle("model", "<id>", args)
 
 	g := findGroup(r, query)
@@ -194,7 +196,7 @@ func cmdModel(r *Registry, args []string) {
 
 // printGroupDetail renders the merged detail for one model group, including a
 // per-record breakdown across sources and providers.
-func printGroupDetail(g *ModelGroup) {
+func printGroupDetail(g *llmreg.ModelGroup) {
 	m := g.Rep
 	fmt.Printf("Name:        %s\n", m.Name)
 	fmt.Printf("ID:          %s\n", m.ID)
@@ -240,7 +242,7 @@ func printGroupDetail(g *ModelGroup) {
 	if len(g.Records) > 1 {
 		fmt.Println()
 		fmt.Println("Records:")
-		recs := append([]*Model(nil), g.Records...)
+		recs := append([]*llmreg.Model(nil), g.Records...)
 		sort.Slice(recs, func(i, j int) bool {
 			if recs[i].Source != recs[j].Source {
 				return recs[i].Source < recs[j].Source
@@ -263,7 +265,7 @@ func printGroupDetail(g *ModelGroup) {
 // cmdDefault handles invocations with no recognized command: the first argument
 // is matched against providers, and if exactly one matches it is used. An
 // optional second argument selects a model within that provider.
-func cmdDefault(r *Registry, args []string) {
+func cmdDefault(r *llmreg.Registry, args []string) {
 	query := args[0]
 	matches := matchProviders(r, query)
 	switch len(matches) {
@@ -291,33 +293,33 @@ func cmdDefault(r *Registry, args []string) {
 
 // printProviderModel shows the detail for a model within a provider. When the
 // specifier matches several distinct models, they are listed instead.
-func printProviderModel(r *Registry, p *Provider, query string) {
+func printProviderModel(r *llmreg.Registry, p *llmreg.Provider, query string) {
 	matches := matchProviderModels(p, query)
 	if len(matches) == 0 {
 		fmt.Fprintf(os.Stderr, "error: provider %q has no model matching %q\n", p.ID, query)
 		os.Exit(1)
 	}
 
-	keys := uniqueStrings(collect(matches, func(m *Model) string { return m.Key }))
+	keys := llmreg.UniqueStrings(llmreg.Collect(matches, func(m *llmreg.Model) string { return m.Key }))
 	if len(keys) > 1 {
 		fmt.Fprintf(os.Stderr, "%q matches %d models in provider %s; be more specific:\n\n", query, len(keys), p.ID)
-		models := representativeModels(matches)
+		models := llmreg.RepresentativeModels(matches)
 		sort.Slice(models, func(i, j int) bool { return models[i].Name < models[j].Name })
 		printModelTable(models)
 		os.Exit(1)
 	}
 
-	if g := r.groupByKey(keys[0]); g != nil {
+	if g := r.GroupByKey(keys[0]); g != nil {
 		printGroupDetail(g)
 	}
 }
 
 // matchProviders returns providers matching query, preferring an exact id/name
 // match over substring matches.
-func matchProviders(r *Registry, query string) []*Provider {
+func matchProviders(r *llmreg.Registry, query string) []*llmreg.Provider {
 	q := strings.ToLower(query)
-	var exact, substr []*Provider
-	for _, p := range r.sortedProviders() {
+	var exact, substr []*llmreg.Provider
+	for _, p := range r.SortedProviders() {
 		if strings.EqualFold(p.ID, query) || strings.EqualFold(p.Name, query) {
 			exact = append(exact, p)
 			continue
@@ -334,10 +336,10 @@ func matchProviders(r *Registry, query string) []*Provider {
 
 // matchProviderModels returns a provider's model records matching query,
 // preferring an exact id match, then a normalized-key match, then substrings.
-func matchProviderModels(p *Provider, query string) []*Model {
-	key := normalizeID(query)
+func matchProviderModels(p *llmreg.Provider, query string) []*llmreg.Model {
+	key := llmreg.NormalizeID(query)
 	q := strings.ToLower(query)
-	var exact, byKey, substr []*Model
+	var exact, byKey, substr []*llmreg.Model
 	for _, m := range p.Models {
 		switch {
 		case m.ID == query:
@@ -359,7 +361,7 @@ func matchProviderModels(p *Provider, query string) []*Model {
 
 // ---- shared printing helpers ----
 
-func printModelTable(models []*Model) {
+func printModelTable(models []*llmreg.Model) {
 	const nameW, ctxW, costW = 40, 9, 16
 	fmt.Printf("%-*s %-*s %-*s %s\n", nameW, "NAME", ctxW, "CONTEXT", costW, "IN/OUT $/M", "CAPS")
 	fmt.Printf("%-*s %-*s %-*s %s\n", nameW, dashes(4), ctxW, dashes(7), costW, dashes(9), dashes(4))
@@ -372,7 +374,7 @@ func printModelTable(models []*Model) {
 	}
 }
 
-func capsString(m *Model) string {
+func capsString(m *llmreg.Model) string {
 	var caps []string
 	if m.Reasoning {
 		caps = append(caps, "reason")
@@ -409,7 +411,7 @@ func formatCost(c float64) string {
 	return fmt.Sprintf("$%g", c)
 }
 
-func formatCostPair(c Cost) string {
+func formatCostPair(c llmreg.Cost) string {
 	if c.Input == 0 && c.Output == 0 {
 		return "-"
 	}
@@ -418,7 +420,7 @@ func formatCostPair(c Cost) string {
 
 func sourcesString(s map[string]bool) string {
 	var out []string
-	for _, name := range []string{sourceModelsDev, sourceLiteLLM} {
+	for _, name := range []string{llmreg.SourceModelsDev, llmreg.SourceLiteLLM} {
 		if s[name] {
 			out = append(out, name)
 		}
@@ -459,44 +461,13 @@ func matches(filter string, fields ...string) bool {
 	return false
 }
 
-// uniqueModelCount counts distinct models (by normalized key) in a slice.
-func uniqueModelCount(ms []*Model) int {
-	seen := map[string]bool{}
-	for _, m := range ms {
-		seen[m.Key] = true
-	}
-	return len(seen)
-}
-
-// representativeModels returns one record per unique key, preferring models.dev.
-func representativeModels(ms []*Model) []*Model {
-	byKey := map[string]*Model{}
-	order := []string{}
-	for _, m := range ms {
-		cur, ok := byKey[m.Key]
-		if !ok {
-			byKey[m.Key] = m
-			order = append(order, m.Key)
-			continue
-		}
-		if m.Source == sourceModelsDev && cur.Source != sourceModelsDev {
-			byKey[m.Key] = m
-		}
-	}
-	out := make([]*Model, 0, len(order))
-	for _, k := range order {
-		out = append(out, byKey[k])
-	}
-	return out
-}
-
 // findGroup locates a model group by exact id, then exact key, then substring.
-func findGroup(r *Registry, query string) *ModelGroup {
-	groups := r.groups()
-	key := normalizeID(query)
+func findGroup(r *llmreg.Registry, query string) *llmreg.ModelGroup {
+	groups := r.Groups()
+	key := llmreg.NormalizeID(query)
 	q := strings.ToLower(query)
 
-	var substr *ModelGroup
+	var substr *llmreg.ModelGroup
 	for _, g := range groups {
 		for _, rec := range g.Records {
 			if rec.ID == query {
@@ -513,7 +484,7 @@ func findGroup(r *Registry, query string) *ModelGroup {
 	return substr
 }
 
-func findProviderInsensitive(r *Registry, id string) *Provider {
+func findProviderInsensitive(r *llmreg.Registry, id string) *llmreg.Provider {
 	for pid, p := range r.Providers {
 		if strings.EqualFold(pid, id) {
 			return p
@@ -522,7 +493,7 @@ func findProviderInsensitive(r *Registry, id string) *Provider {
 	return nil
 }
 
-func findLabInsensitive(r *Registry, name string) *Lab {
+func findLabInsensitive(r *llmreg.Registry, name string) *llmreg.Lab {
 	for ln, l := range r.Labs {
 		if strings.EqualFold(ln, name) {
 			return l

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/leftmike/research/models/llmreg"
 )
 
 func usage() {
@@ -70,9 +72,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	opts := defaultFetchOptions()
-	opts.refresh = *refresh
-	opts.noCache = *noCache
+	opts := llmreg.DefaultFetchOptions()
+	opts.Refresh = *refresh
+	opts.NoCache = *noCache
 
 	cmd := args[0]
 	rest := args[1:]
@@ -82,7 +84,7 @@ func main() {
 		return
 	}
 
-	reg, err := buildRegistry(opts, useMD, useLL)
+	reg, err := llmreg.BuildRegistry(opts, useMD, useLL)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)

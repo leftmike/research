@@ -1,4 +1,4 @@
-package main
+package llmreg
 
 import "testing"
 
@@ -16,8 +16,8 @@ func TestNormalizeID(t *testing.T) {
 		{"meta.llama3-70b-instruct-v1:0", "llama3-70b-instruct"},
 	}
 	for _, c := range cases {
-		if got := normalizeID(c.in); got != c.want {
-			t.Errorf("normalizeID(%q) = %q, want %q", c.in, got, c.want)
+		if got := NormalizeID(c.in); got != c.want {
+			t.Errorf("NormalizeID(%q) = %q, want %q", c.in, got, c.want)
 		}
 	}
 }
@@ -42,52 +42,27 @@ func TestInferLab(t *testing.T) {
 	}
 }
 
-func TestParseSources(t *testing.T) {
-	cases := []struct {
-		in             string
-		md, ll, wantOK bool
-	}{
-		{"all", true, true, true},
-		{"", true, true, true},
-		{"models.dev", true, false, true},
-		{"MD", true, false, true},
-		{"litellm", false, true, true},
-		{"ll", false, true, true},
-		{"bogus", false, false, false},
-	}
-	for _, c := range cases {
-		md, ll, err := parseSources(c.in)
-		if (err == nil) != c.wantOK {
-			t.Errorf("parseSources(%q) ok = %v, want %v (err=%v)", c.in, err == nil, c.wantOK, err)
-			continue
-		}
-		if err == nil && (md != c.md || ll != c.ll) {
-			t.Errorf("parseSources(%q) = (%v,%v), want (%v,%v)", c.in, md, ll, c.md, c.ll)
-		}
-	}
-}
-
 func TestRegistryMergeAndGroups(t *testing.T) {
 	r := newRegistry()
-	r.upsertProvider("anthropic", "Anthropic", "https://docs", "@ai-sdk/anthropic", []string{"ANTHROPIC_API_KEY"}, sourceModelsDev)
+	r.upsertProvider("anthropic", "Anthropic", "https://docs", "@ai-sdk/anthropic", []string{"ANTHROPIC_API_KEY"}, SourceModelsDev)
 	r.addModel(&Model{
 		ID: "claude-opus-4-5", Name: "Claude Opus 4.5", Family: "claude-opus",
-		Provider: "anthropic", Source: sourceModelsDev, Context: 200000,
+		Provider: "anthropic", Source: SourceModelsDev, Context: 200000,
 		Cost: Cost{Input: 5, Output: 25},
 	})
 	// Same logical model from litellm via a different provider key.
 	r.addModel(&Model{
 		ID: "anthropic.claude-opus-4-5-20251101-v1:0", Name: "anthropic.claude-opus-4-5-20251101-v1:0",
-		Provider: "bedrock_converse", Source: sourceLiteLLM, Context: 200000,
+		Provider: "bedrock_converse", Source: SourceLiteLLM, Context: 200000,
 		Cost: Cost{Input: 5, Output: 25},
 	})
 
-	groups := r.groups()
+	groups := r.Groups()
 	if len(groups) != 1 {
 		t.Fatalf("expected 1 merged group, got %d", len(groups))
 	}
 	g := groups[0]
-	if g.Rep.Source != sourceModelsDev {
+	if g.Rep.Source != SourceModelsDev {
 		t.Errorf("representative should be models.dev record, got %q", g.Rep.Source)
 	}
 	if len(g.Providers) != 2 {

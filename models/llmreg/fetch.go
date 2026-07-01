@@ -1,4 +1,4 @@
-package main
+package llmreg
 
 import (
 	"fmt"
@@ -15,15 +15,16 @@ const (
 	litellmURL   = "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
 )
 
-// fetchOptions controls how source data is retrieved and cached.
-type fetchOptions struct {
-	refresh bool          // ignore any cached copy and re-download
-	noCache bool          // do not read or write the cache at all
-	ttl     time.Duration // maximum age of a cached copy before it is refreshed
+// FetchOptions controls how source data is retrieved and cached.
+type FetchOptions struct {
+	Refresh bool          // ignore any cached copy and re-download
+	NoCache bool          // do not read or write the cache at all
+	Ttl     time.Duration // maximum age of a cached copy before it is refreshed
 }
 
-func defaultFetchOptions() fetchOptions {
-	return fetchOptions{ttl: 24 * time.Hour}
+// DefaultFetchOptions returns the default fetch options (24h cache TTL).
+func DefaultFetchOptions() FetchOptions {
+	return FetchOptions{Ttl: 24 * time.Hour}
 }
 
 // cacheDir returns the directory used to cache downloaded source data.
@@ -36,20 +37,20 @@ func cacheDir() string {
 }
 
 // fetchJSON returns the raw bytes for url, named name in the cache. Fresh cache
-// entries (younger than opts.ttl) are returned without a network request. On a
+// entries (younger than opts.Ttl) are returned without a network request. On a
 // network failure, a stale cache entry is used as a fallback when available.
-func fetchJSON(url, name string, opts fetchOptions) ([]byte, error) {
+func fetchJSON(url, name string, opts FetchOptions) ([]byte, error) {
 	cachePath := filepath.Join(cacheDir(), name)
 
-	if !opts.noCache && !opts.refresh {
-		if data, ok := readFreshCache(cachePath, opts.ttl); ok {
+	if !opts.NoCache && !opts.Refresh {
+		if data, ok := readFreshCache(cachePath, opts.Ttl); ok {
 			return data, nil
 		}
 	}
 
 	data, err := download(url)
 	if err != nil {
-		if !opts.noCache {
+		if !opts.NoCache {
 			if cached, rerr := os.ReadFile(cachePath); rerr == nil {
 				fmt.Fprintf(os.Stderr, "warning: %s download failed (%v); using cached copy\n", name, err)
 				return cached, nil
@@ -58,7 +59,7 @@ func fetchJSON(url, name string, opts fetchOptions) ([]byte, error) {
 		return nil, fmt.Errorf("fetch %s: %w", url, err)
 	}
 
-	if !opts.noCache {
+	if !opts.NoCache {
 		writeCache(cachePath, data)
 	}
 	return data, nil
