@@ -171,24 +171,29 @@ func nonEmpty(s, fallback string) string {
 	return s
 }
 
-// buildRegistry fetches both sources and merges them into a registry.
-func buildRegistry(opts fetchOptions) (*Registry, error) {
+// buildRegistry fetches the selected sources and merges them into a registry.
+// Only the requested catalogs are downloaded.
+func buildRegistry(opts fetchOptions, useMD, useLL bool) (*Registry, error) {
 	r := newRegistry()
 
-	mdData, err := fetchJSON(modelsDevURL, "modelsdev.json", opts)
-	if err != nil {
-		return nil, err
-	}
-	if err := loadModelsDev(mdData, r); err != nil {
-		return nil, err
+	if useMD {
+		mdData, err := fetchJSON(modelsDevURL, "modelsdev.json", opts)
+		if err != nil {
+			return nil, err
+		}
+		if err := loadModelsDev(mdData, r); err != nil {
+			return nil, err
+		}
 	}
 
-	llData, err := fetchJSON(litellmURL, "litellm.json", opts)
-	if err != nil {
-		return nil, err
-	}
-	if err := loadLiteLLM(llData, r); err != nil {
-		return nil, err
+	if useLL {
+		llData, err := fetchJSON(litellmURL, "litellm.json", opts)
+		if err != nil {
+			return nil, err
+		}
+		if err := loadLiteLLM(llData, r); err != nil {
+			return nil, err
+		}
 	}
 
 	return r, nil

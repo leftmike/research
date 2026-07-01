@@ -51,6 +51,9 @@ the query.
 
 ### Global flags
 
+- `-source S` — which catalog to use: `all` (default), `models.dev`, or
+  `litellm`. Only the selected catalog is downloaded. Accepts the aliases
+  `md`/`dev` and `ll`/`lite`.
 - `-refresh` — ignore cached data and re-download from the sources.
 - `-no-cache` — do not read or write the on-disk cache.
 
@@ -69,6 +72,7 @@ models models grok-4
 models model claude-opus-4-5
 models openai                  # provider shortcut
 models openai gpt-4o           # model within a provider
+models -source litellm summary # restrict to a single catalog
 ```
 
 A model's detail view merges every matching record across both sources and all

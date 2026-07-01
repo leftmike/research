@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func usage() {
@@ -28,6 +29,7 @@ second argument selects a model within it:
   models <provider> <model>    Show a model within that provider.
 
 Global flags:
+  -source S  Which catalog to use: all (default), models.dev, or litellm.
   -refresh   Ignore cached data and re-download from the sources.
   -no-cache  Do not read or write the on-disk cache.
 
@@ -35,15 +37,36 @@ Cached data lives under the user cache dir (refreshed every 24h).
 Run "models <command> -h" for command-specific flags.`)
 }
 
+// parseSources maps a -source flag value to the set of catalogs to load.
+func parseSources(s string) (useMD, useLL bool, err error) {
+	switch strings.ToLower(strings.TrimSpace(s)) {
+	case "", "all", "both":
+		return true, true, nil
+	case "models.dev", "modelsdev", "models-dev", "md", "dev":
+		return true, false, nil
+	case "litellm", "lite-llm", "ll", "lite":
+		return false, true, nil
+	default:
+		return false, false, fmt.Errorf("unknown source %q: use all, models.dev, or litellm", s)
+	}
+}
+
 func main() {
 	refresh := flag.Bool("refresh", false, "ignore cached data and re-download")
 	noCache := flag.Bool("no-cache", false, "do not read or write the cache")
+	source := flag.String("source", "all", "data source: all, models.dev, or litellm")
 	flag.Usage = usage
 	flag.Parse()
 
 	args := flag.Args()
 	if len(args) < 1 {
 		usage()
+		os.Exit(1)
+	}
+
+	useMD, useLL, err := parseSources(*source)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -59,7 +82,7 @@ func main() {
 		return
 	}
 
-	reg, err := buildRegistry(opts)
+	reg, err := buildRegistry(opts, useMD, useLL)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
