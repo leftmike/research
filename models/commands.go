@@ -16,30 +16,7 @@ func cmdSummary(r *llmreg.Registry, args []string) {
 
 	groups := r.Groups()
 
-	mdProviders, llProviders := 0, 0
-	for _, p := range r.Providers {
-		if p.Sources[llmreg.SourceModelsDev] {
-			mdProviders++
-		}
-		if p.Sources[llmreg.SourceLiteLLM] {
-			llProviders++
-		}
-	}
-	mdModels, llModels := 0, 0
-	for _, m := range r.Models {
-		switch m.Source {
-		case llmreg.SourceModelsDev:
-			mdModels++
-		case llmreg.SourceLiteLLM:
-			llModels++
-		}
-	}
-
-	fmt.Println("Sources:")
-	fmt.Printf("  %-12s %d providers, %d model records\n", llmreg.SourceModelsDev, mdProviders, mdModels)
-	fmt.Printf("  %-12s %d providers, %d model records\n", llmreg.SourceLiteLLM, llProviders, llModels)
-	fmt.Println()
-	fmt.Println("Merged totals:")
+	fmt.Println("Totals:")
 	fmt.Printf("  Providers: %d\n", len(r.Providers))
 	fmt.Printf("  Labs:      %d\n", len(r.Labs))
 	fmt.Printf("  Models:    %d unique (%d records)\n", len(groups), len(r.Models))
@@ -60,17 +37,16 @@ func cmdProviders(r *llmreg.Registry, args []string) {
 	filter := parseFilter("providers", args)
 
 	providers := r.SortedProviders()
-	const idW, nameW, srcW = 24, 26, 18
-	fmt.Printf("%-*s %-*s %-*s %s\n", idW, "ID", nameW, "NAME", srcW, "SOURCES", "MODELS")
-	fmt.Printf("%-*s %-*s %-*s %s\n", idW, dashes(2), nameW, dashes(4), srcW, dashes(7), dashes(6))
+	const idW, nameW = 24, 26
+	fmt.Printf("%-*s %-*s %s\n", idW, "ID", nameW, "NAME", "MODELS")
+	fmt.Printf("%-*s %-*s %s\n", idW, dashes(2), nameW, dashes(4), dashes(6))
 	for _, p := range providers {
 		if filter != "" && !matches(filter, p.ID, p.Name) {
 			continue
 		}
-		fmt.Printf("%-*s %-*s %-*s %d\n",
+		fmt.Printf("%-*s %-*s %d\n",
 			idW, truncate(p.ID, idW-1),
 			nameW, truncate(p.Name, nameW-1),
-			srcW, truncate(sourcesString(p.Sources), srcW-1),
 			len(p.Models))
 	}
 }
@@ -93,7 +69,6 @@ func cmdProvider(r *llmreg.Registry, args []string) {
 func printProvider(p *llmreg.Provider) {
 	fmt.Printf("Provider:  %s\n", p.ID)
 	fmt.Printf("Name:      %s\n", p.Name)
-	fmt.Printf("Sources:   %s\n", sourcesString(p.Sources))
 	if p.Doc != "" {
 		fmt.Printf("Docs:      %s\n", p.Doc)
 	}
@@ -115,20 +90,18 @@ func cmdLabs(r *llmreg.Registry, args []string) {
 	filter := parseFilter("labs", args)
 
 	labs := r.SortedLabs()
-	const nameW, mW, pW = 24, 10, 10
-	fmt.Printf("%-*s %-*s %-*s %s\n", nameW, "LAB", mW, "MODELS", pW, "PROVIDERS", "SOURCES")
-	fmt.Printf("%-*s %-*s %-*s %s\n", nameW, dashes(3), mW, dashes(6), pW, dashes(9), dashes(7))
+	const nameW, mW = 24, 10
+	fmt.Printf("%-*s %-*s %s\n", nameW, "LAB", mW, "MODELS", "PROVIDERS")
+	fmt.Printf("%-*s %-*s %s\n", nameW, dashes(3), mW, dashes(6), dashes(9))
 	for _, l := range labs {
 		if filter != "" && !matches(filter, l.Name) {
 			continue
 		}
 		provs := llmreg.UniqueStrings(llmreg.Collect(l.Models, func(m *llmreg.Model) string { return m.Provider }))
-		srcs := llmreg.UniqueStrings(llmreg.Collect(l.Models, func(m *llmreg.Model) string { return m.Source }))
-		fmt.Printf("%-*s %-*d %-*d %s\n",
+		fmt.Printf("%-*s %-*d %d\n",
 			nameW, truncate(l.Name, nameW-1),
 			mW, llmreg.UniqueModelCount(l.Models),
-			pW, len(provs),
-			strings.Join(srcs, ","))
+			len(provs))
 	}
 }
 
@@ -195,7 +168,7 @@ func cmdModel(r *llmreg.Registry, args []string) {
 }
 
 // printGroupDetail renders the merged detail for one model group, including a
-// per-record breakdown across sources and providers.
+// per-record breakdown across providers.
 func printGroupDetail(g *llmreg.ModelGroup) {
 	m := g.Rep
 	fmt.Printf("Name:        %s\n", m.Name)
@@ -205,7 +178,6 @@ func printGroupDetail(g *llmreg.ModelGroup) {
 	}
 	fmt.Printf("Lab:         %s\n", m.Lab)
 	fmt.Printf("Providers:   %s\n", strings.Join(g.Providers, ", "))
-	fmt.Printf("Sources:     %s\n", strings.Join(g.Sources, ", "))
 	if m.ReleaseDate != "" {
 		fmt.Printf("Released:    %s\n", m.ReleaseDate)
 	}
@@ -238,22 +210,16 @@ func printGroupDetail(g *llmreg.ModelGroup) {
 	fmt.Printf("  Cache read:  %s\n", formatCost(m.Cost.CacheRead))
 	fmt.Printf("  Cache write: %s\n", formatCost(m.Cost.CacheWrite))
 
-	// Per-record breakdown so per-provider/source differences are visible.
+	// Per-record breakdown so per-provider differences are visible.
 	if len(g.Records) > 1 {
 		fmt.Println()
 		fmt.Println("Records:")
 		recs := append([]*llmreg.Model(nil), g.Records...)
-		sort.Slice(recs, func(i, j int) bool {
-			if recs[i].Source != recs[j].Source {
-				return recs[i].Source < recs[j].Source
-			}
-			return recs[i].Provider < recs[j].Provider
-		})
-		const srcW, provW, ctxW = 12, 22, 9
-		fmt.Printf("  %-*s %-*s %-*s %-*s %s\n", srcW, "SOURCE", provW, "PROVIDER", ctxW, "CONTEXT", 16, "IN/OUT $/M", "ID")
+		sort.Slice(recs, func(i, j int) bool { return recs[i].Provider < recs[j].Provider })
+		const provW, ctxW = 22, 9
+		fmt.Printf("  %-*s %-*s %-*s %s\n", provW, "PROVIDER", ctxW, "CONTEXT", 16, "IN/OUT $/M", "ID")
 		for _, rec := range recs {
-			fmt.Printf("  %-*s %-*s %-*s %-*s %s\n",
-				srcW, rec.Source,
+			fmt.Printf("  %-*s %-*s %-*s %s\n",
 				provW, truncate(rec.Provider, provW-1),
 				ctxW, formatContext(rec.Context),
 				16, formatCostPair(rec.Cost),
@@ -416,16 +382,6 @@ func formatCostPair(c llmreg.Cost) string {
 		return "-"
 	}
 	return fmt.Sprintf("%g / %g", c.Input, c.Output)
-}
-
-func sourcesString(s map[string]bool) string {
-	var out []string
-	for _, name := range []string{llmreg.SourceModelsDev, llmreg.SourceLiteLLM} {
-		if s[name] {
-			out = append(out, name)
-		}
-	}
-	return strings.Join(out, ",")
 }
 
 func yesNo(b bool) string {

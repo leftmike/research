@@ -44,16 +44,16 @@ func TestInferLab(t *testing.T) {
 
 func TestRegistryMergeAndGroups(t *testing.T) {
 	r := newRegistry()
-	r.upsertProvider("anthropic", "Anthropic", "https://docs", "@ai-sdk/anthropic", []string{"ANTHROPIC_API_KEY"}, SourceModelsDev)
+	r.upsertProvider("anthropic", "Anthropic", "https://docs", "@ai-sdk/anthropic", []string{"ANTHROPIC_API_KEY"})
 	r.addModel(&Model{
 		ID: "claude-opus-4-5", Name: "Claude Opus 4.5", Family: "claude-opus",
-		Provider: "anthropic", Source: SourceModelsDev, Context: 200000,
+		Provider: "anthropic", Context: 200000,
 		Cost: Cost{Input: 5, Output: 25},
 	})
-	// Same logical model from litellm via a different provider key.
+	// Same logical model served by a different provider under a bedrock-style id.
 	r.addModel(&Model{
 		ID: "anthropic.claude-opus-4-5-20251101-v1:0", Name: "anthropic.claude-opus-4-5-20251101-v1:0",
-		Provider: "bedrock_converse", Source: SourceLiteLLM, Context: 200000,
+		Provider: "amazon-bedrock", Context: 200000,
 		Cost: Cost{Input: 5, Output: 25},
 	})
 
@@ -62,14 +62,8 @@ func TestRegistryMergeAndGroups(t *testing.T) {
 		t.Fatalf("expected 1 merged group, got %d", len(groups))
 	}
 	g := groups[0]
-	if g.Rep.Source != SourceModelsDev {
-		t.Errorf("representative should be models.dev record, got %q", g.Rep.Source)
-	}
 	if len(g.Providers) != 2 {
 		t.Errorf("expected 2 providers, got %v", g.Providers)
-	}
-	if len(g.Sources) != 2 {
-		t.Errorf("expected 2 sources, got %v", g.Sources)
 	}
 	if g.Rep.Lab != "Anthropic" {
 		t.Errorf("expected lab Anthropic, got %q", g.Rep.Lab)

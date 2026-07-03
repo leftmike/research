@@ -1,21 +1,23 @@
 # models
 
 A command-line tool for exploring LLM **model**, **provider**, and **lab**
-information merged from two public catalogs:
+information from [models.dev](https://models.dev) —
+`https://models.dev/api.json`.
 
-- [models.dev](https://models.dev) — `https://models.dev/api.json`
-- [litellm](https://github.com/BerriAI/litellm) —
-  `model_prices_and_context_window.json`
-
-Both sources describe the *provider* (the API serving a model) but not the
+models.dev describes the *provider* (the API serving a model) but not the
 *lab* (the organization that created it), so the lab is inferred from a curated
 family/keyword mapping (see `lab.go`); unrecognized long-tail models are
 reported as `Unknown`.
 
+The same model is often served by several providers under different ids (for
+example Bedrock's `anthropic.claude-opus-4-5-20251101-v1:0` vs. Anthropic's own
+`claude-opus-4-5`), so records are normalized to a common key and merged across
+providers.
+
 ## Layout
 
-The catalog logic — fetching, parsing, merging, id normalization, and lab
-inference — lives in a reusable `llmreg` package
+The catalog logic — fetching, parsing, cross-provider merging, id
+normalization, and lab inference — lives in a reusable `llmreg` package
 (`github.com/leftmike/research/models/llmreg`). The root `main` package is the
 CLI: flag parsing and terminal rendering on top of `llmreg`.
 
@@ -35,13 +37,13 @@ models [global flags] <command> [args]
 
 | Command              | Description                                              |
 |----------------------|----------------------------------------------------------|
-| `summary`            | Overview: source, provider, lab, and model counts.       |
+| `summary`            | Overview: provider, lab, and model counts.               |
 | `providers [SUBSTR]` | List providers (optionally filtered by substring).       |
 | `provider <id>`      | Show one provider and the models it serves.              |
 | `labs [SUBSTR]`      | List labs (model creators) and their model counts.       |
 | `lab <name>`         | Show one lab and its models.                             |
 | `models [SUBSTR]`    | List models (optionally filtered by substring).          |
-| `model <id>`         | Full detail for one model, merged across sources.        |
+| `model <id>`         | Full detail for one model, merged across providers.      |
 
 If the first argument is not one of the commands above, it is matched against
 providers. When exactly one provider matches it is used, and an optional second
@@ -58,10 +60,7 @@ the query.
 
 ### Global flags
 
-- `-source S` — which catalog to use: `all` (default), `models.dev`, or
-  `litellm`. Only the selected catalog is downloaded. Accepts the aliases
-  `md`/`dev` and `ll`/`lite`.
-- `-refresh` — ignore cached data and re-download from the sources.
+- `-refresh` — ignore cached data and re-download from the source.
 - `-no-cache` — do not read or write the on-disk cache.
 
 Downloaded data is cached under the user cache directory and refreshed every
@@ -79,9 +78,8 @@ models models grok-4
 models model claude-opus-4-5
 models openai                  # provider shortcut
 models openai gpt-4o           # model within a provider
-models -source litellm summary # restrict to a single catalog
 ```
 
-A model's detail view merges every matching record across both sources and all
-providers, with a per-record breakdown so per-provider price and context
-differences are visible.
+A model's detail view merges every matching record across all providers, with
+a per-record breakdown so per-provider price and context differences are
+visible.

@@ -9,11 +9,8 @@ import (
 	"time"
 )
 
-// Data source URLs.
-const (
-	modelsDevURL = "https://models.dev/api.json"
-	litellmURL   = "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
-)
+// Data source URL.
+const modelsDevURL = "https://models.dev/api.json"
 
 // FetchOptions controls how source data is retrieved and cached.
 type FetchOptions struct {

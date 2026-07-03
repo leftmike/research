@@ -57,14 +57,13 @@ func loadModelsDev(data []byte, r *Registry) error {
 	}
 
 	for pid, p := range providers {
-		r.upsertProvider(pid, p.Name, p.Doc, p.NPM, p.Env, SourceModelsDev)
+		r.upsertProvider(pid, p.Name, p.Doc, p.NPM, p.Env)
 		for _, m := range p.Models {
 			r.addModel(&Model{
 				ID:          m.ID,
 				Name:        nonEmpty(m.Name, m.ID),
 				Family:      m.Family,
 				Provider:    pid,
-				Source:      SourceModelsDev,
 				InputModes:  m.Modalities.Input,
 				OutputModes: m.Modalities.Output,
 				Reasoning:   m.Reasoning,
@@ -88,82 +87,6 @@ func loadModelsDev(data []byte, r *Registry) error {
 	return nil
 }
 
-// ---- litellm schema ----
-
-type llModel struct {
-	Provider           string  `json:"litellm_provider"`
-	Mode               string  `json:"mode"`
-	MaxInputTokens     int     `json:"max_input_tokens"`
-	MaxOutputTokens    int     `json:"max_output_tokens"`
-	MaxTokens          int     `json:"max_tokens"`
-	InputCostPerToken  float64 `json:"input_cost_per_token"`
-	OutputCostPerToken float64 `json:"output_cost_per_token"`
-	CacheReadCost      float64 `json:"cache_read_input_token_cost"`
-	CacheCreationCost  float64 `json:"cache_creation_input_token_cost"`
-	SupportsReasoning  bool    `json:"supports_reasoning"`
-	SupportsFunctions  bool    `json:"supports_function_calling"`
-	SupportsVision     bool    `json:"supports_vision"`
-	SupportsPDFInput   bool    `json:"supports_pdf_input"`
-}
-
-// loadLiteLLM parses litellm's model_prices_and_context_window.json into the
-// registry. The "sample_spec" documentation entry is skipped.
-func loadLiteLLM(data []byte, r *Registry) error {
-	var entries map[string]json.RawMessage
-	if err := json.Unmarshal(data, &entries); err != nil {
-		return fmt.Errorf("parse litellm: %w", err)
-	}
-
-	for id, raw := range entries {
-		if id == "sample_spec" {
-			continue
-		}
-		var m llModel
-		if err := json.Unmarshal(raw, &m); err != nil {
-			// Skip malformed entries rather than failing the whole load.
-			continue
-		}
-		provider := nonEmpty(m.Provider, "unknown")
-		r.upsertProvider(provider, "", "", "", nil, SourceLiteLLM)
-
-		context := m.MaxInputTokens
-		if context == 0 {
-			context = m.MaxTokens
-		}
-		var in, out []string
-		if m.SupportsVision || m.SupportsPDFInput {
-			in = []string{"text", "image"}
-		}
-		r.addModel(&Model{
-			ID:          id,
-			Name:        id,
-			Provider:    provider,
-			Source:      SourceLiteLLM,
-			Mode:        m.Mode,
-			InputModes:  in,
-			OutputModes: out,
-			Reasoning:   m.SupportsReasoning,
-			ToolCall:    m.SupportsFunctions,
-			Attachment:  m.SupportsVision || m.SupportsPDFInput,
-			Context:     context,
-			OutputLimit: m.MaxOutputTokens,
-			Cost: Cost{
-				Input:      perMillion(m.InputCostPerToken),
-				Output:     perMillion(m.OutputCostPerToken),
-				CacheRead:  perMillion(m.CacheReadCost),
-				CacheWrite: perMillion(m.CacheCreationCost),
-			},
-		})
-	}
-	return nil
-}
-
-// perMillion converts a per-token cost to a per-million-token cost so both
-// sources report pricing in the same units.
-func perMillion(perToken float64) float64 {
-	return perToken * 1_000_000
-}
-
 func nonEmpty(s, fallback string) string {
 	if s == "" {
 		return fallback
@@ -171,29 +94,16 @@ func nonEmpty(s, fallback string) string {
 	return s
 }
 
-// BuildRegistry fetches the selected sources and merges them into a registry.
-// Only the requested catalogs are downloaded.
-func BuildRegistry(opts FetchOptions, useMD, useLL bool) (*Registry, error) {
+// BuildRegistry fetches models.dev and loads it into a registry.
+func BuildRegistry(opts FetchOptions) (*Registry, error) {
 	r := newRegistry()
 
-	if useMD {
-		mdData, err := fetchJSON(modelsDevURL, "modelsdev.json", opts)
-		if err != nil {
-			return nil, err
-		}
-		if err := loadModelsDev(mdData, r); err != nil {
-			return nil, err
-		}
+	mdData, err := fetchJSON(modelsDevURL, "modelsdev.json", opts)
+	if err != nil {
+		return nil, err
 	}
-
-	if useLL {
-		llData, err := fetchJSON(litellmURL, "litellm.json", opts)
-		if err != nil {
-			return nil, err
-		}
-		if err := loadLiteLLM(llData, r); err != nil {
-			return nil, err
-		}
+	if err := loadModelsDev(mdData, r); err != nil {
+		return nil, err
 	}
 
 	return r, nil

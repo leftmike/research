@@ -3,9 +3,9 @@ package llmreg
 import "strings"
 
 // inferLab determines the originating lab (the organization that created a
-// model) from its family, id, and serving provider. models.dev and litellm
-// describe the serving provider but not the creator, so the lab is inferred
-// from a curated mapping with a first-party-provider fallback.
+// model) from its family, id, and serving provider. models.dev describes the
+// serving provider but not the creator, so the lab is inferred from a curated
+// mapping with a first-party-provider fallback.
 func inferLab(family, id, provider string) string {
 	if lab := labFromFamily(family); lab != "" {
 		return lab
@@ -35,8 +35,8 @@ func labFromFamily(family string) string {
 	return ""
 }
 
-// labFromKeywords matches well-known substrings in a model id as a fallback for
-// records without a family (notably litellm entries).
+// labFromKeywords matches well-known substrings in a model id as a fallback
+// for records without a family.
 func labFromKeywords(id string) string {
 	for _, kw := range idKeywords {
 		if strings.Contains(id, kw.prefix) {

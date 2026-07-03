@@ -5,12 +5,6 @@ import (
 	"strings"
 )
 
-// Source identifiers.
-const (
-	SourceModelsDev = "models.dev"
-	SourceLiteLLM   = "litellm"
-)
-
 // Cost holds token pricing in US dollars per million tokens.
 type Cost struct {
 	Input      float64
@@ -23,16 +17,14 @@ func (c Cost) empty() bool {
 	return c.Input == 0 && c.Output == 0 && c.CacheRead == 0 && c.CacheWrite == 0
 }
 
-// Model is a single model record from one source as served by one provider.
+// Model is a single model record as served by one provider.
 type Model struct {
 	ID          string // identifier as it appears in the source
-	Key         string // normalized identifier for cross-source matching
+	Key         string // normalized identifier for cross-provider matching
 	Name        string
 	Family      string
 	Lab         string
 	Provider    string // provider id this record belongs to
-	Source      string // SourceModelsDev or SourceLiteLLM
-	Mode        string // litellm "mode" (chat, embedding, ...); empty for models.dev
 	InputModes  []string
 	OutputModes []string
 	Reasoning   bool
@@ -49,13 +41,12 @@ type Model struct {
 
 // Provider is an API provider that serves models.
 type Provider struct {
-	ID      string
-	Name    string
-	Doc     string
-	NPM     string
-	Env     []string
-	Sources map[string]bool
-	Models  []*Model
+	ID     string
+	Name   string
+	Doc    string
+	NPM    string
+	Env    []string
+	Models []*Model
 }
 
 // Lab is the organization that created a set of models.
@@ -64,7 +55,7 @@ type Lab struct {
 	Models []*Model
 }
 
-// Registry is the merged catalog assembled from all sources.
+// Registry is the merged catalog assembled from models.dev.
 type Registry struct {
 	Providers map[string]*Provider
 	Labs      map[string]*Lab
@@ -90,10 +81,9 @@ func (r *Registry) addModel(m *Model) {
 
 	p := r.Providers[m.Provider]
 	if p == nil {
-		p = &Provider{ID: m.Provider, Name: m.Provider, Sources: map[string]bool{}}
+		p = &Provider{ID: m.Provider, Name: m.Provider}
 		r.Providers[m.Provider] = p
 	}
-	p.Sources[m.Source] = true
 	p.Models = append(p.Models, m)
 
 	lab := r.Labs[m.Lab]
@@ -105,10 +95,10 @@ func (r *Registry) addModel(m *Model) {
 }
 
 // upsertProvider merges provider metadata (name, docs, env) into the registry.
-func (r *Registry) upsertProvider(id, name, doc, npm string, env []string, source string) {
+func (r *Registry) upsertProvider(id, name, doc, npm string, env []string) {
 	p := r.Providers[id]
 	if p == nil {
-		p = &Provider{ID: id, Sources: map[string]bool{}}
+		p = &Provider{ID: id}
 		r.Providers[id] = p
 	}
 	if name != "" {
@@ -126,7 +116,6 @@ func (r *Registry) upsertProvider(id, name, doc, npm string, env []string, sourc
 	if len(env) > 0 {
 		p.Env = env
 	}
-	p.Sources[source] = true
 }
 
 // SortedProviders returns providers sorted by id.
@@ -155,15 +144,13 @@ func (r *Registry) SortedLabs() []*Lab {
 	return out
 }
 
-// ModelGroup collapses model records that share a normalized key into one
-// representative entry, preferring a models.dev record when present, and merges
-// the set of providers and sources that offer it.
+// ModelGroup collapses model records that share a normalized key (the same
+// model served by multiple providers) into one representative entry.
 type ModelGroup struct {
 	Key       string
 	Rep       *Model
 	Records   []*Model
 	Providers []string
-	Sources   []string
 }
 
 // Groups returns the merged model groups, one per normalized key.
@@ -178,8 +165,7 @@ func (r *Registry) Groups() []*ModelGroup {
 			order = append(order, m.Key)
 		}
 		g.Records = append(g.Records, m)
-		// Prefer a richer models.dev record as the representative.
-		if g.Rep == nil || (m.Source == SourceModelsDev && g.Rep.Source != SourceModelsDev) {
+		if g.Rep == nil {
 			g.Rep = m
 		}
 	}
@@ -188,7 +174,6 @@ func (r *Registry) Groups() []*ModelGroup {
 	for _, k := range order {
 		g := byKey[k]
 		g.Providers = UniqueStrings(Collect(g.Records, func(m *Model) string { return m.Provider }))
-		g.Sources = UniqueStrings(Collect(g.Records, func(m *Model) string { return m.Source }))
 		// Fill representative gaps (cost/limits/flags) from sibling records.
 		fillGaps(g)
 		out = append(out, g)
@@ -270,19 +255,14 @@ func UniqueModelCount(ms []*Model) int {
 	return len(seen)
 }
 
-// RepresentativeModels returns one record per unique key, preferring models.dev.
+// RepresentativeModels returns one record per unique key.
 func RepresentativeModels(ms []*Model) []*Model {
 	byKey := map[string]*Model{}
 	order := []string{}
 	for _, m := range ms {
-		cur, ok := byKey[m.Key]
-		if !ok {
+		if _, ok := byKey[m.Key]; !ok {
 			byKey[m.Key] = m
 			order = append(order, m.Key)
-			continue
-		}
-		if m.Source == SourceModelsDev && cur.Source != SourceModelsDev {
-			byKey[m.Key] = m
 		}
 	}
 	out := make([]*Model, 0, len(order))
@@ -292,8 +272,9 @@ func RepresentativeModels(ms []*Model) []*Model {
 	return out
 }
 
-// NormalizeID reduces a source-specific model id to a key that is comparable
-// across sources, stripping provider prefixes and version/date suffixes.
+// NormalizeID reduces a provider-specific model id to a key that is
+// comparable across providers, stripping provider prefixes and version/date
+// suffixes.
 func NormalizeID(id string) string {
 	s := strings.ToLower(strings.TrimSpace(id))
 
