@@ -77,3 +77,26 @@ mermaid README.md
 ```sh
 go test ./...
 ```
+
+Tests are ~85% statement coverage and come in three layers:
+
+- **Golden files** (`golden_test.go`, `testdata/*.golden`) capture the exact
+  rendered art for a diagram of every type plus the routing, direction-flip
+  (`BT`/`RL`), edge-style (dotted/thick), edge-head, self-loop, back-edge,
+  subgraph, and crossing-minimization paths — so any layout regression is
+  caught. Regenerate them after an intentional change with:
+
+  ```sh
+  go test -run TestGolden -update
+  ```
+
+- **Unit tests** (`helpers_test.go`) cover label cleaning, HTML-entity decoding,
+  markdown stripping, wrapping/truncation, display-width, and the ANSI color
+  layer.
+
+- **CLI tests** (`cli_test.go`) drive the `run` entry point end-to-end: stdin
+  and file inputs, fence extraction, `-raw`, `-color`, multi-diagram output, and
+  error paths.
+
+The only uncovered code is `main` (a one-line call into `run`) and the raw
+`ioctl` terminal-width probe, which needs a real TTY.

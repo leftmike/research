@@ -13,30 +13,44 @@ import (
 )
 
 func main() {
-	var (
-		width   = flag.Int("w", 0, "max render width in columns (0 = auto-detect, fallback 100)")
-		colorFl = flag.String("color", "auto", "colorize output: auto, always, or never")
-		rawFl   = flag.Bool("raw", false, "treat entire input as one diagram, ignoring ``` fences")
-	)
-	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "usage: mermaid [-w cols] [-color auto|always|never] [-raw] [file ...]\n\n")
-		fmt.Fprintf(os.Stderr, "Renders Mermaid diagrams as Unicode terminal art. Reads ```mermaid fenced\n")
-		fmt.Fprintf(os.Stderr, "code blocks from each file (or stdin); with -raw the whole input is one diagram.\n\n")
-		flag.PrintDefaults()
+	os.Exit(run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))
+}
+
+// run is the testable entry point: it parses args, reads the given files (or
+// stdin), renders every Mermaid block, and writes to stdout. It returns the
+// process exit code.
+func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
+	fs := flag.NewFlagSet("mermaid", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	width := fs.Int("w", 0, "max render width in columns (0 = auto-detect, fallback 100)")
+	colorFl := fs.String("color", "auto", "colorize output: auto, always, or never")
+	rawFl := fs.Bool("raw", false, "treat entire input as one diagram, ignoring ``` fences")
+	fs.Usage = func() {
+		fmt.Fprintf(stderr, "usage: mermaid [-w cols] [-color auto|always|never] [-raw] [file ...]\n\n")
+		fmt.Fprintf(stderr, "Renders Mermaid diagrams as Unicode terminal art. Reads ```mermaid fenced\n")
+		fmt.Fprintf(stderr, "code blocks from each file (or stdin); with -raw the whole input is one diagram.\n\n")
+		fs.PrintDefaults()
 	}
-	flag.Parse()
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+
+	// A terminal reports its width and enables color under -color=auto; a piped
+	// or in-memory writer does neither.
+	termW, isTTY := 0, false
+	if f, ok := stdout.(*os.File); ok {
+		termW, isTTY = terminalWidth(f.Fd())
+	}
 
 	maxWidth := *width
 	if maxWidth <= 0 {
 		switch {
 		case columnsEnv() > 0:
 			maxWidth = columnsEnv()
+		case isTTY:
+			maxWidth = termW
 		default:
-			if w, ok := terminalWidth(os.Stdout.Fd()); ok {
-				maxWidth = w
-			} else {
-				maxWidth = 100
-			}
+			maxWidth = 100
 		}
 	}
 
@@ -47,29 +61,29 @@ func main() {
 	case "never":
 		color = false
 	default: // auto
-		_, color = terminalWidth(os.Stdout.Fd())
+		color = isTTY
 	}
 
 	var docs []string
-	if flag.NArg() == 0 {
-		data, err := io.ReadAll(os.Stdin)
+	if fs.NArg() == 0 {
+		data, err := io.ReadAll(stdin)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "mermaid:", err)
-			os.Exit(1)
+			fmt.Fprintln(stderr, "mermaid:", err)
+			return 1
 		}
 		docs = append(docs, string(data))
 	} else {
-		for _, name := range flag.Args() {
+		for _, name := range fs.Args() {
 			data, err := os.ReadFile(name)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "mermaid:", err)
-				os.Exit(1)
+				fmt.Fprintln(stderr, "mermaid:", err)
+				return 1
 			}
 			docs = append(docs, string(data))
 		}
 	}
 
-	out := bufio.NewWriter(os.Stdout)
+	out := bufio.NewWriter(stdout)
 	defer out.Flush()
 
 	var blocks []string
@@ -99,6 +113,7 @@ func main() {
 		writeLines(out, lines, color)
 		rendered++
 	}
+	return 0
 }
 
 // extractMermaidBlocks returns the contents of every ```mermaid fenced block.
