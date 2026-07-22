@@ -56,14 +56,24 @@ pre {
 .t { color: var(--text); font-weight: 600; }
 .e { color: var(--edge); }
 .l { color: var(--label); }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1rem 1.25rem; overflow-x: auto;
+}
+.card svg { display: block; }
+svg text { font-variant-ligatures: none; }
+svg text.b { fill: var(--border); }
+svg text.t { fill: var(--text); font-weight: 600; }
+svg text.e { fill: var(--edge); }
+svg text.l { fill: var(--label); }
 </style>
 </head>
 <body>
 `
 
 // writeHTML renders diagrams as a single self-contained HTML page. Each diagram
-// becomes a <pre> block whose spans are colored by CSS class.
-func writeHTML(w io.Writer, title string, diagrams [][]span2D) error {
+// becomes an inline <svg> (useSVG) or a colored <pre> block.
+func writeHTML(w io.Writer, title string, diagrams [][]span2D, useSVG bool) error {
 	if title == "" {
 		title = "Mermaid diagrams"
 	}
@@ -71,6 +81,12 @@ func writeHTML(w io.Writer, title string, diagrams [][]span2D) error {
 	fmt.Fprintf(&b, htmlHead, html.EscapeString(title))
 	fmt.Fprintf(&b, "<h1>%s</h1>\n<main>\n", html.EscapeString(title))
 	for _, lines := range diagrams {
+		if useSVG {
+			b.WriteString(`<div class="card">`)
+			b.WriteString(svgElement(lines))
+			b.WriteString("</div>\n")
+			continue
+		}
 		b.WriteString(`<pre role="img">`)
 		b.WriteByte('\n')
 		for _, line := range lines {

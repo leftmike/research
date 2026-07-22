@@ -12,7 +12,7 @@ func TestWriteHTMLStructure(t *testing.T) {
 		t.Fatal("expected rendered lines")
 	}
 	var buf bytes.Buffer
-	if err := writeHTML(&buf, "My Title", [][]span2D{lines}); err != nil {
+	if err := writeHTML(&buf, "My Title", [][]span2D{lines}, false); err != nil {
 		t.Fatal(err)
 	}
 	out := buf.String()
@@ -35,7 +35,7 @@ func TestWriteHTMLEscaping(t *testing.T) {
 	// A label with HTML metacharacters must be escaped, not emitted raw.
 	lines := render("flowchart LR\n  A[\"x < y & z\"] --> B\n", 0)
 	var buf bytes.Buffer
-	if err := writeHTML(&buf, "t", [][]span2D{lines}); err != nil {
+	if err := writeHTML(&buf, "t", [][]span2D{lines}, false); err != nil {
 		t.Fatal(err)
 	}
 	out := buf.String()
@@ -49,7 +49,7 @@ func TestWriteHTMLEscaping(t *testing.T) {
 
 func TestWriteHTMLDefaultTitle(t *testing.T) {
 	var buf bytes.Buffer
-	if err := writeHTML(&buf, "", nil); err != nil {
+	if err := writeHTML(&buf, "", nil, false); err != nil {
 		t.Fatal(err)
 	}
 	if !strings.Contains(buf.String(), "<title>Mermaid diagrams</title>") {

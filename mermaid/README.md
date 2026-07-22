@@ -30,7 +30,7 @@ go build -o mermaid .
 ## Usage
 
 ```
-usage: mermaid [-w cols] [-color auto|always|never] [-html] [-title t] [-raw] [file ...]
+usage: mermaid [-w cols] [-color auto|always|never] [-html] [-svg] [-title t] [-raw] [file ...]
 ```
 
 - Reads every ` ```mermaid ` (or `~~~mermaid`) fenced block from each file, or
@@ -43,8 +43,13 @@ usage: mermaid [-w cols] [-color auto|always|never] [-html] [-title t] [-raw] [f
   terminal.
 - `-html` emits a single self-contained, theme-aware HTML page (all diagrams as
   colored `<pre>` blocks, no external assets) instead of terminal text; `-title`
-  sets its page title. Width defaults to unlimited under `-html` (the page
-  scrolls horizontally) unless `-w` is given.
+  sets its page title.
+- `-svg` renders diagrams as inline SVG: on its own it writes a self-contained
+  SVG document (diagrams stacked vertically); combined with `-html` it embeds
+  each diagram as an inline `<svg>` in the page. Text runs are pinned to the
+  monospace grid with `textLength`, so box-drawing stays aligned in any font.
+- Width defaults to unlimited under `-html`/`-svg` (the page scrolls, the SVG
+  scales) unless `-w` is given.
 
 ### Examples
 
@@ -80,6 +85,13 @@ Turn a document's diagrams into a standalone web page:
 
 ```sh
 mermaid -html -title "Architecture" docs/design.md > diagrams.html
+```
+
+Export a diagram as a scalable SVG (or an HTML page with inline SVG):
+
+```sh
+mermaid -svg docs/design.md > diagrams.svg
+mermaid -html -svg -title "Architecture" docs/design.md > diagrams.html
 ```
 
 ## Testing
