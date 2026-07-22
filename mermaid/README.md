@@ -30,7 +30,7 @@ go build -o mermaid .
 ## Usage
 
 ```
-usage: mermaid [-w cols] [-color auto|always|never] [-raw] [file ...]
+usage: mermaid [-w cols] [-color auto|always|never] [-html] [-title t] [-raw] [file ...]
 ```
 
 - Reads every ` ```mermaid ` (or `~~~mermaid`) fenced block from each file, or
@@ -41,6 +41,10 @@ usage: mermaid [-w cols] [-color auto|always|never] [-raw] [file ...]
   back to 100 columns, or `$COLUMNS`).
 - `-color` controls ANSI colorization; `auto` colorizes only when stdout is a
   terminal.
+- `-html` emits a single self-contained, theme-aware HTML page (all diagrams as
+  colored `<pre>` blocks, no external assets) instead of terminal text; `-title`
+  sets its page title. Width defaults to unlimited under `-html` (the page
+  scrolls horizontally) unless `-w` is given.
 
 ### Examples
 
@@ -70,6 +74,12 @@ Render all Mermaid blocks embedded in a Markdown file:
 
 ```sh
 mermaid README.md
+```
+
+Turn a document's diagrams into a standalone web page:
+
+```sh
+mermaid -html -title "Architecture" docs/design.md > diagrams.html
 ```
 
 ## Testing

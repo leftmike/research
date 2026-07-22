@@ -25,10 +25,13 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	width := fs.Int("w", 0, "max render width in columns (0 = auto-detect, fallback 100)")
 	colorFl := fs.String("color", "auto", "colorize output: auto, always, or never")
 	rawFl := fs.Bool("raw", false, "treat entire input as one diagram, ignoring ``` fences")
+	htmlFl := fs.Bool("html", false, "emit a self-contained HTML page instead of terminal text")
+	titleFl := fs.String("title", "Mermaid diagrams", "page title for -html output")
 	fs.Usage = func() {
-		fmt.Fprintf(stderr, "usage: mermaid [-w cols] [-color auto|always|never] [-raw] [file ...]\n\n")
-		fmt.Fprintf(stderr, "Renders Mermaid diagrams as Unicode terminal art. Reads ```mermaid fenced\n")
-		fmt.Fprintf(stderr, "code blocks from each file (or stdin); with -raw the whole input is one diagram.\n\n")
+		fmt.Fprintf(stderr, "usage: mermaid [-w cols] [-color auto|always|never] [-html] [-title t] [-raw] [file ...]\n\n")
+		fmt.Fprintf(stderr, "Renders Mermaid diagrams as Unicode terminal art (or a self-contained HTML\n")
+		fmt.Fprintf(stderr, "page with -html). Reads ```mermaid fenced code blocks from each file (or\n")
+		fmt.Fprintf(stderr, "stdin); with -raw the whole input is one diagram.\n\n")
 		fs.PrintDefaults()
 	}
 	if err := fs.Parse(args); err != nil {
@@ -45,6 +48,10 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	maxWidth := *width
 	if maxWidth <= 0 {
 		switch {
+		case *htmlFl:
+			// An HTML page scrolls horizontally, so don't impose a width limit
+			// (which would trigger the "too wide" fallback) unless -w was given.
+			maxWidth = 0
 		case columnsEnv() > 0:
 			maxWidth = columnsEnv()
 		case isTTY:
@@ -99,6 +106,20 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 				blocks = append(blocks, b...)
 			}
 		}
+	}
+
+	if *htmlFl {
+		var diagrams [][]span2D
+		for _, src := range blocks {
+			if lines := render(src, maxWidth); lines != nil {
+				diagrams = append(diagrams, lines)
+			}
+		}
+		if err := writeHTML(out, *titleFl, diagrams); err != nil {
+			fmt.Fprintln(stderr, "mermaid:", err)
+			return 1
+		}
+		return 0
 	}
 
 	rendered := 0
