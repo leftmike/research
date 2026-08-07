@@ -129,10 +129,8 @@ single space; leading and trailing whitespace is trimmed).
 A bare name ends at any of `: ; , . { } [ ] ( )`, an arrow token (`->`, `<-`,
 `<->`, `--`), a comment opener, or end of line.
 
-A bare name may not *begin* with `~.` or `^.` — the two path anchors are always
-followed by a `.` — nor with `--` or `->`. A leading `~` or `^` not followed by
-a dot is an ordinary name character, which is what lets `~pkg` be a name and
-`~.pkg` be a path.
+A bare name may not *begin* with `--` or `->`. There are no other restrictions:
+a path is just names joined by `.`, with no anchors or sigils to avoid.
 
 ```m2
 Order Service            // legal: internal spaces are fine
@@ -177,7 +175,7 @@ language name for syntax-highlighted code.
 | Percentage | `50%` |
 | Color | `#4C6EF5`, `#FFF3BF80`, `#eee`, `red`, `transparent` |
 | String | `"Postgres"`, `'raw'`, `"""md ... """` |
-| Path | `templates.store`, `~.shared.ext` |
+| Path | `store`, `templates.store` |
 | List | `(4, 8)`, `(a.b, c.d)` |
 
 Bare words and paths lex identically; which one a value is depends on the
@@ -240,7 +238,7 @@ which is what layout uses for tie-breaking.
 
 ### 3.3 Implicit creation
 
-Referring to an undeclared name in an edge creates it:
+A name that resolves nowhere (§7.1) is created in the current scope:
 
 ```m2
 cache -> db               // creates both, if they do not already exist
@@ -483,29 +481,48 @@ Edges may cross container boundaries freely, in either direction.
 
 ### 7.1 Scope resolution
 
-The first segment of a path resolves **in the current scope only**. m2 does not
-search enclosing scopes implicitly — a name means what it says where it is
-written.
-
-Two anchors navigate explicitly:
-
-| Anchor | Meaning |
-| --- | --- |
-| `~` | the root scope |
-| `^` | the parent scope; repeatable as `^.^` |
+A path has no anchors and no sigils — it is names joined by `.`. Its first
+segment resolves in the current scope; if nothing matches, the search continues
+outward through each enclosing scope to the root, and the nearest match wins.
+Later segments are then looked up strictly inside what the first one found.
 
 ```m2
+dns: "Route 53"
+
 vpc {
   public { lb }
   private {
     app
-    app -> ^.public.lb          // sibling container
-    app -> ~.dns: "resolve"     // an element at the root
+    app -> public.lb: "upstream"   // public: found one scope out, in vpc
+    app -> dns: "resolve"          // dns: found at the root
   }
 }
-
-dns: "Route 53"
 ```
+
+**Resolution searches outward; creation never does.** An implicitly created name
+(§3.3) always lands in the current scope, so writing an edge can never
+accidentally reach out and modify an enclosing container. The two rules together
+mean an outward match only ever happens against something already declared.
+
+A nearer declaration shadows a farther one. To reach a shadowed outer element,
+give a path long enough to be unambiguous from where you are, or declare the
+statement in an outer scope:
+
+```m2
+db: "Primary"
+
+shard {
+  db: "Shard-local"     // shadows the outer db inside this container
+  worker
+  worker -> db          // the shard-local one
+}
+
+reporter
+reporter -> db          // at the root: the primary
+```
+
+With `[strict]` set, a path that resolves in no enclosing scope is an error
+rather than a new element, which turns a typo into a message instead of a box.
 
 ### 7.2 Declaring into a container
 
@@ -683,8 +700,7 @@ Within one level, later beats earlier.
 ### 9.4 Errors
 
 These are errors, not warnings: a reference that cannot resolve under `strict`;
-a `like` or `src` cycle; a `^` that walks above the root; an unknown attribute
-key; a value of the wrong type.
+a `like` or `src` cycle; an unknown attribute key; a value of the wrong type.
 
 An unknown *value* for a known key is an error too — `[shape: octagon]` fails
 rather than silently drawing a rectangle.
@@ -804,8 +820,7 @@ attr        = name ":" value
 
 block       = "{" [ statement ] { separator [ statement ] } "}" ;
 
-path        = [ anchor "." ] segment { "." segment } ;
-anchor      = "~" | "^" { "." "^" } ;
+path        = segment { "." segment } ;
 segment     = name | string ;
 
 value       = number | percent | color | string | list | path ;
@@ -844,7 +859,7 @@ Each of these is a deliberate departure, listed with the problem it solves.
 | 2 | `x.style.fill: red` | `x [fill: red]` | One flat attribute namespace; nothing to remember about which keys live under `style`. |
 | 3 | `#` starts a comment | `//` and `/* */` start comments | Frees `#` for hex colors, the most common literal in a diagram. |
 | 4 | Undeclared names silently become nodes | Same by default, `[strict]` to forbid it | Keeps the fast path fast, makes typo-proof diagrams possible. |
-| 5 | Names resolve by searching outward | Resolve in the current scope; `^` and `~` navigate | A name means the same thing wherever it appears. |
+| 5 | Names resolve outward, and an unresolved one is created wherever the search stopped | Resolution searches outward, creation is always local, `[strict]` turns a miss into an error | Reaching an outer container is the common case and stays syntax-free; the hazard was never the search, it was a failed search quietly inventing a node. |
 | 6 | `a -> b` only | `(a, b) -> (c, d)` cross products | Fan-in and fan-out without repeating yourself. |
 | 7 | `classes` block, `vars` block, globs (`*.style.fill`), `@`/`...@` imports | `[like: path]` and `[src: "file"]` | Four mechanisms with three syntaxes become two attribute keys. A style bundle is an element; importing binds under a name you chose. |
 | 8 | `shape: sequence_diagram`, `shape: sql_table`, `shape: class` | `kind: sequence`, `kind: table`, `kind: class` | Separates "what outline" from "how are children interpreted". |
@@ -878,23 +893,23 @@ edge:   "CDN + WAF" [shape: hexagon, fill: #F1F3F5]
 platform: "Platform" {
   [direction: down, fill: #F8F9FA, pad: 16]
 
-  gw:      "API Gateway"     [like: ~.t.svc]
-  cart:    "Cart Service"    [like: ~.t.svc]
-  orders:  "Order Service"   [like: ~.t.svc]
-  billing: "Billing Service" [like: ~.t.svc]
+  gw:      "API Gateway"     [like: t.svc]
+  cart:    "Cart Service"    [like: t.svc]
+  orders:  "Order Service"   [like: t.svc]
+  billing: "Billing Service" [like: t.svc]
 
   bus: "Event Bus" [shape: queue, fill: #FFF3BF]
 
   gw -> cart
   gw -> orders
-  orders -> billing: "authorize" [like: ~.t.money]
+  orders -> billing: "authorize" [like: t.money]
   (cart, orders, billing) -> bus: "emit" [stroke-dash: 2, weight: 0.5]
 }
 
 data: "Data" {
   [direction: down]
-  pg:    "Postgres" [like: ~.t.store]
-  redis: "Redis"    [like: ~.t.store]
+  pg:    "Postgres" [like: t.store]
+  redis: "Redis"    [like: t.store]
 }
 
 stripe:   "Stripe" [like: (t.svc, t.external)]
