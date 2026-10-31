@@ -128,7 +128,7 @@ func resetText(t *time.Time) string {
 	if t == nil {
 		return ""
 	}
-	l, now := t.Local(), time.Now()
+	l, now := t.Local().Round(time.Minute), time.Now()
 	switch {
 	case l.YearDay() == now.YearDay() && l.Year() == now.Year():
 		return "Resets at " + l.Format("3:04 PM")
